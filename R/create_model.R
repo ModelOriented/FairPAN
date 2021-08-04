@@ -1,7 +1,26 @@
-create_model <- function(train_x,train_y,neurons,dimensions,p=0){
+#' Creates a default neural network model
+#'
+#' Provides a method to create a simple neural network model which should be enough for
+#' tabular data classification tasks. The model consists of nn_linear layers, there are
+#' no dropouts and the activation function between the layers is nnf_relu(), whereas the
+#' last one is nnf_softmax. The user can provide demanded architecture of the leyers and
+#' select a softmaxes dimension.
+#'
+#' @param train_x train numerical matrix of predictors
+#' @param train_y train numerical vector of target
+#' @param neurons vector of integers describing the architecture. Notation c(8,16,8) means
+#'                3 layer neural network with 8,16 and 8 neurons in 1st, 2nd and 3rd
+#'                layer. Default: c(32,32,32)
+#' @param dimensions integer 0, 1 or 2 for the softmaxes dimension. Default: 2.
+#'
+#' @return neural network model
+#' @export
+#'
+#' @examples
+create_model <- function(train_x,train_y,neurons=c(32,32,32),dimensions=2){
   net <- nn_module(
     "net",
-    initialize = function(n_cont, Neurons, output_dim, p) {
+    initialize = function(n_cont, Neurons, output_dim) {
       torch_manual_seed(7)
       self$fc1<-nn_linear(n_cont, Neurons[1])
       for (i in 2:length(Neurons)){
@@ -28,5 +47,7 @@ create_model <- function(train_x,train_y,neurons,dimensions,p=0){
     output_dim = length(levels(factor(train_y))),
     p=p
   )
+
+  return(model)
 
 }

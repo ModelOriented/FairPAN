@@ -1,3 +1,12 @@
+#' Evaluates model by calculating its accuracy
+#'
+#' @param model neural network model we want to evaluate
+#' @param test_ds dataset object used for making test predictions and evaluation
+#'
+#' @return float accuracy of provided model
+#' @export
+#'
+#' @examples
 eval_accuracy <- function(model,test_ds){
   model$eval()
   test_dl <- test_ds %>% dataloader(batch_size = test_ds$.length(), shuffle = FALSE)
@@ -13,6 +22,19 @@ eval_accuracy <- function(model,test_ds){
   return(accuracy)
 }
 
+#' Calculates STP ratio for the model
+#'
+#' Calcucates Statistical Parity ((TP+FP)/(TP+FP+TN+FN)) ratio for given model, which is
+#' the most important fairness metric
+#'
+#' @param model neural network model we want to evaluate
+#' @param test_ds dataset object used for making predictions for STP
+#' @param sensitive numerical vector of sensitive variable
+#'
+#' @return float, STP ratio
+#' @export
+#'
+#' @examples
 calc_STP<-function(model,test_ds,sensitive){
   preds<-make_preds(model,test_ds)-1
   real<-(test_ds$y$to(device = "cpu") %>% as.array())-1
