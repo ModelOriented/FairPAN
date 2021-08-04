@@ -3,7 +3,7 @@ Type: Package
 Title: The tool for making fair classifier with the neural networks
 Version: 0.1.0
 Authors@R:
-    c(person("Hubert", "Ruczyński", role=c("aut","cre")),
+    c(person("Hubert", "Ruczyński", role=c("aut","cre"),
               email = "hruczynski21@interia.pl"),
       person("Jakub", "Wiśniewski", role = c("aut"),
              email = "jakwisn@gmail.com"))
@@ -21,3 +21,4 @@ Imports:
     data.table,
     mltools
 Language: en-US
+RoxygenNote: 7.1.1
