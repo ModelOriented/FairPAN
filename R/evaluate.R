@@ -7,7 +7,7 @@
 #' @export
 #'
 #' @examples
-eval_accuracy <- function(model,test_ds){
+eval_accuracy <- function(model,test_ds,dev){
   model$eval()
   test_dl <- test_ds %>% dataloader(batch_size = test_ds$.length(), shuffle = FALSE)
   iter <- test_dl$.iter()

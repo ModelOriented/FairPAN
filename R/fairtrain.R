@@ -45,21 +45,21 @@ fairtrain <- function(train_x, test_x, train_y, test_y, sensitive_train, sensiti
                       N_EP_PRECLF = 5, LEARNING_RATE_CLF = 0.001, PROTECTED, PRIVILIGED, PARTITION = 0.7,
                       N_EP_PAN = 50, LEARNING_RATE_ADV = 0.001, LAMBDA = 50, DATA, N_EP_PREADV = 10){
 
-  dev <- if (cuda_is_available()) torch_device("cuda:0") else "cpu"
+  dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
 
-  dsl <- dataset_loader(train_x,train_y,test_x,test_y,batch_size = BATCH_SIZE)
+  dsl <- dataset_loader(train_x, train_y, test_x, test_y, BATCH_SIZE, dev)
 
   clf_model <- create_model(train_x,train_y, NEURONS_CLF, dimensions = DIMENSION_CLF)
   clf_model$to(device = dev)
 
   pretrain_net(N_EP_PRECLF, clf_model, dsl, model_type = 1, LEARNING_RATE_CLF,
-               sensitive_test)
+               sensitive_test, dev)
 
-  preds<-make_preds(clf_model, dsl$test_ds)
+  preds<-make_preds(clf_model, dsl$test_ds, dev)
 
-  p_preds <- make_preds_prob(clf_model, dsl$train_ds)
+  p_preds <- make_preds_prob(clf_model, dsl$train_ds, dev)
 
-  eval_clf( clf_model, dsl$test_ds)
+  eval_accuracy( clf_model, dsl$test_ds, dev)
 
   exp1 <-  GAN_explainer(test_y,clf_model,DATA,PROTECTED,PRIVILIGED)
 
@@ -68,31 +68,31 @@ fairtrain <- function(train_x, test_x, train_y, test_y, sensitive_train, sensiti
   clf_only_model <- create_model(train_x,train_y, NEURONS_CLF, DIMENSION_CLF)
   clf_only_model$to(device = dev)
   pretrain_net(N_EP_ONLY, clf_only_model, dsl, model_type = 1, LEARNING_RATE_CLF,
-               sensitive_test)
+               sensitive_test, dev)
 
   pre_clf_model <- create_model(train_x,train_y, NEURONS_CLF, DIMENSION_CLF)
   pre_clf_model$to(device = dev)
   pretrain_net(N_EP_PRECLF, pre_clf_model, dsl, model_type = 1, LEARNING_RATE_CLF,
-               sensitive_test)
+               sensitive_test, dev)
 
   prepared_data <- prepare_to_adv(p_preds[,2], sensitive_train, PARTITION)
 
   dsl_adv <- dataset_loader(prepared_data$train_x,prepared_data$train_y,
                             prepared_data$test_x,prepared_data$test_y,
-                            batch_size = BATCH_SIZE)
+                            batch_size = BATCH_SIZE, dev)
 
   adv_model <- create_model(prepared_data$train_x,prepared_data$train_y,
                             neurons = NEURONS_ADV, dimensions = DIMENSION_ADV)
 
   adv_model$to(device = dev)
   pretrain_net(N_EP_PREADV, adv_model, dsl_adv, model_type = 0, LEARNING_RATE_ADV,
-               sensitive_test)
+               sensitive_test, dev)
 
   prepared_data$test_y
 
-  make_preds(adv_model,dsl_adv$test_ds)
+  make_preds(adv_model,dsl_adv$test_ds, dev)
 
-  eval_clf(adv_model,dsl_adv$test_ds)
+  eval_accuracy(adv_model,dsl_adv$test_ds, dev)
 
   train_PAN(N_EP_PAN, dsl, clf_model, adv_model, dev, sensitive_train,
             sensitive_test, BATCH_SIZE, LEARNING_RATE_ADV,

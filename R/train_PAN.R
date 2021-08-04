@@ -24,7 +24,7 @@
 #'
 #' @examples
 train_PAN <- function(N_EP_PAN, dsl, clf_model, adv_model, dev, sensitive_train,
-                      sensitive_test, BATCH_SIZE, LEARNING_RATE_ADV=,
+                      sensitive_test, BATCH_SIZE, LEARNING_RATE_ADV,
                       LEARNING_RATE_CLF, LAMBDA){
 
   adversary_losses<-c()

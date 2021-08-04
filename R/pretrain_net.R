@@ -16,7 +16,7 @@
 #' @export
 #'
 #' @examples
-pretrain_net <- function(n_epochs=15,model,dsl,model_type, learnig_rate, sensitive_test){
+pretrain_net <- function(n_epochs=15,model,dsl,model_type, learnig_rate, sensitive_test, dev){
 
   optimizer <- optim_adam(model$parameters, lr = learnig_rate)
 
@@ -25,7 +25,7 @@ pretrain_net <- function(n_epochs=15,model,dsl,model_type, learnig_rate, sensiti
     return(loss)
   }
 
-  train_eval <- function(model,dsl,optimizer){
+  train_eval <- function(model,dsl,optimizer, dev){
     model$train()
     train_losses <- c()
     coro::loop(for (b in dsl$train_dl) {
@@ -49,14 +49,14 @@ pretrain_net <- function(n_epochs=15,model,dsl,model_type, learnig_rate, sensiti
 
   if(model_type == 0){
     for (epoch in 1:n_epochs) {
-      losses <- train_eval(model,dsl,optimizer)
-      acc<-eval_accuracy(model, dsl$test_ds)
+      losses <- train_eval(model,dsl,optimizer, dev)
+      acc<-eval_accuracy(model, dsl$test_ds, dev)
       cat(sprintf("Preadversary Loss at epoch %d: training: %3.3f, validation: %3.3f, accuracy: %3.3f\n", epoch, losses$train_loss, losses$test_loss, acc))    }
   }
   if(model_type == 1){
     for (epoch in 1:n_epochs) {
-      losses <- train_eval(model,dsl,optimizer)
-      acc<-eval_accuracy(model, dsl$test_ds)
+      losses <- train_eval(model,dsl,optimizer, dev)
+      acc<-eval_accuracy(model, dsl$test_ds, dev)
       stp<-calc_STP(model,dsl$test_ds,sensitive_test)
       cat(sprintf("Preclassifier Loss at epoch %d: training: %3.3f, validation: %3.3f, accuracy: %3.3f, stp: %3.3f\n", epoch, losses$train_loss, losses$test_loss, acc,stp))    }
   }

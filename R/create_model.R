@@ -44,8 +44,7 @@ create_model <- function(train_x,train_y,neurons=c(32,32,32),dimensions=2){
   model <- net(
     n_cont = ncol(data.frame(train_x)),
     Neurons = neurons,
-    output_dim = length(levels(factor(train_y))),
-    p=p
+    output_dim = length(levels(factor(train_y)))
   )
 
   return(model)

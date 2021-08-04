@@ -17,7 +17,7 @@
 #' @examples
 
 
-dataset_loader <- function(train_x,train_y,test_x,test_y,batch_size=25){
+dataset_loader <- function(train_x,train_y,test_x,test_y,batch_size=25,dev){
   new_dataset <- dataset(
 
     name = "new_dataset",
