@@ -8,7 +8,13 @@
 #' @param test_y integer, vector of predictors used for testing
 #' @param sensitive_train integer, vector of sensitive values used for training
 #' @param sensitive_test integer, vector of sensitive values used for testing
+#' @param data_scaled_test
+#' @param PROTECTED numerical vector of sensitive variables
+#' @param PRIVILIGED string label of privileged class in protected
+#' @param DATA numerical table of predictors
 #' @param BATCH_SIZE integer indicating a batch size used in dataloader. Default: 50
+#' @param PARTITION float from [0,1] range setting the size of train vector (test size
+#'                  equals 1-PARTITION). Default = 0.7.
 #' @param NEURONS_CLF integer vector describing a neural architecture of classifier
 #'                    network. Default: c(32,32,32). This notation means that the network
 #'                    has 3 layers with 32 neurons each.
@@ -17,33 +23,32 @@
 #'                    has 3 layers with 32 neurons each.
 #' @param DIMENSION_CLF integer from [0,2] setting nnf_softmax dimension for classifier.
 #'                      Default: 2
-#' @param DMIENSION_ADV integer from [0,2] setting nnf_softmax dimension for adversarial.
+#' @param DIMENSION_ADV integer from [0,2] setting nnf_softmax dimension for adversarial.
 #'                      Default: 2
-#' @param N_EP_PRECLF integer setting number of epochs for preclassifiers training.
-#'                    Default: 5
 #' @param LEARNING_RATE_CLF float from [0,1] setting learning rate for classifier.
 #'                          Default: 0.001
-#' @param PROTECTED numerical vector of sensitive variables
-#' @param PRIVILIGED string label of privileged class in protected
-#' @param PARTITION float from [0,1] range setting the size of train vector (test size
-#'                  equals 1-PARTITION). Default = 0.7.
-#' @param N_EP_PAN integer setting number of epochs for PAN training. Default : 50
 #' @param LEARNING_RATE_ADV float from [0,1] setting learning rate for classifier.
 #'                          Default: 0.001
-#' @param LAMBDA integer parameter regulating learning proccess (intuition: the bigger it is,
-#'               the fairer predictions). Default: 50
-#' @param DATA numerical table of predictors
+#' @param N_EP_PRECLF integer setting number of epochs for preclassifiers training.
+#'                    Default: 5
+#' @param N_EP_ONLY integer setting number of epochs for classifier only training.
+#'                  Default: 30
 #' @param N_EP_PREADV integer setting number of epochs for preadversarials training.
 #'                    Default : 10
-#'
+#' @param N_EP_PAN integer setting number of epochs for PAN training. Default : 50
+#' @param LAMBDA integer parameter regulating learning proccess (intuition: the bigger it is,
+#'               the fairer predictions). Default: 50
 #' @return
 #' @export
 #'
 #' @examples
 fairtrain <- function(train_x, test_x, train_y, test_y, sensitive_train, sensitive_test,
-                      BATCH_SIZE = 50, NEURONS_CLF = c(32,32,32), NEURONS_ADV = c(32,32,32), DIMENSION_CLF = 2, DMIENSION_ADV = 2,
-                      N_EP_PRECLF = 5, LEARNING_RATE_CLF = 0.001, PROTECTED, PRIVILIGED, PARTITION = 0.7,
-                      N_EP_PAN = 50, LEARNING_RATE_ADV = 0.001, LAMBDA = 50, DATA, N_EP_PREADV = 10){
+                      data_scaled_test, PROTECTED, PRIVILIGED, DATA, BATCH_SIZE = 50,
+                      PARTITION = 0.7, NEURONS_CLF = c(32,32,32),
+                      NEURONS_ADV = c(32,32,32), DIMENSION_CLF = 2, DIMENSION_ADV = 2,
+                      LEARNING_RATE_CLF = 0.001, LEARNING_RATE_ADV = 0.001,
+                      N_EP_PRECLF = 5, N_EP_ONLY=30, N_EP_PREADV = 10, N_EP_PAN = 50,
+                      LAMBDA = 50 ){
 
   dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
 
@@ -61,7 +66,7 @@ fairtrain <- function(train_x, test_x, train_y, test_y, sensitive_train, sensiti
 
   eval_accuracy( clf_model, dsl$test_ds, dev)
 
-  exp1 <-  GAN_explainer(test_y,clf_model,DATA,PROTECTED,PRIVILIGED)
+  exp1 <-  Single_explainer(test_y,clf_model,DATA,data_scaled_test,test_y,PROTECTED,PRIVILIGED,BATCH_SIZE,dev)
 
   plot(exp1)
 
@@ -98,7 +103,7 @@ fairtrain <- function(train_x, test_x, train_y, test_y, sensitive_train, sensiti
             sensitive_test, BATCH_SIZE, LEARNING_RATE_ADV,
             LEARNING_RATE_CLF, LAMBDA)
 
-  exp <-  GAN_explainer(test_y,clf_model,DATA,PROTECTED,PRIVILIGED)
+  exp <-  Single_explainer(test_y,clf_model,DATA,data_scaled_test,test_y,PROTECTED,PRIVILIGED,BATCH_SIZE,dev)
 
   plot(exp)
 }

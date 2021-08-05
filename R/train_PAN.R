@@ -33,8 +33,8 @@ train_PAN <- function(N_EP_PAN, dsl, clf_model, adv_model, dev, sensitive_train,
   adversary_acc<-c()
   classifier_acc<-c()
 
-  for (epoch in 1:N_EP_GAN){
-    cat(sprintf("GAN epoch %d \n", epoch))
+  for (epoch in 1:N_EP_PAN){
+    cat(sprintf("PAN epoch %d \n", epoch))
     train_dl <- dsl$train_ds %>% dataloader(batch_size = dsl$train_ds$.length(),
                                             shuffle = FALSE)
     iter <- train_dl$.iter()
@@ -46,7 +46,7 @@ train_PAN <- function(N_EP_PAN, dsl, clf_model, adv_model, dev, sensitive_train,
     train_x <- matrix(train_x, ncol=1)
     train_y <- sensitive_train
 
-    adv_dsl <- dataset_loader(train_x,train_y,train_x,train_y,BATCH_SIZE)
+    adv_dsl <- dataset_loader(train_x,train_y,train_x,train_y,BATCH_SIZE,dev)
 
     adv_optimizer <- optim_adam(adv_model$parameters, lr = LEARNING_RATE_ADV)
     clf_optimizer <- optim_adam(clf_model$parameters, lr = LEARNING_RATE_CLF)
@@ -80,15 +80,15 @@ train_PAN <- function(N_EP_PAN, dsl, clf_model, adv_model, dev, sensitive_train,
 
 
     if(epoch/1 == as.integer(epoch/1)){
-      acc<-eval_clf(adv_model,adv_dsl$test_ds)
+      acc<-eval_accuracy(adv_model,adv_dsl$test_ds,dev)
       adversary_acc<-c(adversary_acc,acc)
       cat(sprintf("Adversary accuracy at epoch %d: %3.3f\n", epoch,acc))
 
-      cacc<-eval_clf(clf_model,dsl$test_ds)
+      cacc<-eval_accuracy(clf_model,dsl$test_ds,dev)
       classifier_acc<-c(classifier_acc,cacc)
       cat(sprintf("Classifier accuracy at epoch %d: %3.3f\n", epoch,cacc))
     }
-    stp<-STP_calc(clf_model,dsl$test_ds,sensitive_test)
+    stp<-calc_STP(clf_model,dsl$test_ds,sensitive_test,dev)
     STP<-c(STP,stp)
     adversary_losses<-c(adversary_losses,mean(train_losses))
     #classifier_losses<-c(classifier_losses,clf_train_losses)

@@ -5,37 +5,44 @@
 #'
 #' @param target numerical target of classification task
 #' @param model first model we want to explain
-#' @param model2 second model we want to explain
-#' @param model3 third model we want to explain
 #' @param data_set numerical table of predictors
 #' @param protected numerical vector of sensitive variables
 #' @param privileged string label of privileged class in protected
+#' @param data_scaled_test
 #'
 #' @return fobject
 #' @export
 #'
 #' @examples
-Single_explainer <- function(target,model,data_set,protected,privileged){
+Single_explainer <- function(target,model,data_set,data_scaled_test,test_y,protected,privileged,batch_size,dev){
 
   y_numeric <- as.numeric(target)-1
   custom_predict <- function(mmodel, newdata) {
-    pp<-make_preds_prob(model = mmodel, test_ds = dataset_loader(data_scaled_test,test_y,data_scaled_test,test_y)$test_ds)
+    print(dev)
+    pp<-make_preds_prob(model = mmodel, test_ds = dataset_loader(data_scaled_test,test_y,data_scaled_test,test_y,batch_size,dev)$test_ds,dev)
     pp[,2]
   }
+
+  print(custom_predict(model))
+  print(protected)
+
   aps_model_exp <- DALEX::explain(model, data = data_set, y = y_numeric,
                                   predict_function = custom_predict,
                                   type = 'classification')
+
+  print("hi")
+  print(aps_model_exp)
   fobject <- fairness_check(aps_model_exp,
                             protected = protected,
                             privileged = privileged)
   return(fobject)
 }
 
-Triple_explainer <- function(target,model,model2,model3,data_set,protected,privileged){
+Triple_explainer <- function(target,model,model2,model3,data_set,data_scaled_test,test_y,protected,privileged,dev){
 
   y_numeric <- as.numeric(target)-1
   custom_predict <- function(mmodel, newdata) {
-    pp<-make_preds_prob(model = mmodel, test_ds = dataset_loader(data_scaled_test,test_y,data_scaled_test,test_y)$test_ds)
+    pp<-make_preds_prob(model = mmodel, test_ds = dataset_loader(data_scaled_test,test_y,data_scaled_test,test_y,batch_size,dev)$test_ds,dev)
     pp[,2]
   }
   aps_model_exp <- DALEX::explain(label ='PAN',model, data = data_set, y = y_numeric,
@@ -53,11 +60,11 @@ Triple_explainer <- function(target,model,model2,model3,data_set,protected,privi
   return(fobject)
 }
 
-Dual_explainer <- function(target,model,model2,data_set,protected,privileged){
+Dual_explainer <- function(target,model,model2,data_set,data_scaled_test,test_y,protected,privileged,dev){
 
   y_numeric <- as.numeric(target)-1
   custom_predict <- function(mmodel, newdata) {
-    pp<-make_preds_prob(model = mmodel, test_ds = dataset_loader(data_scaled_test,test_y,data_scaled_test,test_y)$test_ds)
+    pp<-make_preds_prob(model = mmodel, test_ds = dataset_loader(data_scaled_test,test_y,data_scaled_test,test_y,batch_size,dev)$test_ds,dev)
     pp[,2]
   }
   aps_model_exp <- DALEX::explain(label ='classfier_only',model, data = data_set, y = y_numeric,

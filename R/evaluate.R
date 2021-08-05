@@ -35,8 +35,8 @@ eval_accuracy <- function(model,test_ds,dev){
 #' @export
 #'
 #' @examples
-calc_STP<-function(model,test_ds,sensitive){
-  preds<-make_preds(model,test_ds)-1
+calc_STP<-function(model,test_ds,sensitive,dev){
+  preds<-make_preds(model,test_ds,dev)-1
   real<-(test_ds$y$to(device = "cpu") %>% as.array())-1
   sensitive<-sensitive-1
   # print(sum(real))

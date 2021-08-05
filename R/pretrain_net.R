@@ -40,7 +40,7 @@ pretrain_net <- function(n_epochs=15,model,dsl,model_type, learnig_rate, sensiti
     valid_losses <- c()
     coro::loop(for (b in dsl$test_dl) {
       output <- model(b$x_cont$to(device = dev))
-      loss <- calc_loss(lambda,output,b$y$to(device = dev))
+      loss <- calc_loss(output,b$y$to(device = dev))
       valid_losses <- c(valid_losses, loss$item())
     })
 
@@ -57,7 +57,7 @@ pretrain_net <- function(n_epochs=15,model,dsl,model_type, learnig_rate, sensiti
     for (epoch in 1:n_epochs) {
       losses <- train_eval(model,dsl,optimizer, dev)
       acc<-eval_accuracy(model, dsl$test_ds, dev)
-      stp<-calc_STP(model,dsl$test_ds,sensitive_test)
+      stp<-calc_STP(model,dsl$test_ds,sensitive_test,dev)
       cat(sprintf("Preclassifier Loss at epoch %d: training: %3.3f, validation: %3.3f, accuracy: %3.3f, stp: %3.3f\n", epoch, losses$train_loss, losses$test_loss, acc,stp))    }
   }
   return(list("train_loss"=losses$train_loss, "test_loss"= losses$test_loss))
