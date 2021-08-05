@@ -6,12 +6,13 @@
 #' last one is nnf_softmax. The user can provide demanded architecture of the leyers and
 #' select a softmaxes dimension.
 #'
-#' @param train_x train numerical matrix of predictors
-#' @param train_y train numerical vector of target
+#' @param train_x numeric, scaled matrix of predictors used for training
+#' @param train_y numeric, scaled vector of target used for training
 #' @param neurons vector of integers describing the architecture. Notation c(8,16,8) means
 #'                3 layer neural network with 8,16 and 8 neurons in 1st, 2nd and 3rd
 #'                layer. Default: c(32,32,32)
-#' @param dimensions integer 0, 1 or 2 for the softmaxes dimension. Default: 2.
+#' @param dimensions integer from [0,2] setting nnf_softmax dimension for classifier.
+#'                   Default: 2
 #'
 #' @return neural network model
 #' @export

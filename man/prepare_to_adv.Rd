@@ -4,14 +4,15 @@
 \alias{prepare_to_adv}
 \title{Prepares data for adversarials pretrain}
 \usage{
-prepare_to_adv(preds, sensitive, PARTITION)
+prepare_to_adv(preds, sensitive, partition = 0.7)
 }
 \arguments{
 \item{preds}{numeric vector of predictions of target value made by classifier (preferably the probabilistic ones)}
 
 \item{sensitive}{integer vector of sensitive attribute which adversarial has to predict}
 
-\item{PARTITION}{float from [0,1] range meaning the size of train vector (test equals 1-PARTITION)}
+\item{partition}{float from [0,1] range setting the size of train vector (test size
+equals 1-partition). Default = 0.7.}
 }
 \value{
 list of four numeric lists with x and y data for train and test respectively

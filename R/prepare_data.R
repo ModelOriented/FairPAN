@@ -1,15 +1,14 @@
-
-
 #' Create data sets and dataloaders
 #'
 #' Create two data sets, from given ..x matrices and ..y vectors and converts them into
 #' dataloaders with provided batch size.
 #'
-#' @param train_x numerical matrix with training predictor variables
-#' @param train_y numerical vector with training target variables
-#' @param test_x numerical matrix with test predictor variables
-#' @param test_y numerical vector with test target variables
-#' @param batch_size integer defining the size of batch size in dataloader
+#' @param train_x numeric, scaled matrix of predictors used for training
+#' @param test_x integer, matrix of predictors used for testing
+#' @param train_y numeric, scaled vector of target used for training
+#' @param test_y integer, vector of predictors used for testing
+#' @param batch_size integer indicating a batch size used in dataloader. Default: 50
+#' @param dev device used to calculations (cpu or gpu)
 #'
 #' @return list of two data sets and two dataloaders for train and test respectively
 #' @export
@@ -17,7 +16,7 @@
 #' @examples
 
 
-dataset_loader <- function(train_x,train_y,test_x,test_y,batch_size=25,dev){
+dataset_loader <- function(train_x,train_y,test_x,test_y,batch_size=50,dev){
   new_dataset <- dataset(
 
     name = "new_dataset",
@@ -51,7 +50,8 @@ dataset_loader <- function(train_x,train_y,test_x,test_y,batch_size=25,dev){
 #'
 #' @param preds numeric vector of predictions of target value made by classifier (preferably the probabilistic ones)
 #' @param sensitive integer vector of sensitive attribute which adversarial has to predict
-#' @param PARTITION float from [0,1] range meaning the size of train vector (test equals 1-PARTITION)
+#' @param partition float from [0,1] range setting the size of train vector (test size
+#'                  equals 1-partition). Default = 0.7.
 #'
 #' @return list of four numeric lists with x and y data for train and test respectively
 #' @export
@@ -59,9 +59,9 @@ dataset_loader <- function(train_x,train_y,test_x,test_y,batch_size=25,dev){
 #' @examples
 #'
 #'
-prepare_to_adv <- function(preds, sensitive, PARTITION){
+prepare_to_adv <- function(preds, sensitive, partition=0.7){
   set.seed(123)
-  train_indices <- sample(1:length(preds),  length(preds) * PARTITION)
+  train_indices <- sample(1:length(preds),  length(preds) * partition)
   train_x <- as.numeric(preds[train_indices])
   train_x <- matrix(train_x, ncol=1)
   train_y <- sensitive[train_indices]

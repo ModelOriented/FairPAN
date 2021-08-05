@@ -9,26 +9,27 @@ pretrain_net(
   model,
   dsl,
   model_type,
-  learnig_rate,
-  sensitive_test
+  learning_rate = 0.001,
+  sensitive_test,
+  dev
 )
 }
 \arguments{
-\item{n_epochs}{indicates the number of epochs for neural network pretrain}
+\item{n_epochs}{integer setting number of epochs for training. Default: 15}
 
 \item{model}{neural network model we want to train}
 
 \item{dsl}{dataset_loader object for the training}
 
-\item{model_type}{indicates which model (0 for adversarial, 1 for classifier)}
+\item{model_type}{indicates which model we train (0 for adversarial, 1 for classifier)}
 
-\item{learnig_rate}{float, setting learning rate for the training}
+\item{learning_rate}{float from [0,1] setting learning rate for model. Default: 0.001}
 
 \item{sensitive_test}{test vector for sensitive variable used to calculate STP}
-}
-\value{
 
+\item{dev}{device used to calculations (cpu or gpu)}
 }
 \description{
-Pretrains the neural network
+The function pretrain both the classifier and adversarial model. You can select which
+model it is by setting model_type parameter
 }

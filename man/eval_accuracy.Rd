@@ -4,12 +4,14 @@
 \alias{eval_accuracy}
 \title{Evaluates model by calculating its accuracy}
 \usage{
-eval_accuracy(model, test_ds)
+eval_accuracy(model, test_ds, dev)
 }
 \arguments{
 \item{model}{neural network model we want to evaluate}
 
 \item{test_ds}{dataset object used for making test predictions and evaluation}
+
+\item{dev}{device used to calculations (cpu or gpu)}
 }
 \value{
 float accuracy of provided model

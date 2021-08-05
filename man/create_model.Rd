@@ -7,15 +7,16 @@
 create_model(train_x, train_y, neurons = c(32, 32, 32), dimensions = 2)
 }
 \arguments{
-\item{train_x}{train numerical matrix of predictors}
+\item{train_x}{numeric, scaled matrix of predictors used for training}
 
-\item{train_y}{train numerical vector of target}
+\item{train_y}{numeric, scaled vector of target used for training}
 
 \item{neurons}{vector of integers describing the architecture. Notation c(8,16,8) means
 3 layer neural network with 8,16 and 8 neurons in 1st, 2nd and 3rd
 layer. Default: c(32,32,32)}
 
-\item{dimensions}{integer 0, 1 or 2 for the softmaxes dimension. Default: 2.}
+\item{dimensions}{integer from [0,2] setting nnf_softmax dimension for classifier.
+Default: 2}
 }
 \value{
 neural network model

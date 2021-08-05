@@ -4,7 +4,7 @@
 \alias{calc_STP}
 \title{Calculates STP ratio for the model}
 \usage{
-calc_STP(model, test_ds, sensitive)
+calc_STP(model, test_ds, sensitive, dev)
 }
 \arguments{
 \item{model}{neural network model we want to evaluate}
@@ -12,11 +12,13 @@ calc_STP(model, test_ds, sensitive)
 \item{test_ds}{dataset object used for making predictions for STP}
 
 \item{sensitive}{numerical vector of sensitive variable}
+
+\item{dev}{device used to calculations (cpu or gpu)}
 }
 \value{
 float, STP ratio
 }
 \description{
-Calcucates Statistical Parity ((TP+FP)/(TP+FP+TN+FN)) ratio for given model, which is
-the most important fairness metric
+Calcucates Statistical Parity ((TP+FP)/(TP+FP+TN+FN)) ratio between privileged and
+discriminated label for given model, which is the most important fairness metric.
 }

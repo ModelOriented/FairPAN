@@ -5,21 +5,21 @@
 \title{Trains PAN model}
 \usage{
 train_PAN(
-  N_EP_PAN,
+  n_ep_pan,
   dsl,
   clf_model,
   adv_model,
   dev,
   sensitive_train,
   sensitive_test,
-  BATCH_SIZE,
-  LEARNING_RATE_ADV,
-  LEARNING_RATE_CLF,
-  LAMBDA
+  batch_size,
+  learning_rate_adv,
+  learning_rate_clf,
+  lambda
 )
 }
 \arguments{
-\item{N_EP_PAN}{number of epochs for PAN training}
+\item{n_ep_pan}{number of epochs for PAN training}
 
 \item{dsl}{dataset_loader object for classificator network}
 
@@ -31,19 +31,16 @@ train_PAN(
 
 \item{sensitive_train}{integer vector of sensitive attribute used for training}
 
-\item{BATCH_SIZE}{batch size used in adversarials dataset_loader}
+\item{batch_size}{batch size used in adversarials dataset_loader}
 
-\item{LEARNING_RATE_ADV}{learning rate of adversarial}
+\item{learning_rate_adv}{learning rate of adversarial}
 
-\item{LEARNING_RATE_CLF}{learning rate of classifier}
+\item{learning_rate_clf}{learning rate of classifier}
 
-\item{LAMBDA}{parameter regulating learning proccess (intuition: the bigger it is,
+\item{lambda}{parameter regulating learning proccess (intuition: the bigger it is,
 the fairer predictions).}
 
 \item{sensitive_testnteger}{vector of sensitive attribute used for testing}
-}
-\value{
-
 }
 \description{
 Trains Predictive Adversarial Network model, which means that it proceeds with the

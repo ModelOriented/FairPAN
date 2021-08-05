@@ -4,18 +4,20 @@
 \alias{dataset_loader}
 \title{Create data sets and dataloaders}
 \usage{
-dataset_loader(train_x, train_y, test_x, test_y, batch_size = 25)
+dataset_loader(train_x, train_y, test_x, test_y, batch_size = 50, dev)
 }
 \arguments{
-\item{train_x}{numerical matrix with training predictor variables}
+\item{train_x}{numeric, scaled matrix of predictors used for training}
 
-\item{train_y}{numerical vector with training target variables}
+\item{train_y}{numeric, scaled vector of target used for training}
 
-\item{test_x}{numerical matrix with test predictor variables}
+\item{test_x}{integer, matrix of predictors used for testing}
 
-\item{test_y}{numerical vector with test target variables}
+\item{test_y}{integer, vector of predictors used for testing}
 
-\item{batch_size}{integer defining the size of batch size in dataloader}
+\item{batch_size}{integer indicating a batch size used in dataloader. Default: 50}
+
+\item{dev}{device used to calculations (cpu or gpu)}
 }
 \value{
 list of two data sets and two dataloaders for train and test respectively

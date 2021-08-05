@@ -2,6 +2,7 @@
 #'
 #' @param model neural network model we want to evaluate
 #' @param test_ds dataset object used for making test predictions and evaluation
+#' @param dev device used to calculations (cpu or gpu)
 #'
 #' @return float accuracy of provided model
 #' @export
@@ -24,12 +25,13 @@ eval_accuracy <- function(model,test_ds,dev){
 
 #' Calculates STP ratio for the model
 #'
-#' Calcucates Statistical Parity ((TP+FP)/(TP+FP+TN+FN)) ratio for given model, which is
-#' the most important fairness metric
+#' Calcucates Statistical Parity ((TP+FP)/(TP+FP+TN+FN)) ratio between privileged and
+#' discriminated label for given model, which is the most important fairness metric.
 #'
 #' @param model neural network model we want to evaluate
 #' @param test_ds dataset object used for making predictions for STP
 #' @param sensitive numerical vector of sensitive variable
+#' @param dev device used to calculations (cpu or gpu)
 #'
 #' @return float, STP ratio
 #' @export

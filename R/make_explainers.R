@@ -1,16 +1,19 @@
-#' Provides fairmodels object for selected model/s
+#' Provides fairmodels object for selected model
 #'
-#' The functions below provide fairmodels object for one, two or three neural network
-#' models with the usage of DALEX explainer
+#' The functions below provide fairmodels object for one neural network
+#' model with the usage of DALEX explainer and fairmodels fairness_check.
 #'
 #' @param target numerical target of classification task
-#' @param model first model we want to explain
+#' @param model the model we want to explain
 #' @param data_set numerical table of predictors
 #' @param protected numerical vector of sensitive variables
 #' @param privileged string label of privileged class in protected
-#' @param data_scaled_test
+#' @param data_scaled_test scaled matrix of numerical values representing predictors
+#' @param test_y integer, vector of predictors used for testing
+#' @param batch_size integer indicating a batch size used in dataloader.
+#' @param dev device used to calculations (cpu or gpu)
 #'
-#' @return fobject
+#' @return fobject - fairness object
 #' @export
 #'
 #' @examples
@@ -23,22 +26,38 @@ Single_explainer <- function(target,model,data_set,data_scaled_test,test_y,prote
     pp[,2]
   }
 
-  print(custom_predict(model))
-  print(protected)
-
   aps_model_exp <- DALEX::explain(model, data = data_set, y = y_numeric,
                                   predict_function = custom_predict,
                                   type = 'classification')
 
-  print("hi")
-  print(aps_model_exp)
   fobject <- fairness_check(aps_model_exp,
                             protected = protected,
                             privileged = privileged)
   return(fobject)
 }
 
-Triple_explainer <- function(target,model,model2,model3,data_set,data_scaled_test,test_y,protected,privileged,dev){
+#' Provides fairmodels object for selected three model
+#'
+#' The functions below provide fairmodels object for three neural network
+#' models with the usage of DALEX explainer and fairmodels fairness_check.
+#'
+#' @param target numerical target of classification task
+#' @param model first model we want to explain
+#' @param model2 second model we want to explain
+#' @param model3 third model we want to explain
+#' @param data_set numerical table of predictors
+#' @param protected numerical vector of sensitive variables
+#' @param privileged string label of privileged class in protected
+#' @param data_scaled_test scaled matrix of numerical values representing predictors
+#' @param test_y integer, vector of predictors used for testing
+#' @param batch_size integer indicating a batch size used in dataloader.
+#' @param dev device used to calculations (cpu or gpu)
+#'
+#' @return fobject - fairness object
+#' @export
+#'
+#' @examples
+Triple_explainer <- function(target,model,model2,model3,data_set,data_scaled_test,test_y,protected,privileged,batch_size,dev){
 
   y_numeric <- as.numeric(target)-1
   custom_predict <- function(mmodel, newdata) {
@@ -60,7 +79,27 @@ Triple_explainer <- function(target,model,model2,model3,data_set,data_scaled_tes
   return(fobject)
 }
 
-Dual_explainer <- function(target,model,model2,data_set,data_scaled_test,test_y,protected,privileged,dev){
+#' Provides fairmodels object for selected two model
+#'
+#' The functions below provide fairmodels object for two neural network
+#' models with the usage of DALEX explainer and fairmodels fairness_check.
+#'
+#' @param target numerical target of classification task
+#' @param model first model we want to explain
+#' @param model2 second model we want to explain
+#' @param data_set numerical table of predictors
+#' @param protected numerical vector of sensitive variables
+#' @param privileged string label of privileged class in protected
+#' @param data_scaled_test scaled matrix of numerical values representing predictors
+#' @param test_y integer, vector of predictors used for testing
+#' @param batch_size integer indicating a batch size used in dataloader.
+#' @param dev device used to calculations (cpu or gpu)
+#'
+#' @return fobject - fairness object
+#' @export
+#'
+#' @examples
+Dual_explainer <- function(target,model,model2,data_set,data_scaled_test,test_y,protected,privileged,batch_size,dev){
 
   y_numeric <- as.numeric(target)-1
   custom_predict <- function(mmodel, newdata) {

@@ -2,23 +2,24 @@
 
 #' Pretrains the neural network
 #'
+#' The function pretrain both the classifier and adversarial model. You can select which
+#' model it is by setting model_type parameter
 #'
-#'
-#'
-#' @param n_epochs indicates the number of epochs for neural network pretrain
+#' @param n_epochs integer setting number of epochs for training. Default: 15
 #' @param model neural network model we want to train
 #' @param dsl dataset_loader object for the training
-#' @param model_type indicates which model (0 for adversarial, 1 for classifier)
-#' @param learnig_rate float, setting learning rate for the training
+#' @param model_type indicates which model we train (0 for adversarial, 1 for classifier)
+#' @param learning_rate float from [0,1] setting learning rate for model. Default: 0.001
 #' @param sensitive_test test vector for sensitive variable used to calculate STP
+#' @param dev device used to calculations (cpu or gpu)
 #'
-#' @return
+#' @return NULL
 #' @export
 #'
 #' @examples
-pretrain_net <- function(n_epochs=15,model,dsl,model_type, learnig_rate, sensitive_test, dev){
+pretrain_net <- function(n_epochs=15,model,dsl,model_type, learning_rate=0.001, sensitive_test, dev){
 
-  optimizer <- optim_adam(model$parameters, lr = learnig_rate)
+  optimizer <- optim_adam(model$parameters, lr = learning_rate)
 
   calc_loss <- function(output,batch){
     loss <- nnf_cross_entropy(output, batch)

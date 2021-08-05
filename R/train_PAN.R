@@ -6,26 +6,26 @@
 #' mutual training of adverssarial on whole data set and classifier on a single mini batch.
 #' The result is a fairer classifier.
 #'
-#' @param N_EP_PAN number of epochs for PAN training
+#' @param n_ep_pan number of epochs for PAN training
 #' @param dsl dataset_loader object for classificator network
 #' @param clf_model classifier model (preferably after pretrain)
 #' @param adv_model adversarial model (preferably after pretrain)
 #' @param dev device used to computation ("cuda" or "cpu")
 #' @param sensitive_train integer vector of sensitive attribute used for training
-#' @param sensitive_testnteger vector of sensitive attribute used for testing
-#' @param BATCH_SIZE batch size used in adversarials dataset_loader
-#' @param LEARNING_RATE_ADV learning rate of adversarial
-#' @param LEARNING_RATE_CLF learning rate of classifier
-#' @param LAMBDA parameter regulating learning proccess (intuition: the bigger it is,
+#' @param sensitive_test integer vector of sensitive attribute used for testing
+#' @param batch_size batch size used in adversarials dataset_loader
+#' @param learning_rate_adv learning rate of adversarial
+#' @param learning_rate_clf learning rate of classifier
+#' @param lambda parameter regulating learning proccess (intuition: the bigger it is,
 #'               the fairer predictions).
 #'
-#' @return
+#' @return NULL
 #' @export
 #'
 #' @examples
-train_PAN <- function(N_EP_PAN, dsl, clf_model, adv_model, dev, sensitive_train,
-                      sensitive_test, BATCH_SIZE, LEARNING_RATE_ADV,
-                      LEARNING_RATE_CLF, LAMBDA){
+train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, dev, sensitive_train,
+                      sensitive_test, batch_size, learning_rate_adv,
+                      learning_rate_clf, lambda){
 
   adversary_losses<-c()
   classifier_losses<-c()
@@ -33,7 +33,7 @@ train_PAN <- function(N_EP_PAN, dsl, clf_model, adv_model, dev, sensitive_train,
   adversary_acc<-c()
   classifier_acc<-c()
 
-  for (epoch in 1:N_EP_PAN){
+  for (epoch in 1:n_ep_pan){
     cat(sprintf("PAN epoch %d \n", epoch))
     train_dl <- dsl$train_ds %>% dataloader(batch_size = dsl$train_ds$.length(),
                                             shuffle = FALSE)
@@ -46,10 +46,10 @@ train_PAN <- function(N_EP_PAN, dsl, clf_model, adv_model, dev, sensitive_train,
     train_x <- matrix(train_x, ncol=1)
     train_y <- sensitive_train
 
-    adv_dsl <- dataset_loader(train_x,train_y,train_x,train_y,BATCH_SIZE,dev)
+    adv_dsl <- dataset_loader(train_x,train_y,train_x,train_y,batch_size,dev)
 
-    adv_optimizer <- optim_adam(adv_model$parameters, lr = LEARNING_RATE_ADV)
-    clf_optimizer <- optim_adam(clf_model$parameters, lr = LEARNING_RATE_CLF)
+    adv_optimizer <- optim_adam(adv_model$parameters, lr = learning_rate_adv)
+    clf_optimizer <- optim_adam(clf_model$parameters, lr = learning_rate_clf)
     adv_model$train()
     clf_model$train()
     train_losses <- c()
@@ -58,7 +58,7 @@ train_PAN <- function(N_EP_PAN, dsl, clf_model, adv_model, dev, sensitive_train,
     coro::loop(for (b in adv_dsl$train_dl) {
       adv_optimizer$zero_grad()
       output <- adv_model(b$x_cont$to(device = dev))
-      loss <- nnf_cross_entropy(output, b$y$to(device = dev))*LAMBDA
+      loss <- nnf_cross_entropy(output, b$y$to(device = dev))*lambda
       loss$backward()
       adv_optimizer$step()
       train_losses <- c(train_losses, loss$item())
@@ -68,7 +68,7 @@ train_PAN <- function(N_EP_PAN, dsl, clf_model, adv_model, dev, sensitive_train,
     iterator<-adv_dsl$train_dl$.iter()
     b <- iterator$.next()
     output <- adv_model(b$x_cont$to(device = dev))
-    loss <- nnf_cross_entropy(output, b$y$to(device = dev))*LAMBDA
+    loss <- nnf_cross_entropy(output, b$y$to(device = dev))*lambda
 
     iterator<-dsl$train_dl$.iter()
     b <- iterator$.next()
