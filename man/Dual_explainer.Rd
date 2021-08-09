@@ -2,12 +2,14 @@
 % Please edit documentation in R/make_explainers.R
 \name{Dual_explainer}
 \alias{Dual_explainer}
-\title{Provides fairmodels object for selected two model}
+\title{Provides fairmodels object for selected two models}
 \usage{
 Dual_explainer(
   target,
   model,
   model2,
+  model_name,
+  model_name2,
   data_set,
   data_scaled_test,
   test_y,

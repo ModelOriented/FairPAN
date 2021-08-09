@@ -23,5 +23,7 @@ train and test vectors
 }
 \examples{
 
-
+preds <-c(0.312,0.343,0.932,0.754,0.436,0.185,0.527,0.492,0.743,0.011)
+sensitive <- c(1,1,2,2,1,1,2,2,2,1)
+prepare_to_adv(preds,sensitive,partition=0.6)
 }

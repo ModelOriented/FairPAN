@@ -7,6 +7,7 @@
 Single_explainer(
   target,
   model,
+  model_name,
   data_set,
   data_scaled_test,
   test_y,

@@ -26,3 +26,11 @@ list of two data sets and two dataloaders for train and test respectively
 Create two data sets, from given ..x matrices and ..y vectors and converts them into
 dataloaders with provided batch size.
 }
+\examples{
+train_x = matrix(c(1,2,3,4,5,6),nrow=3)
+train_y = c(1,2,3)
+test_x = matrix(c(1,2,3,4),nrow=2)
+test_y = c(1,2)
+dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+dataset_loader(train_x,train_y,test_x,test_y,batch_size=1,dev)
+}

@@ -15,7 +15,9 @@ train_PAN(
   batch_size,
   learning_rate_adv,
   learning_rate_clf,
-  lambda
+  lambda,
+  verbose,
+  monitor
 )
 }
 \arguments{

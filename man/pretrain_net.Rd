@@ -11,7 +11,9 @@ pretrain_net(
   model_type,
   learning_rate = 0.001,
   sensitive_test,
-  dev
+  dev,
+  verbose = TRUE,
+  monitor = TRUE
 )
 }
 \arguments{
