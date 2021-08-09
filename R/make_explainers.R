@@ -25,6 +25,7 @@ Single_explainer <- function(target,model,model_name,data_set,data_scaled_test,t
     pp<-make_preds_prob(model = mmodel, test_ds = dataset_loader(data_scaled_test,test_y,data_scaled_test,test_y,batch_size,dev)$test_ds,dev)
     pp[,2]
   }
+  #print(custom_predict(model,c(1,2,3)))
 
   aps_model_exp <- DALEX::explain(label=model_name,model, data = data_set, y = y_numeric,
                                   predict_function = custom_predict,

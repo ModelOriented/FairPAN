@@ -48,7 +48,6 @@ pretrain <- function(clf_model=NULL,adv_model=NULL,trained=0,train_x=NULL,train_
                      neurons_clf=c(32,32,32),neurons_adv=c(32,32,32),dimension_clf=2,
                      dimension_adv=2,learning_rate_clf=0.001,
                      learning_rate_adv=0.001,n_ep_preclf=5,n_ep_preadv=10,dsl,dev){
-
   if(is.null(clf_model)){
     clf_model <- create_model(train_x,train_y, neurons_clf, dimension_clf)
   }

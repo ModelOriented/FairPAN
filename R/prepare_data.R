@@ -24,8 +24,8 @@
 
 dataset_loader <- function(train_x,train_y,test_x,test_y,batch_size=50,dev){
 
-  if(!is.numeric(train_x)||!is.matrix(train_x)) stop("train_x must be numeric matrix of predictors")
-  if(!is.numeric(test_x)||!is.matrix(test_x)) stop("test_x must be numeric matrix of predictors")
+  if(!is.numeric(train_x)) stop("train_x must be numeric")
+  if(!is.numeric(test_x)) stop("test_x must be numeric")
   if(!is.numeric(train_y)||!is.vector(train_y)) stop("train_y must be numeric vector of target")
   if(!is.numeric(test_y)||!is.vector(test_y)) stop("test_y must be numeric vector of target")
   if(!is.numeric(batch_size)) stop("batch size must be numeric")
@@ -128,6 +128,8 @@ preprocess <- function(data,target_name,sensitive_name,drop_also,sample=1,train_
   if (!is.character(drop_also)) stop("drop_also must be a character vector")
   if (!is.list(data)) stop("data must be a list")
 
+  #dodać jednak balansowanie, bo bez tego jest lipa
+
   data <- na.omit(data)
   set.seed(seed)
   sample_indices <- sample(1:nrow(data), nrow(data)*sample)
@@ -156,8 +158,8 @@ preprocess <- function(data,target_name,sensitive_name,drop_also,sample=1,train_
   test_indices <- sample(rest_indices, test_size/(1-train_size)*length(rest_indices))
   validation_indices <- setdiff(rest_indices, test_indices)
 
-  data_scaled_test<-data_scaled[test_indices]
-  data_scaled_valid<-data_scaled[validation_indices]
+  data_scaled_test<-data_scaled[test_indices,]
+  data_scaled_valid<-data_scaled[validation_indices,]
 
   train_x <- data_scaled[train_indices,]
   train_y <- target[train_indices]

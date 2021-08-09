@@ -25,7 +25,7 @@
 #' @examples
 train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, dev, sensitive_train,
                       sensitive_test, batch_size, learning_rate_adv,
-                      learning_rate_clf, lambda, verbose, monitor){
+                      learning_rate_clf, lambda, verbose=TRUE, monitor=TRUE){
   if(monitor){
     adversary_losses<-c()
     STP<-c()
