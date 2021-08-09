@@ -17,7 +17,7 @@
 #' @export
 #'
 #' @examples
-pretrain_net <- function(n_epochs=15,model,dsl,model_type, learning_rate=0.001, sensitive_test, dev){
+pretrain_net <- function(n_epochs=15,model,dsl,model_type, learning_rate=0.001, sensitive_test, dev, verbose=TRUE, monitor=TRUE){
 
   optimizer <- optim_adam(model$parameters, lr = learning_rate)
 
@@ -51,15 +51,37 @@ pretrain_net <- function(n_epochs=15,model,dsl,model_type, learning_rate=0.001, 
   if(model_type == 0){
     for (epoch in 1:n_epochs) {
       losses <- train_eval(model,dsl,optimizer, dev)
-      acc<-eval_accuracy(model, dsl$test_ds, dev)
-      cat(sprintf("Preadversary Loss at epoch %d: training: %3.3f, validation: %3.3f, accuracy: %3.3f\n", epoch, losses$train_loss, losses$test_loss, acc))    }
+      if(monitor){
+        acc<-eval_accuracy(model, dsl$test_ds, dev)
+        verbose_cat(sprintf("Preadversary at epoch %d: training loss: %3.3f, validation: %3.3f, accuracy: %3.3f\n", epoch, losses$train_loss, losses$test_loss, acc),verbose=verbose)
+      }else{
+        verbose_cat(sprintf("Preadversary at epoch %d: training loss: %3.3f, validation: %3.3f\n", epoch, losses$train_loss, losses$test_loss),verbose=verbose)
+      }
+    }
   }
   if(model_type == 1){
     for (epoch in 1:n_epochs) {
       losses <- train_eval(model,dsl,optimizer, dev)
-      acc<-eval_accuracy(model, dsl$test_ds, dev)
-      stp<-calc_STP(model,dsl$test_ds,sensitive_test,dev)
-      cat(sprintf("Preclassifier Loss at epoch %d: training: %3.3f, validation: %3.3f, accuracy: %3.3f, stp: %3.3f\n", epoch, losses$train_loss, losses$test_loss, acc,stp))    }
+      if(monitor){
+        acc<-eval_accuracy(model, dsl$test_ds, dev)
+        stp<-calc_STP(model,dsl$test_ds,sensitive_test,dev)
+        verbose_cat(sprintf("Preclassifier at epoch %d: training loss: %3.3f, validation: %3.3f, accuracy: %3.3f, STPR: %3.3f\n", epoch, losses$train_loss, losses$test_loss, acc,stp),verbose=verbose)
+      }else{
+        verbose_cat(sprintf("Preclassifier at epoch %d: training loss: %3.3f, validation: %3.3f\n", epoch, losses$train_loss, losses$test_loss),verbose=verbose)
+      }
+    }
+  }
+  if(model_type == 2){
+    for (epoch in 1:n_epochs) {
+      losses <- train_eval(model,dsl,optimizer, dev)
+      if(monitor){
+        acc<-eval_accuracy(model, dsl$test_ds, dev)
+        stp<-calc_STP(model,dsl$test_ds,sensitive_test,dev)
+        verbose_cat(sprintf("Classifier only at epoch %d: training loss: %3.3f, validation: %3.3f, accuracy: %3.3f, STPR: %3.3f\n", epoch, losses$train_loss, losses$test_loss, acc,stp),verbose=verbose)
+      }else{
+        verbose_cat(sprintf("Classifier only at epoch %d: training loss: %3.3f, validation: %3.3f\n", epoch, losses$train_loss, losses$test_loss),verbose=verbose)
+      }
+    }
   }
   return(list("train_loss"=losses$train_loss, "test_loss"= losses$test_loss))
 }

@@ -31,6 +31,8 @@ train_PAN(
 
 \item{sensitive_train}{integer vector of sensitive attribute used for training}
 
+\item{sensitive_test}{integer vector of sensitive attribute used for testing}
+
 \item{batch_size}{batch size used in adversarials dataset_loader}
 
 \item{learning_rate_adv}{learning rate of adversarial}
@@ -39,8 +41,6 @@ train_PAN(
 
 \item{lambda}{parameter regulating learning proccess (intuition: the bigger it is,
 the fairer predictions).}
-
-\item{sensitive_testnteger}{vector of sensitive attribute used for testing}
 }
 \description{
 Trains Predictive Adversarial Network model, which means that it proceeds with the

@@ -25,16 +25,16 @@
 #' @examples
 train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, dev, sensitive_train,
                       sensitive_test, batch_size, learning_rate_adv,
-                      learning_rate_clf, lambda){
-
-  adversary_losses<-c()
-  classifier_losses<-c()
-  STP<-c()
-  adversary_acc<-c()
-  classifier_acc<-c()
+                      learning_rate_clf, lambda, verbose, monitor){
+  if(monitor){
+    adversary_losses<-c()
+    STP<-c()
+    adversary_acc<-c()
+    classifier_acc<-c()
+  }
 
   for (epoch in 1:n_ep_pan){
-    cat(sprintf("PAN epoch %d \n", epoch))
+    verbose_cat(sprintf("PAN epoch %d \n", epoch),verbose)
     train_dl <- dsl$train_ds %>% dataloader(batch_size = dsl$train_ds$.length(),
                                             shuffle = FALSE)
     iter <- train_dl$.iter()
@@ -78,23 +78,25 @@ train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, dev, sensitive_train,
     clf_loss$backward()
     clf_optimizer$step()
 
+    adversary_losses<-c(adversary_losses,mean(train_losses))
 
-    if(epoch/1 == as.integer(epoch/1)){
+    if(monitor){
       acc<-eval_accuracy(adv_model,adv_dsl$test_ds,dev)
       adversary_acc<-c(adversary_acc,acc)
-      cat(sprintf("Adversary accuracy at epoch %d: %3.3f\n", epoch,acc))
 
       cacc<-eval_accuracy(clf_model,dsl$test_ds,dev)
       classifier_acc<-c(classifier_acc,cacc)
-      cat(sprintf("Classifier accuracy at epoch %d: %3.3f\n", epoch,cacc))
+
+      stp<-calc_STP(clf_model,dsl$test_ds,sensitive_test,dev)
+      STP<-c(STP,stp)
+
+      verbose_cat(sprintf("Classifier accuracy at epoch %d: %3.3f\n", epoch,cacc),verbose)
+      verbose_cat(sprintf("Adversary at epoch %d: training loss: %3.3f, accuracy: %3.3f, STPR: %3.3f\n",
+                  epoch, mean(train_losses),acc,stp), verbose)
+    }else{
+      verbose_cat(sprintf("Adversary at epoch %d: training loss: %3.3f",
+                          epoch, mean(train_losses)), verbose)
     }
-    stp<-calc_STP(clf_model,dsl$test_ds,sensitive_test,dev)
-    STP<-c(STP,stp)
-    adversary_losses<-c(adversary_losses,mean(train_losses))
-    #classifier_losses<-c(classifier_losses,clf_train_losses)
-    cat(sprintf("Adversary Loss at epoch %d: training: %3.3f, STPR: %3.3f\n",
-                epoch, mean(train_losses),stp))
-    #cat(sprintf("Classifier Loss at epoch %d: training: %3.3f\n", epoch,
-    #mean(clf_train_losses)))
+
   }
 }
