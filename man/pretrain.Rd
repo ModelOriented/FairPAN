@@ -7,7 +7,7 @@
 pretrain(
   clf_model = NULL,
   adv_model = NULL,
-  trained = 0,
+  trained = FALSE,
   train_x = NULL,
   train_y = NULL,
   sensitive_train,

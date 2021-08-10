@@ -8,7 +8,7 @@
 #' @param n_epochs integer setting number of epochs for training. Default: 15
 #' @param model neural network model we want to train
 #' @param dsl dataset_loader object for the training
-#' @param model_type indicates which model we train (0 for adversarial, 1 for classifier)
+#' @param model_type indicates which model we train (0 for preadversarial, 1 for preclassifier, 2 for classifier only)
 #' @param learning_rate float from [0,1] setting learning rate for model. Default: 0.001
 #' @param sensitive_test test vector for sensitive variable used to calculate STP
 #' @param dev device used to calculations (cpu or gpu)
@@ -18,6 +18,15 @@
 #'
 #' @examples
 pretrain_net <- function(n_epochs=15,model,dsl,model_type, learning_rate=0.001, sensitive_test, dev, verbose=TRUE, monitor=TRUE){
+  if(n_epochs!=n_epochs/1 || n_epochs<0) stop("n_epochs must be a positive integer")
+  if(typeof(model)!='closure') stop("provide a neural network as a model")
+  if(typeof(dsl)!="list") stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
+  if(typeof(dsl$test_ds)!="environment") stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
+  if(typeof(dsl$test_ds$y)!="externalptr") stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
+  if(learning_rate>1 || learning_rate<0) stop("learning_rate must be between 0 and 1")
+  if(!dev %in% c("gpu","cpu"))stop("dev must be gpu or cpu")
+  if(!is.vector(sensitive_test)) stop("sensitive_test must be a vector")
+  if(!is.logical(verbose)||!is.logical(monitor)) stop("verbose and monitor must be logical")
 
   optimizer <- optim_adam(model$parameters, lr = learning_rate)
 

@@ -9,6 +9,10 @@
 #'
 #' @examples
 eval_accuracy <- function(model,test_ds,dev){
+  if(typeof(model)!='closure') stop("provide a neural network as a model")
+  if(typeof(test_ds)!="environment") stop("provide a test data set")
+  if(typeof(test_ds$y)!="externalptr") stop("provide a test data set")
+  if(!dev %in% c("gpu","cpu"))stop("dev must be gpu or cpu")
   model$eval()
   test_dl <- test_ds %>% dataloader(batch_size = test_ds$.length(), shuffle = FALSE)
   iter <- test_dl$.iter()
@@ -38,10 +42,17 @@ eval_accuracy <- function(model,test_ds,dev){
 #'
 #' @examples
 calc_STP<-function(model,test_ds,sensitive,dev){
+  if(typeof(model)!='closure') stop("provide a neural network as a model")
+  if(typeof(test_ds)!="environment") stop("provide a test data set")
+  if(typeof(test_ds$y)!="externalptr") stop("provide a test data set")
+  if(!dev %in% c("gpu","cpu"))stop("dev must be gpu or cpu")
+  if(!is.vector(sensitive)) stop("sensitive must be a vector")
+
+
   preds<-make_preds(model,test_ds,dev)-1
   real<-(test_ds$y$to(device = "cpu") %>% as.array())-1
   sensitive<-sensitive-1
-  # print(sum(real))
+
   TP0<-0;FP0<-0;TN0<-0;FN0<-0;Tr0<-0;Fa0<-0
   TP1<-0;FP1<-0;TN1<-0;FN1<-0;Tr1<-0;Fa1<-0
 

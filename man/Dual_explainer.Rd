@@ -10,9 +10,8 @@ Dual_explainer(
   model2,
   model_name,
   model_name2,
-  data_set,
+  data_test,
   data_scaled_test,
-  test_y,
   protected,
   privileged,
   batch_size,
@@ -26,11 +25,9 @@ Dual_explainer(
 
 \item{model2}{second model we want to explain}
 
-\item{data_set}{numerical table of predictors}
+\item{data_test}{numerical table of predictors}
 
 \item{data_scaled_test}{scaled matrix of numerical values representing predictors}
-
-\item{test_y}{integer, vector of predictors used for testing}
 
 \item{protected}{numerical vector of sensitive variables}
 

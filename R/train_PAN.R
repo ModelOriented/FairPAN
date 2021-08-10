@@ -19,13 +19,32 @@
 #' @param lambda parameter regulating learning proccess (intuition: the bigger it is,
 #'               the fairer predictions).
 #'
-#' @return NULL
+#' @return NULL if monitor is FALSE, list of metrics if it is TRUE
 #' @export
 #'
 #' @examples
 train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, dev, sensitive_train,
                       sensitive_test, batch_size, learning_rate_adv,
                       learning_rate_clf, lambda, verbose=TRUE, monitor=TRUE){
+
+  if(n_ep_pan!=n_ep_pan/1 || n_ep_pan<0) stop("n_ep_pan must be a positive integer")
+  if(typeof(clf_model)!='closure') stop("provide a neural network as a clf_model")
+  if(typeof(adv_model)!='closure') stop("provide a neural network as a adv_model")
+  if(typeof(dsl)!="list") stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
+  if(typeof(dsl$test_ds)!="environment") stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
+  if(typeof(dsl$test_ds$y)!="externalptr") stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
+  if(learning_rate_clf>1 || learning_rate_clf<0) stop("learning_rate_clf must be between 0 and 1")
+  if(learning_rate_adv>1 || learning_rate_adv<0) stop("learning_rate_adv must be between 0 and 1")
+
+  if(!dev %in% c("gpu","cpu"))stop("dev must be gpu or cpu")
+  if(!is.vector(sensitive_test)) stop("sensitive_test must be a vector")
+  if(!is.vector(sensitive_train)) stop("sensitive_train must be a vector")
+
+  if(!is.logical(verbose)||!is.logical(monitor)) stop("verbose and monitor must be logical")
+
+  if(lambda!=lambda/1 || lambda<0) stop("lambda must be a positive integer")
+
+
   if(monitor){
     adversary_losses<-c()
     STP<-c()
@@ -98,5 +117,11 @@ train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, dev, sensitive_train,
                           epoch, mean(train_losses)), verbose)
     }
 
+  }
+  if(monitor){
+    monitoring <- list("STP"=STP,"adversary_acc"=adversary_acc,"classifier_acc"=classifier_acc,"adversary_losses"=adversary_losses)
+    return(monitoring)
+  }else{
+    return(NULL)
   }
 }

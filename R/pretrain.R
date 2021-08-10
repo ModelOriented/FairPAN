@@ -43,18 +43,46 @@
 #' @export
 #'
 #' @examples
-pretrain <- function(clf_model=NULL,adv_model=NULL,trained=0,train_x=NULL,train_y=NULL,
+pretrain <- function(clf_model=NULL,adv_model=NULL,trained=FALSE,train_x=NULL,train_y=NULL,
                      sensitive_train,sensitive_test, batch_size=50,partition=0.7,
                      neurons_clf=c(32,32,32),neurons_adv=c(32,32,32),dimension_clf=2,
                      dimension_adv=2,learning_rate_clf=0.001,
-                     learning_rate_adv=0.001,n_ep_preclf=5,n_ep_preadv=10,dsl,dev){
+                     learning_rate_adv=0.001,n_ep_preclf=5,n_ep_preadv=10,dsl,dev,verbose=TRUE,monitor=TRUE){
+
+
+  if(n_ep_preclf!=n_ep_preclf/1 || n_ep_preclf<0) stop("n_ep_preclf must be a positive integer")
+  if(n_ep_preadv!=n_ep_preadv/1 || n_ep_preadv<0) stop("n_ep_preadv must be a positive integer")
+  if(typeof(dsl)!="list") stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
+  if(typeof(dsl$test_ds)!="environment") stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
+  if(typeof(dsl$test_ds$y)!="externalptr") stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
+  if(learning_rate_clf>1 || learning_rate_clf<0) stop("learning_rate_clf must be between 0 and 1")
+  if(learning_rate_adv>1 || learning_rate_adv<0) stop("learning_rate_adv must be between 0 and 1")
+  if(partition>1 || partition<0) stop("partition must be between 0 and 1")
+
+  if(!dev %in% c("gpu","cpu"))stop("dev must be gpu or cpu")
+  if(!is.vector(sensitive_test)) stop("sensitive_test must be a vector")
+  if(!is.vector(sensitive_train)) stop("sensitive_train must be a vector")
+
+  if(!is.logical(trained))stop("trained must be logical")
+  if(!is.logical(verbose)||!is.logical(monitor)) stop("verbose and monitor must be logical")
+
+  if(!dimension_clf %in% c(0,1,2)) stop("dimension_clf must be a 0,1 or 2")
+  if(!dimension_adv %in% c(0,1,2)) stop("dimension_adv must be a 0,1 or 2")
+  if(sum(neurons_clf-neurons_clf/1)!=0) stop("neurons_clf must be a vector of integers")
+  if(sum(neurons_adv-neurons_adv/1)!=0) stop("neurons_adv must be a vector of integers")
+
+
   if(is.null(clf_model)){
+    if(!is.vector(train_y)) stop("train_y must be a vector")
+    if(!is.matrix(train_x)) stop("train_x must be a matrix")
+    if(nrow(train_x)!=length(train_y)) stop("length of train_y must be equal number of rows of train_x")
     clf_model <- create_model(train_x,train_y, neurons_clf, dimension_clf)
   }
+  if(typeof(clf_model)!='closure') stop("provide a neural network as a model")
   clf_model$to(device = dev)
-  if(trained==0){
+  if(!trained){
     pretrain_net(n_ep_preclf, clf_model, dsl, model_type = 1, learning_rate_clf,
-                 sensitive_test, dev)
+                 sensitive_test, dev,verbose=verbose,monitor = monitor)
   }
   p_preds <- make_preds_prob(clf_model, dsl$train_ds, dev)
 
@@ -68,10 +96,11 @@ pretrain <- function(clf_model=NULL,adv_model=NULL,trained=0,train_x=NULL,train_
     adv_model <- create_model(prepared_data$train_x,prepared_data$train_y,
                               neurons = neurons_adv, dimensions = dimension_adv)
   }
+  if(typeof(adv_model)!='closure') stop("provide a neural network as a model")
   adv_model$to(device = dev)
 
   pretrain_net(n_ep_preadv, adv_model, dsl_adv, model_type = 0, learning_rate_adv,
-               sensitive_test, dev)
+               sensitive_test, dev,verbose=verbose,monitor = monitor)
 
   return(list("clf_model"=clf_model, "adv_model"=adv_model))
 }

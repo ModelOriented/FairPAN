@@ -23,7 +23,7 @@ pretrain_net(
 
 \item{dsl}{dataset_loader object for the training}
 
-\item{model_type}{indicates which model we train (0 for adversarial, 1 for classifier)}
+\item{model_type}{indicates which model we train (0 for preadversarial, 1 for preclassifier, 2 for classifier only)}
 
 \item{learning_rate}{float from [0,1] setting learning rate for model. Default: 0.001}
 

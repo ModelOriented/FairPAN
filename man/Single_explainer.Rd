@@ -8,9 +8,8 @@ Single_explainer(
   target,
   model,
   model_name,
-  data_set,
+  data_test,
   data_scaled_test,
-  test_y,
   protected,
   privileged,
   batch_size,
@@ -22,11 +21,9 @@ Single_explainer(
 
 \item{model}{the model we want to explain}
 
-\item{data_set}{numerical table of predictors}
+\item{data_test}{numerical table of predictors}
 
 \item{data_scaled_test}{scaled matrix of numerical values representing predictors}
-
-\item{test_y}{integer, vector of predictors used for testing}
 
 \item{protected}{numerical vector of sensitive variables}
 

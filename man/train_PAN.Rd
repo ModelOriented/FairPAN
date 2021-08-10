@@ -16,8 +16,8 @@ train_PAN(
   learning_rate_adv,
   learning_rate_clf,
   lambda,
-  verbose,
-  monitor
+  verbose = TRUE,
+  monitor = TRUE
 )
 }
 \arguments{

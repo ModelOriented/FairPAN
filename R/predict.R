@@ -11,6 +11,10 @@
 #'
 #' @examples
 make_preds <- function(model,test_ds,dev){
+  if(typeof(model)!='closure') stop("provide a neural network as a model")
+  if(typeof(test_ds)!="environment") stop("provide a test data set")
+  if(typeof(test_ds$y)!="externalptr") stop("provide a test data set")
+  if(!dev %in% c("gpu","cpu"))stop("dev must be gpu or cpu")
   model$eval()
   test_dl <- test_ds %>% dataloader(batch_size = test_ds$.length(), shuffle = FALSE)
   iter <- test_dl$.iter()
@@ -36,6 +40,10 @@ make_preds <- function(model,test_ds,dev){
 #'
 #' @examples
 make_preds_prob <- function(model,test_ds,dev){
+  if(typeof(model)!='closure') stop("provide a neural network as a model")
+  if(typeof(test_ds)!="environment") stop("provide a test data set")
+  if(typeof(test_ds$y)!="externalptr") stop("provide a test data set")
+  if(!dev %in% c("gpu","cpu"))stop("dev must be gpu or cpu")
   model$eval()
   test_dl <- test_ds %>% dataloader(batch_size = test_ds$.length(), shuffle = FALSE)
   iter <- test_dl$.iter()
