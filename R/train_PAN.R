@@ -18,12 +18,16 @@
 #' @param learning_rate_clf learning rate of classifier
 #' @param lambda parameter regulating learning proccess (intuition: the bigger it is,
 #'               the fairer predictions).
+#' @param clf_optimizer
+#' @param adv_optimizer
+#' @param verbose
+#' @param monitor
 #'
 #' @return NULL if monitor is FALSE, list of metrics if it is TRUE
 #' @export
 #'
 #' @examples
-train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, dev, sensitive_train,
+train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, clf_optimizer, adv_optimizer, dev, sensitive_train,
                       sensitive_test, batch_size, learning_rate_adv,
                       learning_rate_clf, lambda, verbose=TRUE, monitor=TRUE){
 
@@ -42,20 +46,20 @@ train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, dev, sensitive_train,
 
   if(!is.logical(verbose)||!is.logical(monitor)) stop("verbose and monitor must be logical")
 
-  #if(lambda!=lambda/1 || lambda<0) stop("lambda must be a positive integer")
+  if(!is.numeric(lambda)) stop("lambda must be numeric")
 
+  batch_iter <-2
   adversary_losses<-c()
   classifier_losses<-c()
+
   if(monitor){
     STP<-c()
     adversary_acc<-c()
     classifier_acc<-c()
   }
-#   to co tu się stało to grzech i zbrodnia przeciw ludzkości
-#   adv_optimizer <- optim_adam(adv_model$parameters, lr = learning_rate_adv)
-#   clf_optimizer <- optim_adam(clf_model$parameters, lr = learning_rate_clf)
-#   adv_model$train()
-#   clf_model$train()
+
+  adv_model$train()
+  clf_model$train()
 
   for (epoch in 1:n_ep_pan){
     verbose_cat(sprintf("PAN epoch %d \n", epoch),verbose)
@@ -74,34 +78,40 @@ train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, dev, sensitive_train,
 
     train_losses <- c()
     #clf_train_losses <- c()
-    iterator<-dsl$train_dl$.iter()
-    #train adversarial on whole dataset, all batches
+    #iterator<-dsl$train_dl$.iter()
     coro::loop(for (b in adv_dsl$train_dl) {
-      adv_optimizer$zero_grad()
       output <- adv_model(b$x_cont$to(device = dev))
-      loss <- nnf_cross_entropy(output, b$y$to(device = dev))*lambda
+      loss <- torch_mul(nnf_cross_entropy(output, b$y$to(device = dev)),lambda)
+      adv_optimizer$zero_grad()
       loss$backward()
       adv_optimizer$step()
       train_losses <- c(train_losses, loss$item())
 
     })
     #we're training the classifier on a single minibatch to cheat an adversarial
+    iter<-dsl$train_dl$.iter()
     iterator<-adv_dsl$train_dl$.iter()
-    b <- iterator$.next()
-    output <- adv_model(b$x_cont$to(device = dev))
-    loss <- nnf_cross_entropy(output, b$y$to(device = dev))*lambda
 
-    iterator<-dsl$train_dl$.iter()
-    b <- iterator$.next()
-    clf_optimizer$zero_grad()
+    for(i in 1:batch_iter){
+      iter$.next()
+      iterator$.next()
+    }
+
+    batch_iter=(batch_iter+1)%%20+1
+
+    b <- iter$.next()
     clf_output <- clf_model(b$x_cont$to(device = dev))
-    clf_loss <- nnf_cross_entropy(clf_output, b$y$to(device = dev))#-loss$item()
-    #clf_loss2 <- nnf_cross_entropy(clf_output, b$y$to(device = dev))
-    # print(clf_loss)
-    # print(clf_loss2)
+    preds<-clf_output[,2]$to(device = "cpu")
+    preds<-torch_reshape(preds,list(batch_size,1))
+    batch <- iterator$.next()
+    output <- adv_model(preds$to(device = dev))
+    loss <- torch_mul(nnf_cross_entropy(output, batch$y$to(device = dev)),lambda)
+
+    clf_loss <- torch_sub(nnf_cross_entropy(clf_output, b$y$to(device = dev)),loss)
+    clf_optimizer$zero_grad()
     clf_loss$backward()
     clf_optimizer$step()
-    #classifier_losses<-c(classifier_losses,clf_loss)
+
     adversary_losses<-c(adversary_losses,mean(train_losses))
     # user wants to calculate and plot monitor values
     if(monitor){

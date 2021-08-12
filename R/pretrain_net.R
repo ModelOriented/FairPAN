@@ -12,8 +12,10 @@
 #' @param learning_rate float from [0,1] setting learning rate for model. Default: 0.001
 #' @param sensitive_test test vector for sensitive variable used to calculate STP
 #' @param dev device used to calculations (cpu or gpu)
+#' @param verbose
+#' @param monitor
 #'
-#' @return NULL
+#' @return optimizer
 #' @export
 #'
 #' @examples
@@ -92,5 +94,5 @@ pretrain_net <- function(n_epochs=15,model,dsl,model_type, learning_rate=0.001, 
       }
     }
   }
-  return(list("train_loss"=losses$train_loss, "test_loss"= losses$test_loss))
+  return(optimizer)
 }

@@ -24,9 +24,9 @@
 #'                    network. Default: c(32,32,32). This notation means that the network
 #'                    has 3 layers with 32 neurons each.
 #' @param dimension_clf integer from [0,2] setting nnf_softmax dimension for classifier.
-#'                      Default: 2
+#'                      Default: 2 (suggested to use 2 for classifier and 1 for adversarial)
 #' @param dimension_adv integer from [0,2] setting nnf_softmax dimension for adversarial.
-#'                      Default: 2
+#'                      Default: 1 (suggested to use 2 for classifier and 1 for adversarial)
 #' @param learning_rate_clf float from [0,1] setting learning rate for classifier.
 #'                          Default: 0.001
 #' @param learning_rate_adv float from [0,1] setting learning rate for classifier.
@@ -37,19 +37,22 @@
 #'                    Default : 10
 #' @param dsl dataset_loader object from pretrain
 #' @param dev device used to calculations (cpu or gpu)
+#' @param clf_optimizer
+#' @param verbose
+#' @param monitor
 #'
 #' @return list of two obejcts: clf_model and adv_model which are pretrained neural
 #'         networks.
 #' @export
 #'
 #' @examples
-pretrain <- function(clf_model=NULL,adv_model=NULL,trained=FALSE,train_x=NULL,train_y=NULL,
+pretrain <- function(clf_model=NULL,adv_model=NULL,clf_optimizer=NULL,trained=FALSE,train_x=NULL,train_y=NULL,
                      sensitive_train,sensitive_test, batch_size=50,partition=0.7,
                      neurons_clf=c(32,32,32),neurons_adv=c(32,32,32),dimension_clf=2,
-                     dimension_adv=2,learning_rate_clf=0.001,
+                     dimension_adv=1,learning_rate_clf=0.001,
                      learning_rate_adv=0.001,n_ep_preclf=5,n_ep_preadv=10,dsl,dev,verbose=TRUE,monitor=TRUE){
 
-
+  #add ifs for optimizer
   if(n_ep_preclf!=n_ep_preclf/1 || n_ep_preclf<0) stop("n_ep_preclf must be a positive integer")
   if(n_ep_preadv!=n_ep_preadv/1 || n_ep_preadv<0) stop("n_ep_preadv must be a positive integer")
   if(typeof(dsl)!="list") stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
@@ -81,7 +84,7 @@ pretrain <- function(clf_model=NULL,adv_model=NULL,trained=FALSE,train_x=NULL,tr
   if(typeof(clf_model)!='closure') stop("provide a neural network as a model")
   clf_model$to(device = dev)
   if(!trained){
-    pretrain_net(n_ep_preclf, clf_model, dsl, model_type = 1, learning_rate_clf,
+    clf_optimizer<-pretrain_net(n_ep_preclf, clf_model, dsl, model_type = 1, learning_rate_clf,
                  sensitive_test, dev,verbose=verbose,monitor = monitor)
   }
   p_preds <- make_preds_prob(clf_model, dsl$train_ds, dev)
@@ -99,8 +102,8 @@ pretrain <- function(clf_model=NULL,adv_model=NULL,trained=FALSE,train_x=NULL,tr
   if(typeof(adv_model)!='closure') stop("provide a neural network as a model")
   adv_model$to(device = dev)
 
-  pretrain_net(n_ep_preadv, adv_model, dsl_adv, model_type = 0, learning_rate_adv,
+  adv_optimizer <- pretrain_net(n_ep_preadv, adv_model, dsl_adv, model_type = 0, learning_rate_adv,
                sensitive_test, dev,verbose=verbose,monitor = monitor)
 
-  return(list("clf_model"=clf_model, "adv_model"=adv_model))
+  return(list("clf_model"=clf_model, "adv_model"=adv_model, "clf_optimizer"=clf_optimizer,"adv_optimizer"=adv_optimizer))
 }

@@ -12,10 +12,9 @@
 #'                3 layer neural network with 8,16 and 8 neurons in 1st, 2nd and 3rd
 #'                layer. Default: c(32,32,32)
 #' @param dimensions integer from [0,2] setting nnf_softmax dimension for classifier.
-#'                   Default: 2
+#'                   Default: 2 (suggested to use 2 for classifier and 1 for adversarial)
 #'
 #' @return neural network model
-#' @export
 #'
 #' @examples
 create_model <- function(train_x,train_y,neurons=c(32,32,32),dimensions=2){
@@ -38,7 +37,7 @@ create_model <- function(train_x,train_y,neurons=c(32,32,32),dimensions=2){
 
     },
     forward = function(x_cont) {
-      all <- torch_cat(x_cont,dim=2)
+      all <- torch_cat(x_cont,dim=dimensions)
       for (i in 1:length(neurons)){
         str<-paste("all<-all %>% self$fc",i,"() %>%
                     nnf_relu()",sep="")
