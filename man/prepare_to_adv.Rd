@@ -7,7 +7,8 @@
 prepare_to_adv(preds, sensitive, partition = 0.7)
 }
 \arguments{
-\item{preds}{numeric vector of predictions of target value made by classifier (preferably the probabilistic ones)}
+\item{preds}{numeric vector of predictions of target value made by classifier (preferably the
+probabilistic ones)}
 
 \item{sensitive}{integer vector of sensitive attribute which adversarial has to predict}
 

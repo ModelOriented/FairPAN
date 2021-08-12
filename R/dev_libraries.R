@@ -10,3 +10,4 @@
 #use_testthat()
 #use_test()
 #test() - tests package
+#test_active_file()

@@ -39,7 +39,7 @@ preclassifier, 2 for classifier only)}
 adjust parameters and training process)}
 }
 \value{
-optimizer
+list(train_loss,test_loss,optimizer)
 }
 \description{
 The function pretrain both the classifier and adversarial model. You can select which

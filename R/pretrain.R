@@ -91,6 +91,7 @@ pretrain <- function(clf_model=NULL,adv_model=NULL,clf_optimizer=NULL,trained=FA
   if(!trained){
     clf_optimizer<-pretrain_net(n_ep_preclf, clf_model, dsl, model_type = 1, learning_rate_clf,
                  sensitive_test, dev,verbose=verbose,monitor = monitor)
+    clf_optimizer<-clf_optimizer$optimizer
   }
   p_preds <- make_preds_prob(clf_model, dsl$train_ds, dev)
 
@@ -109,6 +110,8 @@ pretrain <- function(clf_model=NULL,adv_model=NULL,clf_optimizer=NULL,trained=FA
 
   adv_optimizer <- pretrain_net(n_ep_preadv, adv_model, dsl_adv, model_type = 0, learning_rate_adv,
                sensitive_test, dev,verbose=verbose,monitor = monitor)
+
+  adv_optimizer<-adv_optimizer$optimizer
 
   return(list("clf_model"=clf_model, "adv_model"=adv_model, "clf_optimizer"=clf_optimizer,"adv_optimizer"=adv_optimizer))
 }

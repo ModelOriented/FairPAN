@@ -60,5 +60,6 @@ provides other data objects that are necessary for our training.
 }
 \examples{
 data("adult")
-preprocess(adult,"salary","sex",c("race"),sample=0.001,train_size=0.7,test_size=0.2,validation_size=0.1,seed=7)
+preprocess(adult,"salary","sex",c("race"),sample=0.001,train_size=0.7,test_size=0.2,
+validation_size=0.1,seed=7)
 }

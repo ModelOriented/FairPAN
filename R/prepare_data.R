@@ -63,7 +63,8 @@ dataset_loader <- function(train_x,train_y,test_x,test_y,batch_size=50,dev){
 #' Prepares classifiers output for adversarial by splitting original predictions into
 #' train and test vectors
 #'
-#' @param preds numeric vector of predictions of target value made by classifier (preferably the probabilistic ones)
+#' @param preds numeric vector of predictions of target value made by classifier (preferably the
+#' probabilistic ones)
 #' @param sensitive integer vector of sensitive attribute which adversarial has to predict
 #' @param partition float from [0,1] range setting the size of train vector (test size
 #'                  equals 1-partition). Default = 0.7.
@@ -78,8 +79,10 @@ dataset_loader <- function(train_x,train_y,test_x,test_y,batch_size=50,dev){
 #'prepare_to_adv(preds,sensitive,partition=0.6)
 prepare_to_adv <- function(preds, sensitive, partition=0.7){
   if(!is.numeric(preds)||!is.vector(preds)) stop("preds must be numeric vector of probabilities")
-  if(!is.numeric(sensitive)||!is.vector(sensitive)) stop("sensitive must be numeric vector of mapped sensitive classes")
-  if(!is.numeric(partition)|| partition>1 || partition<0) stop("partition must be numeric be in [0,1]")
+  if(!is.numeric(sensitive)||!is.vector(sensitive)) stop("sensitive must be numeric vector of mapped
+                                                         sensitive classes")
+  if(!is.numeric(partition)|| partition>1 || partition<0) stop("partition must be numeric be in
+                                                               [0,1]")
   set.seed(123)
   train_indices <- sample(1:length(preds),  length(preds) * partition)
   train_x <- as.numeric(preds[train_indices])
@@ -124,18 +127,22 @@ prepare_to_adv <- function(preds, sensitive, partition=0.7){
 #'
 #' @examples
 #' data("adult")
-#' preprocess(adult,"salary","sex",c("race"),sample=0.001,train_size=0.7,test_size=0.2,validation_size=0.1,seed=7)
+#' preprocess(adult,"salary","sex",c("race"),sample=0.001,train_size=0.7,test_size=0.2,
+#' validation_size=0.1,seed=7)
 preprocess <- function(data,target_name,sensitive_name,privileged,discriminated,drop_also,
                        sample=1,train_size=0.7,test_size=0.3,validation_size=0,seed=NULL){
 
-  if (train_size+test_size+validation_size!=1) stop("train_size+test_size+validation_size must equal 1")
-  if (!is.character(target_name) || !is.character(sensitive_name)) stop("target_name and sensitive_name must be characters")
+  if (train_size+test_size+validation_size!=1) stop("train_size+test_size+validation_size must
+                                                    equal 1")
+  if (!is.character(target_name) || !is.character(sensitive_name)) stop("target_name and
+                                                                        sensitive_name must be
+                                                                        characters")
   if (!is.character(drop_also)) stop("drop_also must be a character vector")
   if (!is.list(data)) stop("data must be a list")
 
   print(nrow(data))
   col<-eval( parse( text=paste( "data$",sensitive_name,sep="" ) ) )
-  #balance dataset to have the same number of sensitive values, so adversarial doesnt
+  #balance dataset to have the same number of sensitive values, so adversarial doesn't
   #overfit (like all predictions are 1 or 2)
   M <- min(table(col))
   df_new <- data[col == privileged, ][1:M, ]

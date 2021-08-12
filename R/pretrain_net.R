@@ -18,7 +18,7 @@
 #' (monitoring tends to slow down the training proccess, but provides some useful info to
 #' adjust parameters and training process)
 #'
-#' @return optimizer
+#' @return list(train_loss,test_loss,optimizer)
 #' @export
 #'
 #' @examples
@@ -97,5 +97,5 @@ pretrain_net <- function(n_epochs=15,model,dsl,model_type, learning_rate=0.001, 
       }
     }
   }
-  return(optimizer)
+  return(list("train_loss"=losses$train_loss, "test_loss"=losses$test_loss, "optimizer"=optimizer))
 }
