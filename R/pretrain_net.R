@@ -8,12 +8,15 @@
 #' @param n_epochs integer setting number of epochs for training. Default: 15
 #' @param model neural network model we want to train
 #' @param dsl dataset_loader object for the training
-#' @param model_type indicates which model we train (0 for preadversarial, 1 for preclassifier, 2 for classifier only)
+#' @param model_type indicates which model we train (0 for preadversarial, 1 for
+#' preclassifier, 2 for classifier only)
 #' @param learning_rate float from [0,1] setting learning rate for model. Default: 0.001
 #' @param sensitive_test test vector for sensitive variable used to calculate STP
 #' @param dev device used to calculations (cpu or gpu)
-#' @param verbose
-#' @param monitor
+#' @param verbose logical indicating if we want to print monitored outputs or not
+#' @param monitor logical indicating if we want to monitor the learning process or not
+#' (monitoring tends to slow down the training proccess, but provides some useful info to
+#' adjust parameters and training process)
 #'
 #' @return optimizer
 #' @export

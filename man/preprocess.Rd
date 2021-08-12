@@ -8,6 +8,8 @@ preprocess(
   data,
   target_name,
   sensitive_name,
+  privileged,
+  discriminated,
   drop_also,
   sample = 1,
   train_size = 0.7,
@@ -24,6 +26,10 @@ interpretable as categorical.}
 
 \item{sensitive_name}{character, column name of the sensitive variable.Selected column must
 be interpretable as categorical.}
+
+\item{privileged}{character meaning the name of privileged group}
+
+\item{discriminated}{character meaning the name of discriminated group}
 
 \item{drop_also}{character vector, column names of other columns to drop (like other
 sensitive variables).}

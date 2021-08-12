@@ -103,6 +103,8 @@ prepare_to_adv <- function(preds, sensitive, partition=0.7){
 #' interpretable as categorical.
 #' @param sensitive_name character, column name of the sensitive variable.Selected column must
 #' be interpretable as categorical.
+#' @param privileged character meaning the name of privileged group
+#' @param discriminated character meaning the name of discriminated group
 #' @param drop_also character vector, column names of other columns to drop (like other
 #' sensitive variables).
 #' @param sample double from [0,1] setting size of our sample from original data set.

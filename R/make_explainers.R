@@ -5,6 +5,7 @@
 #'
 #' @param target numerical target of classification task
 #' @param model the model we want to explain
+#' @param model_name character providing the label (name) to first model
 #' @param data_test numerical table of predictors
 #' @param protected numerical vector of sensitive variables
 #' @param privileged string label of privileged class in protected
@@ -51,6 +52,8 @@ Single_explainer <- function(target,model,model_name,data_test,data_scaled_test,
 #' @param target numerical target of classification task
 #' @param model first model we want to explain
 #' @param model2 second model we want to explain
+#' @param model_name character providing the label (name) to first model
+#' @param model_name2 character providing the label (name) to second model
 #' @param data_test numerical table of predictors
 #' @param protected numerical vector of sensitive variables
 #' @param privileged string label of privileged class in protected
@@ -99,6 +102,9 @@ Dual_explainer <- function(target,model,model2,model_name,model_name2,data_test,
 #' @param model first model we want to explain
 #' @param model2 second model we want to explain
 #' @param model3 third model we want to explain
+#' @param model_name character providing the label (name) to first model
+#' @param model_name2 character providing the label (name) to second model
+#' @param model_name3 character providing the label (name) to third model
 #' @param data_test numerical table of predictors
 #' @param protected numerical vector of sensitive variables
 #' @param privileged string label of privileged class in protected

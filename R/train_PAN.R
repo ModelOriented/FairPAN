@@ -10,6 +10,8 @@
 #' @param dsl dataset_loader object for classificator network
 #' @param clf_model classifier model (preferably after pretrain)
 #' @param adv_model adversarial model (preferably after pretrain)
+#' @param clf_optimizer optimizer for classificator from pretrain
+#' @param adv_optimizer optimizer for adverarial from pretrain
 #' @param dev device used to computation ("cuda" or "cpu")
 #' @param sensitive_train integer vector of sensitive attribute used for training
 #' @param sensitive_test integer vector of sensitive attribute used for testing
@@ -18,10 +20,10 @@
 #' @param learning_rate_clf learning rate of classifier
 #' @param lambda parameter regulating learning proccess (intuition: the bigger it is,
 #'               the fairer predictions).
-#' @param clf_optimizer
-#' @param adv_optimizer
-#' @param verbose
-#' @param monitor
+#' @param verbose logical indicating if we want to print monitored outputs or not
+#' @param monitor logical indicating if we want to monitor the learning process or not
+#' (monitoring tends to slow down the training proccess, but provides some useful info to
+#' adjust parameters and training process)
 #'
 #' @return NULL if monitor is FALSE, list of metrics if it is TRUE
 #' @export
@@ -39,6 +41,9 @@ train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, clf_optimizer, adv_op
   if(typeof(dsl$test_ds$y)!="externalptr") stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
   if(learning_rate_clf>1 || learning_rate_clf<0) stop("learning_rate_clf must be between 0 and 1")
   if(learning_rate_adv>1 || learning_rate_adv<0) stop("learning_rate_adv must be between 0 and 1")
+
+  if(!typeof(clf_optimizer) == "environment") stop("clf_optimizer must be an optimizer used for classificator pretrain")
+  if(!typeof(adv_optimizer) == "environment") stop("adv_optimizer must be an optimizer used for adversarials pretrain")
 
   if(!dev %in% c("gpu","cpu"))stop("dev must be gpu or cpu")
   if(!is.vector(sensitive_test)) stop("sensitive_test must be a vector")

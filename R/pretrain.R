@@ -5,9 +5,11 @@
 #' pretrained, hovewer the adversarial cannot.
 #'
 #' @param clf_model optional value, provide the pretrain with your own classification
-#'                  neural network. Default: NULL
+#' neural network. Default: NULL
 #' @param adv_model optional value, provide the pretrain with your own adversarial
-#'                  neural network. Default: NULL
+#' neural network. Default: NULL
+#' @param clf_optimizer optional value, provide the optimizer of classifier if you decided
+#' to provide your own pre trained classifier. Default: NULL
 #' @param trained  0 if the classificator is untrained, 1 if the classificator is already
 #' pretrained. Default: 0
 #' @param train_x numeric, scaled matrix of predictors used for training
@@ -16,33 +18,34 @@
 #' @param sensitive_test integer, vector of sensitive values used for testing
 #' @param batch_size integer indicating a batch size used in dataloader. Default: 50
 #' @param partition float from [0,1] range setting the size of train vector (test size
-#'                  equals 1-partition). Default = 0.7.
+#' equals 1-partition). Default = 0.7.
 #' @param neurons_clf integer vector describing a neural architecture of classifier
-#'                    network. Default: c(32,32,32). This notation means that the network
-#'                    has 3 layers with 32 neurons each.
+#' network. Default: c(32,32,32). This notation means that the network has 3 layers with
+#' 32 neurons each.
 #' @param neurons_adv integer vector describing a neural architecture of adversarial
-#'                    network. Default: c(32,32,32). This notation means that the network
-#'                    has 3 layers with 32 neurons each.
+#' network. Default: c(32,32,32). This notation means that the network has 3 layers with
+#' 32 neurons each.
 #' @param dimension_clf integer from [0,2] setting nnf_softmax dimension for classifier.
-#'                      Default: 2 (suggested to use 2 for classifier and 1 for adversarial)
+#' Default: 2 (suggested to use 2 for classifier and 1 for adversarial)
 #' @param dimension_adv integer from [0,2] setting nnf_softmax dimension for adversarial.
-#'                      Default: 1 (suggested to use 2 for classifier and 1 for adversarial)
+#' Default: 1 (suggested to use 2 for classifier and 1 for adversarial)
 #' @param learning_rate_clf float from [0,1] setting learning rate for classifier.
-#'                          Default: 0.001
+#' Default: 0.001
 #' @param learning_rate_adv float from [0,1] setting learning rate for classifier.
-#'                          Default: 0.001
+#' Default: 0.001
 #' @param n_ep_preclf integer setting number of epochs for preclassifiers training.
-#'                    Default: 5
+#' Default: 5
 #' @param n_ep_preadv integer setting number of epochs for preadversarials training.
-#'                    Default : 10
+#' Default : 10
 #' @param dsl dataset_loader object from pretrain
 #' @param dev device used to calculations (cpu or gpu)
-#' @param clf_optimizer
-#' @param verbose
-#' @param monitor
+#' @param verbose logical indicating if we want to print monitored outputs or not
+#' @param monitor logical indicating if we want to monitor the learning process or not
+#' (monitoring tends to slow down the training proccess, but provides some useful info to
+#' adjust parameters and training process)
 #'
 #' @return list of two obejcts: clf_model and adv_model which are pretrained neural
-#'         networks.
+#' networks.
 #' @export
 #'
 #' @examples
@@ -73,6 +76,8 @@ pretrain <- function(clf_model=NULL,adv_model=NULL,clf_optimizer=NULL,trained=FA
   if(!dimension_adv %in% c(0,1,2)) stop("dimension_adv must be a 0,1 or 2")
   if(sum(neurons_clf-neurons_clf/1)!=0) stop("neurons_clf must be a vector of integers")
   if(sum(neurons_adv-neurons_adv/1)!=0) stop("neurons_adv must be a vector of integers")
+
+  if(!is.null(clf_optimizer)&&!typeof(clf_optimizer)=="environment") stop("clf_optimizer mus be NULL or optimizer from clf pretrain")
 
 
   if(is.null(clf_model)){

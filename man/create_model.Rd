@@ -16,7 +16,7 @@ create_model(train_x, train_y, neurons = c(32, 32, 32), dimensions = 2)
 layer. Default: c(32,32,32)}
 
 \item{dimensions}{integer from [0,2] setting nnf_softmax dimension for classifier.
-Default: 2}
+Default: 2 (suggested to use 2 for classifier and 1 for adversarial)}
 }
 \value{
 neural network model

@@ -7,6 +7,7 @@
 pretrain(
   clf_model = NULL,
   adv_model = NULL,
+  clf_optimizer = NULL,
   trained = FALSE,
   train_x = NULL,
   train_y = NULL,
@@ -17,13 +18,15 @@ pretrain(
   neurons_clf = c(32, 32, 32),
   neurons_adv = c(32, 32, 32),
   dimension_clf = 2,
-  dimension_adv = 2,
+  dimension_adv = 1,
   learning_rate_clf = 0.001,
   learning_rate_adv = 0.001,
   n_ep_preclf = 5,
   n_ep_preadv = 10,
   dsl,
-  dev
+  dev,
+  verbose = TRUE,
+  monitor = TRUE
 )
 }
 \arguments{
@@ -32,6 +35,9 @@ neural network. Default: NULL}
 
 \item{adv_model}{optional value, provide the pretrain with your own adversarial
 neural network. Default: NULL}
+
+\item{clf_optimizer}{optional value, provide the optimizer of classifier if you decided
+to provide your own pre trained classifier. Default: NULL}
 
 \item{trained}{0 if the classificator is untrained, 1 if the classificator is already
 pretrained. Default: 0}
@@ -50,18 +56,18 @@ pretrained. Default: 0}
 equals 1-partition). Default = 0.7.}
 
 \item{neurons_clf}{integer vector describing a neural architecture of classifier
-network. Default: c(32,32,32). This notation means that the network
-has 3 layers with 32 neurons each.}
+network. Default: c(32,32,32). This notation means that the network has 3 layers with
+32 neurons each.}
 
 \item{neurons_adv}{integer vector describing a neural architecture of adversarial
-network. Default: c(32,32,32). This notation means that the network
-has 3 layers with 32 neurons each.}
+network. Default: c(32,32,32). This notation means that the network has 3 layers with
+32 neurons each.}
 
 \item{dimension_clf}{integer from [0,2] setting nnf_softmax dimension for classifier.
-Default: 2}
+Default: 2 (suggested to use 2 for classifier and 1 for adversarial)}
 
 \item{dimension_adv}{integer from [0,2] setting nnf_softmax dimension for adversarial.
-Default: 2}
+Default: 1 (suggested to use 2 for classifier and 1 for adversarial)}
 
 \item{learning_rate_clf}{float from [0,1] setting learning rate for classifier.
 Default: 0.001}
@@ -78,10 +84,16 @@ Default : 10}
 \item{dsl}{dataset_loader object from pretrain}
 
 \item{dev}{device used to calculations (cpu or gpu)}
+
+\item{verbose}{logical indicating if we want to print monitored outputs or not}
+
+\item{monitor}{logical indicating if we want to monitor the learning process or not
+(monitoring tends to slow down the training proccess, but provides some useful info to
+adjust parameters and training process)}
 }
 \value{
 list of two obejcts: clf_model and adv_model which are pretrained neural
-        networks.
+networks.
 }
 \description{
 This function can create and pretrain both classifier and adversarial. The user can

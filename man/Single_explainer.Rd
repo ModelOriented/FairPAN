@@ -21,6 +21,8 @@ Single_explainer(
 
 \item{model}{the model we want to explain}
 
+\item{model_name}{character providing the label (name) to first model}
+
 \item{data_test}{numerical table of predictors}
 
 \item{data_scaled_test}{scaled matrix of numerical values representing predictors}

@@ -9,6 +9,8 @@ train_PAN(
   dsl,
   clf_model,
   adv_model,
+  clf_optimizer,
+  adv_optimizer,
   dev,
   sensitive_train,
   sensitive_test,
@@ -29,6 +31,10 @@ train_PAN(
 
 \item{adv_model}{adversarial model (preferably after pretrain)}
 
+\item{clf_optimizer}{optimizer for classificator from pretrain}
+
+\item{adv_optimizer}{optimizer for adverarial from pretrain}
+
 \item{dev}{device used to computation ("cuda" or "cpu")}
 
 \item{sensitive_train}{integer vector of sensitive attribute used for training}
@@ -43,6 +49,15 @@ train_PAN(
 
 \item{lambda}{parameter regulating learning proccess (intuition: the bigger it is,
 the fairer predictions).}
+
+\item{verbose}{logical indicating if we want to print monitored outputs or not}
+
+\item{monitor}{logical indicating if we want to monitor the learning process or not
+(monitoring tends to slow down the training proccess, but provides some useful info to
+adjust parameters and training process)}
+}
+\value{
+NULL if monitor is FALSE, list of metrics if it is TRUE
 }
 \description{
 Trains Predictive Adversarial Network model, which means that it proceeds with the

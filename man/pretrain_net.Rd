@@ -23,13 +23,23 @@ pretrain_net(
 
 \item{dsl}{dataset_loader object for the training}
 
-\item{model_type}{indicates which model we train (0 for preadversarial, 1 for preclassifier, 2 for classifier only)}
+\item{model_type}{indicates which model we train (0 for preadversarial, 1 for
+preclassifier, 2 for classifier only)}
 
 \item{learning_rate}{float from [0,1] setting learning rate for model. Default: 0.001}
 
 \item{sensitive_test}{test vector for sensitive variable used to calculate STP}
 
 \item{dev}{device used to calculations (cpu or gpu)}
+
+\item{verbose}{logical indicating if we want to print monitored outputs or not}
+
+\item{monitor}{logical indicating if we want to monitor the learning process or not
+(monitoring tends to slow down the training proccess, but provides some useful info to
+adjust parameters and training process)}
+}
+\value{
+optimizer
 }
 \description{
 The function pretrain both the classifier and adversarial model. You can select which

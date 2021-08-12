@@ -29,6 +29,12 @@ Triple_explainer(
 
 \item{model3}{third model we want to explain}
 
+\item{model_name}{character providing the label (name) to first model}
+
+\item{model_name2}{character providing the label (name) to second model}
+
+\item{model_name3}{character providing the label (name) to third model}
+
 \item{data_test}{numerical table of predictors}
 
 \item{data_scaled_test}{scaled matrix of numerical values representing predictors}
