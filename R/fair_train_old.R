@@ -66,9 +66,9 @@ fair_train_old <- function(train_x, test_x, train_y, test_y, sensitive_train, se
 
   eval_accuracy( clf_model, dsl$test_ds, dev)
 
-  exp1 <-  Single_explainer(test_y,clf_model,data,data_scaled_test,test_y,protected,priviliged,batch_size,dev)
+  #exp1 <-  Single_explainer(test_y,clf_model,data,data_scaled_test,test_y,protected,priviliged,batch_size,dev)
 
-  plot(exp1)
+  #plot(exp1)
 
   clf_only_model <- create_model(train_x,train_y, neurons_clf, dimension_clf)
   clf_only_model$to(device = dev)
@@ -103,7 +103,7 @@ fair_train_old <- function(train_x, test_x, train_y, test_y, sensitive_train, se
             sensitive_test, batch_size, learning_rate_adv,
             learning_rate_clf, lambda)
 
-  exp <-  Single_explainer(test_y,clf_model,data,data_scaled_test,test_y,protected,priviliged,batch_size,dev)
+ # exp <-  Single_explainer(test_y,clf_model,data,data_scaled_test,test_y,protected,priviliged,batch_size,dev)
 
   plot(exp)
 }

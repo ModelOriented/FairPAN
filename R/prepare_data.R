@@ -37,6 +37,7 @@ dataset_loader <- function(train_x,train_y,test_x,test_y,batch_size=50,dev){
     initialize = function(df,y2) {
       df <- na.omit(df)
       x_cont <- df
+      #create tensors for x and y and pass it to device
       self$x_cont <- torch_tensor(x_cont)$to(device = dev)
       self$y <- torch_tensor(y2,dtype = torch_long())$to(device = dev)
     },
@@ -48,6 +49,7 @@ dataset_loader <- function(train_x,train_y,test_x,test_y,batch_size=50,dev){
     }
   )
 
+  #create datasets and data loaders
   train_ds <- new_dataset(train_x,train_y)
   test_ds <- new_dataset(test_x,test_y)
   train_dl <- train_ds %>% dataloader(batch_size = batch_size, shuffle = FALSE)
@@ -121,36 +123,53 @@ prepare_to_adv <- function(preds, sensitive, partition=0.7){
 #' @examples
 #' data("adult")
 #' preprocess(adult,"salary","sex",c("race"),sample=0.001,train_size=0.7,test_size=0.2,validation_size=0.1,seed=7)
-preprocess <- function(data,target_name,sensitive_name,drop_also,sample=1,train_size=0.7,
-                       test_size=0.3,validation_size=0,seed=NULL){
+preprocess <- function(data,target_name,sensitive_name,privileged,discriminated,drop_also,
+                       sample=1,train_size=0.7,test_size=0.3,validation_size=0,seed=NULL){
+
   if (train_size+test_size+validation_size!=1) stop("train_size+test_size+validation_size must equal 1")
   if (!is.character(target_name) || !is.character(sensitive_name)) stop("target_name and sensitive_name must be characters")
   if (!is.character(drop_also)) stop("drop_also must be a character vector")
   if (!is.list(data)) stop("data must be a list")
 
-  #dodać jednak balansowanie, bo bez tego jest lipa
+  print(nrow(data))
+  col<-eval( parse( text=paste( "data$",sensitive_name,sep="" ) ) )
+  #balance dataset to have the same number of sensitive values, so adversarial doesnt
+  #overfit (like all predictions are 1 or 2)
+  M <- min(table(col))
+  df_new <- data[col == privileged, ][1:M, ]
+  df_new <- rbind(df_new, data[col == discriminated, ][1:M, ])
+  print(nrow(df_new))
+  data<-df_new
+  #print(data)
 
   data <- na.omit(data)
+  print(nrow(data))
   set.seed(seed)
   sample_indices <- sample(1:nrow(data), nrow(data)*sample)
-
   data <- data[sample_indices,]
-
+  #print(data)
+  data <- na.omit(data)
+  #print(data)
+  #print(data)
+  print("after sampling and balancing data set")
+  print(nrow(data))
   sensitive <- as.integer (eval( parse( text=paste( "data$",sensitive_name,sep="" ) ) ) )
 
   target <- as.integer (eval( parse( text=paste( "data$",target_name,sep="" ) ) ) )
 
+  #drop columns we dont want to be in learning set
   data_coded<- data[,-which(names(data) %in% c(target_name,sensitive_name,drop_also))]
-
+  #encode columns which are not numeric
   for(i in 1:ncol(data_coded)){
     if(!is.numeric(data_coded[,i])){
       data_coded[,i]<-as.integer(data_coded[,i])
     }
   }
 
+  #prepare data with scaling
   data_matrix=matrix(unlist(data_coded),ncol=ncol(data_coded))
   data_scaled=scale(data_matrix,center=TRUE,scale=TRUE)
-
+  #prepare indices for all classes
   set.seed(seed)
   train_indices <- sample(1:nrow(data_coded), train_size*nrow(data_coded))
   rest_indices <- setdiff(1:nrow(data_coded), train_indices)
@@ -168,6 +187,8 @@ preprocess <- function(data,target_name,sensitive_name,drop_also,sample=1,train_
   test_x <- data_scaled[test_indices,]
   test_y <- target[test_indices]
   sensitive_test <- sensitive[test_indices]
+  print("test")
+  print(nrow(test_x))
 
   valid_x <- data_scaled[validation_indices,]
   valid_y <- target[validation_indices]
@@ -177,7 +198,7 @@ preprocess <- function(data,target_name,sensitive_name,drop_also,sample=1,train_
   protected_test <-eval( parse( text=paste( "data_test$",sensitive_name,sep="" ) ) )
 
   data_valid<-data[validation_indices,]
-  protected_valid <-eval( parse( text=paste( "data_test$",sensitive_name,sep="" ) ) )
+  protected_valid <-eval( parse( text=paste( "data_valid$",sensitive_name,sep="" ) ) )
 
   prepared_data<-list("train_x"=train_x,"train_y"=train_y,"sensitive_train"=sensitive_train,
                       "test_x"=test_x,"test_y"=test_y,"sensitive_test"=sensitive_test,

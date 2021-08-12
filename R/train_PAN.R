@@ -42,15 +42,20 @@ train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, dev, sensitive_train,
 
   if(!is.logical(verbose)||!is.logical(monitor)) stop("verbose and monitor must be logical")
 
-  if(lambda!=lambda/1 || lambda<0) stop("lambda must be a positive integer")
+  #if(lambda!=lambda/1 || lambda<0) stop("lambda must be a positive integer")
 
-
+  adversary_losses<-c()
+  classifier_losses<-c()
   if(monitor){
-    adversary_losses<-c()
     STP<-c()
     adversary_acc<-c()
     classifier_acc<-c()
   }
+#   to co tu się stało to grzech i zbrodnia przeciw ludzkości
+#   adv_optimizer <- optim_adam(adv_model$parameters, lr = learning_rate_adv)
+#   clf_optimizer <- optim_adam(clf_model$parameters, lr = learning_rate_clf)
+#   adv_model$train()
+#   clf_model$train()
 
   for (epoch in 1:n_ep_pan){
     verbose_cat(sprintf("PAN epoch %d \n", epoch),verbose)
@@ -67,13 +72,10 @@ train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, dev, sensitive_train,
 
     adv_dsl <- dataset_loader(train_x,train_y,train_x,train_y,batch_size,dev)
 
-    adv_optimizer <- optim_adam(adv_model$parameters, lr = learning_rate_adv)
-    clf_optimizer <- optim_adam(clf_model$parameters, lr = learning_rate_clf)
-    adv_model$train()
-    clf_model$train()
     train_losses <- c()
-    clf_train_losses <- c()
+    #clf_train_losses <- c()
     iterator<-dsl$train_dl$.iter()
+    #train adversarial on whole dataset, all batches
     coro::loop(for (b in adv_dsl$train_dl) {
       adv_optimizer$zero_grad()
       output <- adv_model(b$x_cont$to(device = dev))
@@ -83,7 +85,7 @@ train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, dev, sensitive_train,
       train_losses <- c(train_losses, loss$item())
 
     })
-
+    #we're training the classifier on a single minibatch to cheat an adversarial
     iterator<-adv_dsl$train_dl$.iter()
     b <- iterator$.next()
     output <- adv_model(b$x_cont$to(device = dev))
@@ -93,12 +95,15 @@ train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, dev, sensitive_train,
     b <- iterator$.next()
     clf_optimizer$zero_grad()
     clf_output <- clf_model(b$x_cont$to(device = dev))
-    clf_loss <- nnf_cross_entropy(clf_output, b$y$to(device = dev))-loss$item()
+    clf_loss <- nnf_cross_entropy(clf_output, b$y$to(device = dev))#-loss$item()
+    #clf_loss2 <- nnf_cross_entropy(clf_output, b$y$to(device = dev))
+    # print(clf_loss)
+    # print(clf_loss2)
     clf_loss$backward()
     clf_optimizer$step()
-
+    #classifier_losses<-c(classifier_losses,clf_loss)
     adversary_losses<-c(adversary_losses,mean(train_losses))
-
+    # user wants to calculate and plot monitor values
     if(monitor){
       acc<-eval_accuracy(adv_model,adv_dsl$test_ds,dev)
       adversary_acc<-c(adversary_acc,acc)
@@ -109,7 +114,7 @@ train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, dev, sensitive_train,
       stp<-calc_STP(clf_model,dsl$test_ds,sensitive_test,dev)
       STP<-c(STP,stp)
 
-      verbose_cat(sprintf("Classifier accuracy at epoch %d: %3.3f\n", epoch,cacc),verbose)
+      verbose_cat(sprintf("Classifier at epoch %d:training loss: %3.3f, accuracy: %3.3f\n", epoch,clf_loss$item(),cacc),verbose)
       verbose_cat(sprintf("Adversary at epoch %d: training loss: %3.3f, accuracy: %3.3f, STPR: %3.3f\n",
                   epoch, mean(train_losses),acc,stp), verbose)
     }else{
