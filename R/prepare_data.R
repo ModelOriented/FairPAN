@@ -140,19 +140,19 @@ preprocess <- function(data,target_name,sensitive_name,privileged,discriminated,
   if (!is.character(drop_also)) stop("drop_also must be a character vector")
   if (!is.list(data)) stop("data must be a list")
 
-  print(nrow(data))
+  #print(nrow(data))
   col<-eval( parse( text=paste( "data$",sensitive_name,sep="" ) ) )
   #balance dataset to have the same number of sensitive values, so adversarial doesn't
   #overfit (like all predictions are 1 or 2)
   M <- min(table(col))
   df_new <- data[col == privileged, ][1:M, ]
   df_new <- rbind(df_new, data[col == discriminated, ][1:M, ])
-  print(nrow(df_new))
+  #print(nrow(df_new))
   data<-df_new
   #print(data)
 
   data <- na.omit(data)
-  print(nrow(data))
+  #print(nrow(data))
   set.seed(seed)
   sample_indices <- sample(1:nrow(data), nrow(data)*sample)
   data <- data[sample_indices,]
@@ -160,8 +160,8 @@ preprocess <- function(data,target_name,sensitive_name,privileged,discriminated,
   data <- na.omit(data)
   #print(data)
   #print(data)
-  print("after sampling and balancing data set")
-  print(nrow(data))
+  #print("after sampling and balancing data set")
+  #print(nrow(data))
   sensitive <- as.integer (eval( parse( text=paste( "data$",sensitive_name,sep="" ) ) ) )
 
   target <- as.integer (eval( parse( text=paste( "data$",target_name,sep="" ) ) ) )
@@ -196,8 +196,8 @@ preprocess <- function(data,target_name,sensitive_name,privileged,discriminated,
   test_x <- data_scaled[test_indices,]
   test_y <- target[test_indices]
   sensitive_test <- sensitive[test_indices]
-  print("test")
-  print(nrow(test_x))
+  #print("test")
+  #print(nrow(test_x))
 
   valid_x <- data_scaled[validation_indices,]
   valid_y <- target[validation_indices]

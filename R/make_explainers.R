@@ -12,35 +12,41 @@
 #' @param data_scaled_test scaled matrix of numerical values representing predictors
 #' @param batch_size integer indicating a batch size used in dataloader.
 #' @param dev device used to calculations (cpu or gpu)
+#' @param verbose
 #'
 #' @return fobject - fairness object
 #' @export
 #'
 #' @examples
-Single_explainer <- function(target,model,model_name,data_test,data_scaled_test,protected,privileged,batch_size,dev){
+Single_explainer <- function(target,model,model_name,data_test,data_scaled_test,protected,
+                             privileged,batch_size,dev,verbose=TRUE){
   if(!is.vector(target)) stop("target must be a vector")
   if(typeof(model)!='closure') stop("models must be neural networks models")
   if(typeof(model_name)!='character') stop("model names must be characters")
-  if(nrow(data_test)!=nrow(data_scaled_test)) stop("number of rows of data_test and data_scaled_test cannot differ")
-  if(nrow(data_test)!=length(protected)) stop("number of rows of data_test and length of protected must be the same")
-  if(typeof(privileged)!='character') stop("privileged must be character name of label from protected")
+  if(nrow(data_test)!=nrow(data_scaled_test)) stop("number of rows of data_test and data_scaled_test
+                                                   cannot differ")
+  if(nrow(data_test)!=length(protected)) stop("number of rows of data_test and length of protected
+                                              must be the same")
+  if(typeof(privileged)!='character') stop("privileged must be character name of label from
+                                           protected")
   if(batch_size!=batch_size/1) stop("batch size must be an integer")
   if(!dev %in% c("gpu","cpu"))stop("dev must be gpu or cpu")
 
   y_numeric <- as.numeric(target)-1
   custom_predict <- function(mmodel, newdata) {
-    pp<-make_preds_prob(model = mmodel, test_ds = dataset_loader(data_scaled_test,target,data_scaled_test,target,batch_size,dev)$test_ds,dev)
+    pp<-make_preds_prob(model = mmodel, test_ds = dataset_loader(data_scaled_test,target,
+                                                                 data_scaled_test,target,batch_size,
+                                                                 dev)$test_ds,dev)
     pp[,2]
   }
-  #print(custom_predict(model,c(1,2,3)))
 
   aps_model_exp <- DALEX::explain(label=model_name,model, data = data_test, y = y_numeric,
                                   predict_function = custom_predict,
-                                  type = 'classification')
+                                  type = 'classification', verbose = verbose)
 
   fobject <- fairness_check(aps_model_exp,
                             protected = protected,
-                            privileged = privileged)
+                            privileged = privileged, verbose = verbose)
   return(fobject)
 }
 
@@ -60,35 +66,44 @@ Single_explainer <- function(target,model,model_name,data_test,data_scaled_test,
 #' @param data_scaled_test scaled matrix of numerical values representing predictors
 #' @param batch_size integer indicating a batch size used in dataloader.
 #' @param dev device used to calculations (cpu or gpu)
+#' @param verbose
 #'
 #' @return fobject - fairness object
 #' @export
 #'
 #' @examples
-Dual_explainer <- function(target,model,model2,model_name,model_name2,data_test,data_scaled_test,protected,privileged,batch_size,dev){
+Dual_explainer <- function(target,model,model2,model_name,model_name2,data_test,data_scaled_test,
+                           protected,privileged,batch_size,dev,verbose=TRUE){
   if(!is.vector(target)) stop("target must be a vector")
   if(!is.matrix(train_x)) stop("train_x must be a matrix")
-  if(typeof(model)!='closure' || typeof(model2)!='closure') stop("models must be neural networks models")
-  if(typeof(model_name)!='character' || typeof(model_name2)!='character') stop("model names must be characters")
-  if(nrow(data_test)!=nrow(data_scaled_test)) stop("number of rows of data_test and data_scaled_test cannot differ")
-  if(nrow(data_test)!=length(protected)) stop("number of rows of data_test and length of protected must be the same")
-  if(typeof(privileged)!='character') stop("privileged must be character name of label from protected")
+  if(typeof(model)!='closure' || typeof(model2)!='closure') stop("models must be neural networks
+                                                                 models")
+  if(typeof(model_name)!='character' || typeof(model_name2)!='character') stop("model names must be
+                                                                               characters")
+  if(nrow(data_test)!=nrow(data_scaled_test)) stop("number of rows of data_test and data_scaled_test
+                                                   cannot differ")
+  if(nrow(data_test)!=length(protected)) stop("number of rows of data_test and length of protected
+                                              must be the same")
+  if(typeof(privileged)!='character') stop("privileged must be character name of label from
+                                           protected")
   if(batch_size!=batch_size/1) stop("batch size must be an integer")
   if(!dev %in% c("gpu","cpu"))stop("dev must be gpu or cpu")
   y_numeric <- as.numeric(target)-1
   custom_predict <- function(mmodel, newdata) {
-    pp<-make_preds_prob(model = mmodel, test_ds = dataset_loader(data_scaled_test,target,data_scaled_test,target,batch_size,dev)$test_ds,dev)
+    pp<-make_preds_prob(model = mmodel, test_ds = dataset_loader(data_scaled_test,target
+                                                                 ,data_scaled_test,target,
+                                                                 batch_size,dev)$test_ds,dev)
     pp[,2]
   }
   aps_model_exp <- DALEX::explain(label =model_name,model, data = data_test, y = y_numeric,
                                   predict_function = custom_predict,
-                                  type = 'classification')
+                                  type = 'classification', verbose = verbose)
   aps_model_exp2 <- DALEX::explain(label =model_name2,model2, data = data_test, y = y_numeric,
                                    predict_function = custom_predict,
-                                   type = 'classification')
+                                   type = 'classification', verbose = verbose)
   fobject <- fairness_check(aps_model_exp,aps_model_exp2,
                             protected = protected,
-                            privileged = privileged)
+                            privileged = privileged, verbose = verbose)
   return(fobject)
 }
 
@@ -111,19 +126,27 @@ Dual_explainer <- function(target,model,model2,model_name,model_name2,data_test,
 #' @param data_scaled_test scaled matrix of numerical values representing predictors
 #' @param batch_size integer indicating a batch size used in dataloader.
 #' @param dev device used to calculations (cpu or gpu)
+#' @param verbose
 #'
 #' @return fobject - fairness object
 #' @export
 #'
 #' @examples
-Triple_explainer <- function(target,model,model2,model3,model_name,model_name2,model_name3,data_test,data_scaled_test,protected,privileged,batch_size,dev){
+Triple_explainer <- function(target,model,model2,model3,model_name,model_name2,model_name3,
+                             data_test,data_scaled_test,protected,privileged,batch_size,dev,
+                             verbose=TRUE){
   if(!is.vector(target)) stop("target must be a vector")
   if(!is.matrix(train_x)) stop("train_x must be a matrix")
-  if(typeof(model)!='closure' || typeof(model2)!='closure' || typeof(model3)!='closure') stop("models must be neural networks models")
-  if(typeof(model_name)!='character' || typeof(model_name2)!='character' || typeof(model_name3)!='character') stop("model names must be characters")
-  if(nrow(data_test)!=nrow(data_scaled_test)) stop("number of rows of data_test and data_scaled_test cannot differ")
-  if(nrow(data_test)!=length(protected)) stop("number of rows of data_test and length of protected must be the same")
-  if(typeof(privileged)!='character') stop("privileged must be character name of label from protected")
+  if(typeof(model)!='closure' || typeof(model2)!='closure' || typeof(model3)!='closure')
+    stop("models must be neural networks models")
+  if(typeof(model_name)!='character' || typeof(model_name2)!='character' ||
+     typeof(model_name3)!='character') stop("model names must be characters")
+  if(nrow(data_test)!=nrow(data_scaled_test)) stop("number of rows of data_test and
+                                                   data_scaled_test cannot differ")
+  if(nrow(data_test)!=length(protected)) stop("number of rows of data_test and length of
+                                              protected must be the same")
+  if(typeof(privileged)!='character') stop("privileged must be character name of label
+                                           from protected")
   if(batch_size!=batch_size/1) stop("batch size must be an integer")
   if(!dev %in% c("gpu","cpu"))stop("dev must be gpu or cpu")
 
@@ -131,20 +154,22 @@ Triple_explainer <- function(target,model,model2,model3,model_name,model_name2,m
 
   y_numeric <- as.numeric(target)-1
   custom_predict <- function(mmodel, newdata) {
-    pp<-make_preds_prob(model = mmodel, test_ds = dataset_loader(data_scaled_test,target,data_scaled_test,target,batch_size,dev)$test_ds,dev)
+    pp<-make_preds_prob(model = mmodel, test_ds = dataset_loader(data_scaled_test,target,
+                                                                 data_scaled_test,target,
+                                                                 batch_size,dev)$test_ds,dev)
     pp[,2]
   }
   aps_model_exp <- DALEX::explain(label =model_name,model, data = data_test, y = y_numeric,
                                   predict_function = custom_predict,
-                                  type = 'classification')
+                                  type = 'classification', verbose = verbose)
   aps_model_exp2 <- DALEX::explain(label =model_name2,model2, data = data_test, y = y_numeric,
                                    predict_function = custom_predict,
-                                   type = 'classification')
+                                   type = 'classification', verbose = verbose)
   aps_model_exp3 <- DALEX::explain(label =model_name3,model3, data = data_test, y = y_numeric,
                                    predict_function = custom_predict,
-                                   type = 'classification')
+                                   type = 'classification', verbose = verbose)
   fobject <- fairness_check(aps_model_exp,aps_model_exp2,aps_model_exp3,
                             protected = protected,
-                            privileged = privileged)
+                            privileged = privileged, verbose = verbose)
   return(fobject)
 }

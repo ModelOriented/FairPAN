@@ -1,4 +1,4 @@
-test_that("test-pretrain_net", { #TO DO:
+test_that("test-pretrain_net", {
   data("adult")
   adult<-adult[1:200,]
   adult
