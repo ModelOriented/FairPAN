@@ -18,7 +18,7 @@
 #' @export
 #'
 #' @examples
-Single_explainer <- function(target,model,model_name,data_test,data_scaled_test,protected,
+Single_explainer <- function(target,model,model_name,data_test,data_scaled_test,protected, #explain_PAN, fainess_check_PAN
                              privileged,batch_size,dev,verbose=TRUE){
   if(!is.vector(target)) stop("target must be a vector")
   if(typeof(model)!='closure') stop("models must be neural networks models")
@@ -75,13 +75,12 @@ Single_explainer <- function(target,model,model_name,data_test,data_scaled_test,
 Dual_explainer <- function(target,model,model2,model_name,model_name2,data_test,data_scaled_test,
                            protected,privileged,batch_size,dev,verbose=TRUE){
   if(!is.vector(target)) stop("target must be a vector")
-  if(!is.matrix(train_x)) stop("train_x must be a matrix")
   if(typeof(model)!='closure' || typeof(model2)!='closure') stop("models must be neural networks
                                                                  models")
   if(typeof(model_name)!='character' || typeof(model_name2)!='character') stop("model names must be
                                                                                characters")
   if(nrow(data_test)!=nrow(data_scaled_test)) stop("number of rows of data_test and data_scaled_test
-                                                   cannot differ")
+  cannot differ")
   if(nrow(data_test)!=length(protected)) stop("number of rows of data_test and length of protected
                                               must be the same")
   if(typeof(privileged)!='character') stop("privileged must be character name of label from
@@ -136,7 +135,6 @@ Triple_explainer <- function(target,model,model2,model3,model_name,model_name2,m
                              data_test,data_scaled_test,protected,privileged,batch_size,dev,
                              verbose=TRUE){
   if(!is.vector(target)) stop("target must be a vector")
-  if(!is.matrix(train_x)) stop("train_x must be a matrix")
   if(typeof(model)!='closure' || typeof(model2)!='closure' || typeof(model3)!='closure')
     stop("models must be neural networks models")
   if(typeof(model_name)!='character' || typeof(model_name2)!='character' ||

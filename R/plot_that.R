@@ -3,7 +3,7 @@
 #' Plots visualizations that show the learning process
 #'
 #' @param STP double vector of Statistical Parity ratio value
-#' @param adversary_acc double vector of adversarials accuracy
+#' @param adversary_acc double, vector containing adversarial models accuracy for each epoch
 #' @param adversary_losses double vector of adversaries losses
 #' @param classifier_acc double vector of adversarials accuracy
 #'

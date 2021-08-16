@@ -13,7 +13,8 @@ Single_explainer(
   protected,
   privileged,
   batch_size,
-  dev
+  dev,
+  verbose = TRUE
 )
 }
 \arguments{
@@ -34,6 +35,8 @@ Single_explainer(
 \item{batch_size}{integer indicating a batch size used in dataloader.}
 
 \item{dev}{device used to calculations (cpu or gpu)}
+
+\item{verbose}{}
 }
 \value{
 fobject - fairness object

@@ -29,11 +29,11 @@ eval_accuracy <- function(model,test_ds,dev){
 
 #' Calculates STP ratio for the model
 #'
-#' Calcucates Statistical Parity ((TP+FP)/(TP+FP+TN+FN)) ratio between privileged and
+#' Calculates Statistical Parity ((TP+FP)/(TP+FP+TN+FN)) ratio between privileged and
 #' discriminated label for given model, which is the most important fairness metric.
 #'
 #' @param model neural network model we want to evaluate
-#' @param test_ds dataset object used for making predictions for STP
+#' @param test_ds \code{dataset} object from torch used for making predictions for STP
 #' @param sensitive numerical vector of sensitive variable
 #' @param dev device used to calculations (cpu or gpu)
 #'
@@ -41,7 +41,7 @@ eval_accuracy <- function(model,test_ds,dev){
 #' @export
 #'
 #' @examples
-calc_STP<-function(model,test_ds,sensitive,dev){
+calc_STP<-function(model, test_ds,sensitive,dev){
   if(typeof(model)!='closure') stop("provide a neural network as a model")
   if(typeof(test_ds)!="environment") stop("provide a test data set")
   if(typeof(test_ds$y)!="externalptr") stop("provide a test data set")
@@ -49,7 +49,7 @@ calc_STP<-function(model,test_ds,sensitive,dev){
   if(!is.vector(sensitive)) stop("sensitive must be a vector")
 
 
-  preds<-make_preds(model,test_ds,dev)-1
+  preds <- make_preds(model,test_ds,dev)-1
   real<-(test_ds$y$to(device = "cpu") %>% as.array())-1
   sensitive<-sensitive-1
 

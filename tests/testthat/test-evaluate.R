@@ -1,80 +1,30 @@
 test_that("test-evaluate", { #printy irytują
-  data("adult")
-  adult<-adult[1:200,]
-  sensitive = adult$sex
-  sensitive = as.integer(sensitive)
-
-  data <- adult[ , c(2,3,4,5,6,7,8,9,12,13,14,15)]
-  data$workclass <- as.integer(data$workclass)
-  data$education  <- as.integer(data$education)
-  data$marital_status <- as.integer(data$marital_status)
-  data$occupation <- as.integer(data$occupation)
-  data$relationship <- as.integer(data$relationship)
-  data$native_country <- as.integer(data$native_country)
-
-  data_matrix=matrix(unlist(data),ncol=12)
-  data_scaled=scale(data_matrix,center=TRUE,scale=TRUE)
-
-  target=adult$salary
-  target= as.integer(target)
-  set.seed(7)
-  train_indices <- sample(1:nrow(adult), 0.7*nrow(adult))
-  adult_test<-adult[setdiff(1:nrow(adult), train_indices),]
-  data_scaled_test<-data_scaled[setdiff(1:nrow(adult), train_indices),]
-
-  train_x<-data_scaled[train_indices,]
-  test_x<-data_scaled[setdiff(1:nrow(data_scaled), train_indices), ]
-
-  train_y<-target[train_indices]
-  test_y<-target[setdiff(1:length(target), train_indices)]
-
-  sensitive_train<-sensitive[train_indices]
-  sensitive_test<-sensitive[setdiff(1:length(sensitive), train_indices)]
-
   dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+  model1 <- torch_load("~/Fairness 2021/FairPAN/tests/zzz/preclf")
+  model2 <- torch_load("~/Fairness 2021/FairPAN/tests/zzz/clf1")
+  model3 <- torch_load("~/Fairness 2021/FairPAN/tests/zzz/clf2")
+  model4 <- torch_load("~/Fairness 2021/FairPAN/tests/zzz/clf3")
+  processed <- torch_load("~/Fairness 2021/FairPAN/tests/zzz/processed")
+  dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x, processed$test_y,
+                        batch_size=5, dev=dev)
 
-  dsl <- dataset_loader(train_x, train_y, test_x, test_y, 5, dev)
+  acc1 <- eval_accuracy(model1,dsl$test_ds,dev)
+  acc2 <- eval_accuracy(model2,dsl$test_ds,dev)
+  acc3 <- eval_accuracy(model3,dsl$test_ds,dev)
+  acc4 <- eval_accuracy(model4,dsl$test_ds,dev)
 
-  clf_model <- create_model(train_x,train_y, c(8,8,8), dimensions = 2)
-  clf_model$to(device = dev)
+  expect_equal(round(acc1,7),0.8355438)
+  expect_equal(round(acc2,7),0.8381963)
+  expect_equal(round(acc3,7),0.8381963)
+  expect_equal(round(acc4,7),0.8355438)
 
-  pretrain_net(5, clf_model, dsl, model_type = 1, 0.001,sensitive_test, dev, FALSE, FALSE)
-  acc1 <- eval_accuracy(clf_model,dsl$test_ds,dev)
-  pretrain_net(5, clf_model, dsl, model_type = 1, 0.001,sensitive_test, dev, FALSE, FALSE)
-  acc2 <- eval_accuracy(clf_model,dsl$test_ds,dev)
-  pretrain_net(5, clf_model, dsl, model_type = 1, 0.001,sensitive_test, dev, FALSE, FALSE)
-  acc3 <- eval_accuracy(clf_model,dsl$test_ds,dev)
-  pretrain_net(5, clf_model, dsl, model_type = 1, 0.001,sensitive_test, dev, FALSE, FALSE)
-  acc4 <- eval_accuracy(clf_model,dsl$test_ds,dev)
-  pretrain_net(5, clf_model, dsl, model_type = 1, 0.001,sensitive_test, dev, FALSE, FALSE)
-  acc5 <- eval_accuracy(clf_model,dsl$test_ds,dev)
-  pretrain_net(5, clf_model, dsl, model_type = 1, 0.001,sensitive_test, dev, FALSE, FALSE)
-  acc6 <- eval_accuracy(clf_model,dsl$test_ds,dev)
+  stp1 <- calc_STP(model1,dsl$test_ds,processed$sensitive_test,dev)
+  stp2 <- calc_STP(model2,dsl$test_ds,processed$sensitive_test,dev)
+  stp3 <- calc_STP(model3,dsl$test_ds,processed$sensitive_test,dev)
+  stp4 <- calc_STP(model4,dsl$test_ds,processed$sensitive_test,dev)
 
-  expect_true(acc1<=acc2)
-  expect_true(acc2<=acc4)
-  expect_true(acc3<=acc4)
-  expect_true(acc4<=acc5)
-  expect_true(acc5<=acc6)
-
-  expect_equal(acc1,0.3)
-  expect_equal(acc2,0.81666667)
-  expect_equal(acc3,0.81666667)
-  expect_equal(acc4,0.81666667)
-  expect_equal(acc5,0.81666667)
-  expect_equal(acc6,0.85)
-
-  clf_model <- create_model(train_x,train_y, c(8,8,8), dimensions = 2)
-  clf_model$to(device = dev)
-
-  pretrain_net(1, clf_model, dsl, model_type = 1, 0.001,sensitive_test, dev, FALSE, FALSE)
-  stp1 <- calc_STP(clf_model,dsl$test_ds,sensitive_test,dev)
-  pretrain_net(5, clf_model, dsl, model_type = 1, 0.001,sensitive_test, dev, FALSE, FALSE)
-  stp2 <- calc_STP(clf_model,dsl$test_ds,sensitive_test,dev)
-  pretrain_net(15, clf_model, dsl, model_type = 1, 0.001,sensitive_test, dev, FALSE, FALSE)
-  stp3 <- calc_STP(clf_model,dsl$test_ds,sensitive_test,dev)
-
-  expect_equal(stp1,1)
-  expect_equal(stp2,0.41558442)
-  expect_equal(stp3,0.72727273)
+  expect_equal(round(stp1,7),0.3320388)
+  expect_equal(round(stp2,7),0.3192681)
+  expect_equal(round(stp3,7),0.3270079)
+  expect_equal(round(stp4,7),0.3942961)
 })

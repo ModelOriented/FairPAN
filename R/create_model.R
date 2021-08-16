@@ -17,8 +17,9 @@
 #' @return neural network model
 #'
 #' @examples
-create_model <- function(train_x,train_y,neurons=c(32,32,32),dimensions=2){
-  if(!dimensions %in% c(0,1,2)) stop("dimensions must be a 0,1 or 2")
+create_model <- function(train_x, train_y, neurons=c(32,32,32), dimensions=2){
+
+  if( !dimensions %in% c(0,1,2)) stop("dimensions must be a 0,1 or 2")
   if(!is.vector(train_y)) stop("train_y must be a vector")
   if(!is.matrix(train_x)) stop("train_x must be a matrix")
   if(nrow(train_x)!=length(train_y)) stop("length of train_y must be equal number of rows of train_x")

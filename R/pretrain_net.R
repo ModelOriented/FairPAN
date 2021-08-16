@@ -74,7 +74,7 @@ pretrain_net <- function(n_epochs=15,model,dsl,model_type, learning_rate=0.001, 
     }
   }
   if(model_type == 1){
-    for (epoch in 1:n_epochs) {
+    for (epoch in 1:n_epochs) { # TODO seq_len
       losses <- train_eval(model,dsl,optimizer, dev)
       if(monitor){
         acc<-eval_accuracy(model, dsl$test_ds, dev)

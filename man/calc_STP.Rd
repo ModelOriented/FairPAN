@@ -9,7 +9,7 @@ calc_STP(model, test_ds, sensitive, dev)
 \arguments{
 \item{model}{neural network model we want to evaluate}
 
-\item{test_ds}{dataset object used for making predictions for STP}
+\item{test_ds}{\code{dataset} object from torch used for making predictions for STP}
 
 \item{sensitive}{numerical vector of sensitive variable}
 
@@ -19,6 +19,6 @@ calc_STP(model, test_ds, sensitive, dev)
 float, STP ratio
 }
 \description{
-Calcucates Statistical Parity ((TP+FP)/(TP+FP+TN+FN)) ratio between privileged and
+Calculates Statistical Parity ((TP+FP)/(TP+FP+TN+FN)) ratio between privileged and
 discriminated label for given model, which is the most important fairness metric.
 }

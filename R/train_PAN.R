@@ -36,7 +36,9 @@ train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, clf_optimizer, adv_op
   if(n_ep_pan!=n_ep_pan/1 || n_ep_pan<0) stop("n_ep_pan must be a positive integer")
   if(typeof(clf_model)!='closure') stop("provide a neural network as a clf_model")
   if(typeof(adv_model)!='closure') stop("provide a neural network as a adv_model")
-  if(typeof(dsl)!="list") stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
+  if(typeof(dsl)!="list"){
+    stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
+  }
   if(typeof(dsl$test_ds)!="environment") stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
   if(typeof(dsl$test_ds$y)!="externalptr") stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
   if(learning_rate_clf>1 || learning_rate_clf<0) stop("learning_rate_clf must be between 0 and 1")
@@ -101,16 +103,16 @@ train_PAN <- function(n_ep_pan, dsl, clf_model, adv_model, clf_optimizer, adv_op
       iter$.next()
       iterator$.next()
     }
-
+    #policzyć ilość batchy
     batch_iter=(batch_iter+1)%%20+1
 
-    b <- iter$.next()
+    b          <- iter$.next()
     clf_output <- clf_model(b$x_cont$to(device = dev))
-    preds<-clf_output[,2]$to(device = "cpu")
-    preds<-torch_reshape(preds,list(batch_size,1))
-    batch <- iterator$.next()
-    output <- adv_model(preds$to(device = dev))
-    loss <- torch_mul(nnf_cross_entropy(output, batch$y$to(device = dev)),lambda)
+    preds      <- clf_output[,2]$to(device = "cpu")
+    preds      <- torch_reshape(preds,list(batch_size,1))
+    batch      <- iterator$.next()
+    output     <- adv_model(preds$to(device = dev))
+    loss       <- torch_mul(nnf_cross_entropy(output, batch$y$to(device = dev)),lambda)
 
     clf_loss <- torch_sub(nnf_cross_entropy(clf_output, b$y$to(device = dev)),loss)
     clf_optimizer$zero_grad()

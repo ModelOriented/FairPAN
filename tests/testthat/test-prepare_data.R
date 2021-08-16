@@ -43,4 +43,39 @@ test_that("test-prepare_data", {
   expect_true(is.vector(prepared$test_y))
 
   expect_equal(typeof(prepared),"list")
-})
+
+
+  data("adult")
+
+  processed <- preprocess(adult,"salary","sex","Male","Female",c("race"),sample=0.05,
+                          train_size=0.65,test_size=0.35,validation_size=0,seed=7)
+
+  expect_true(is.matrix(processed$train_x))
+  expect_true(is.vector(processed$train_y))
+  expect_true(nrow(processed$train_x)==length(processed$train_y))
+  expect_true(is.vector(processed$sensitive_train))
+  expect_true(length(processed$train_y)==length(processed$sensitive_train))
+
+  expect_true(is.matrix(processed$test_x))
+  expect_true(is.vector(processed$test_y))
+  expect_true(nrow(processed$test_x)==length(processed$test_y))
+  expect_true(is.vector(processed$sensitive_test))
+  expect_true(length(processed$test_y)==length(processed$sensitive_test))
+
+
+  expect_true(is.matrix(processed$valid_x))
+  expect_true(is.vector(processed$valid_y))
+  expect_true(nrow(processed$valid_x)==length(processed$valid_y))
+  expect_true(is.vector(processed$sensitive_valid))
+  expect_true(length(processed$valid_y)==length(processed$sensitive_valid))
+
+  expect_true(is.matrix(processed$data_scaled_test))
+  expect_true(is.matrix(processed$data_scaled_valid))
+
+  expect_true(is.list(processed$data_test))
+  expect_true(processed$protected_test[1]=="Male")
+  expect_true(nrow(processed$data_valid)==0)
+  expect_true(length(processed$protected_valid)==0)
+
+
+  })

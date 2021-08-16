@@ -1,6 +1,6 @@
-#' Create data sets and dataloaders
+#' Create datasets and dataloaders
 #'
-#' Create two data sets, from given ..x matrices and ..y vectors and converts them into
+#' Create two datasets, from given ..x matrices and ..y vectors and converts them into
 #' dataloaders with provided batch size.
 #'
 #' @param train_x numeric, scaled matrix of predictors used for training

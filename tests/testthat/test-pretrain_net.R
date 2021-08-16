@@ -39,31 +39,31 @@ test_that("test-pretrain_net", {
   clf_model <- create_model(train_x,train_y, c(8,8,8), dimensions = 2)
   clf_model$to(device = dev)
 
-  loss1 <- pretrain_net(5, clf_model, dsl, model_type = 1, 0.001,
+  loss1 <- pretrain_net(3, clf_model, dsl, model_type = 1, 0.001,
                         sensitive_test, dev,verbose = FALSE, monitor = FALSE)
-  loss2 <- pretrain_net(5, clf_model, dsl, model_type = 1, 0.001,
+  loss2 <- pretrain_net(3, clf_model, dsl, model_type = 1, 0.001,
                         sensitive_test, dev,verbose = FALSE, monitor = FALSE)
-  loss3 <- pretrain_net(5, clf_model, dsl, model_type = 1, 0.001,
+  loss3 <- pretrain_net(3, clf_model, dsl, model_type = 1, 0.001,
                         sensitive_test, dev,verbose = FALSE, monitor = FALSE)
-  loss4 <- pretrain_net(5, clf_model, dsl, model_type = 1, 0.001,
-                        sensitive_test, dev,verbose = FALSE, monitor = FALSE)
-  loss5 <- pretrain_net(5, clf_model, dsl, model_type = 1, 0.001,
-                        sensitive_test, dev,verbose = FALSE, monitor = FALSE)
-  loss6 <- pretrain_net(5, clf_model, dsl, model_type = 1, 0.001,
-                        sensitive_test, dev,verbose = FALSE, monitor = FALSE)
+  # loss4 <- pretrain_net(5, clf_model, dsl, model_type = 1, 0.001,
+  #                       sensitive_test, dev,verbose = FALSE, monitor = FALSE)
+  # loss5 <- pretrain_net(5, clf_model, dsl, model_type = 1, 0.001,
+  #                       sensitive_test, dev,verbose = FALSE, monitor = FALSE)
+  # loss6 <- pretrain_net(5, clf_model, dsl, model_type = 1, 0.001,
+  #                       sensitive_test, dev,verbose = FALSE, monitor = FALSE)
   #different_losses
   expect_false(loss1$test_loss==loss2$test_loss)
   expect_false(loss2$test_loss==loss3$test_loss)
-  expect_false(loss3$test_loss==loss4$test_loss)
-  expect_false(loss4$test_loss==loss5$test_loss)
-  expect_false(loss5$test_loss==loss6$test_loss)
-  expect_false(loss6$test_loss==loss1$test_loss)
+  expect_false(loss3$test_loss==loss1$test_loss)
+  # expect_false(loss4$test_loss==loss5$test_loss)
+  # expect_false(loss5$test_loss==loss6$test_loss)
+  # expect_false(loss6$test_loss==loss1$test_loss)
 
   expect_false(loss1$train_loss==loss2$train_loss)
   expect_false(loss2$train_loss==loss3$train_loss)
-  expect_false(loss3$train_loss==loss4$train_loss)
-  expect_false(loss4$train_loss==loss5$train_loss)
-  expect_false(loss5$train_loss==loss6$train_loss)
-  expect_false(loss6$train_loss==loss1$train_loss)
+  expect_false(loss3$train_loss==loss1$train_loss)
+  # expect_false(loss4$train_loss==loss5$train_loss)
+  # expect_false(loss5$train_loss==loss6$train_loss)
+  # expect_false(loss6$train_loss==loss1$train_loss)
 
 })
