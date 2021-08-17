@@ -25,42 +25,44 @@ train_PAN(
 \arguments{
 \item{n_ep_pan}{number of epochs for PAN training}
 
-\item{dsl}{dataset_loader object for classificator network}
+\item{dsl}{\code{dataset_loader} object for classificator network}
 
 \item{clf_model}{classifier model (preferably after pretrain)}
 
 \item{adv_model}{adversarial model (preferably after pretrain)}
 
-\item{clf_optimizer}{optimizer for classificator from pretrain}
+\item{clf_optimizer}{optimizer for classificator model from pretrain}
 
-\item{adv_optimizer}{optimizer for adverarial from pretrain}
+\item{adv_optimizer}{optimizer for adversarial model from pretrain}
 
 \item{dev}{device used to computation ("cuda" or "cpu")}
 
-\item{sensitive_train}{integer vector of sensitive attribute used for training}
+\item{sensitive_train}{integer vector of sensitive attribute used for
+training}
 
 \item{sensitive_test}{integer vector of sensitive attribute used for testing}
 
-\item{batch_size}{batch size used in adversarials dataset_loader}
+\item{batch_size}{batch size used in adversarial models \code{dataset_loader}}
 
 \item{learning_rate_adv}{learning rate of adversarial}
 
 \item{learning_rate_clf}{learning rate of classifier}
 
-\item{lambda}{parameter regulating learning proccess (intuition: the bigger it is,
-the fairer predictions).}
+\item{lambda}{parameter regulating learning process (intuition: the bigger it
+is, the fairer predictions and the worse accuracy of classifier).}
 
-\item{verbose}{logical indicating if we want to print monitored outputs or not}
+\item{verbose}{logical indicating if we want to print monitored outputs or
+not}
 
-\item{monitor}{logical indicating if we want to monitor the learning process or not
-(monitoring tends to slow down the training proccess, but provides some useful info to
-adjust parameters and training process)}
+\item{monitor}{logical indicating if we want to monitor the learning process
+or not (monitoring tends to slow down the training proccess, but provides
+some useful info to adjust parameters and training process)}
 }
 \value{
 NULL if monitor is FALSE, list of metrics if it is TRUE
 }
 \description{
-Trains Predictive Adversarial Network model, which means that it proceeds with the
-mutual training of adverssarial on whole data set and classifier on a single mini batch.
-The result is a fairer classifier.
+Trains Predictive Adversarial Network model, which means that it proceeds
+with the mutual training of adversarial model on whole dataloader and
+classifier on a single mini batch. The result is a fairer classifier.
 }

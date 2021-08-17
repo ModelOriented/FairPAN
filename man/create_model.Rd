@@ -2,7 +2,7 @@
 % Please edit documentation in R/create_model.R
 \name{create_model}
 \alias{create_model}
-\title{Creates a default neural network model}
+\title{Creates simple neural network model}
 \usage{
 create_model(train_x, train_y, neurons = c(32, 32, 32), dimensions = 2)
 }
@@ -11,20 +11,21 @@ create_model(train_x, train_y, neurons = c(32, 32, 32), dimensions = 2)
 
 \item{train_y}{numeric, scaled vector of target used for training}
 
-\item{neurons}{vector of integers describing the architecture. Notation c(8,16,8) means
-3 layer neural network with 8,16 and 8 neurons in 1st, 2nd and 3rd
-layer. Default: c(32,32,32)}
+\item{neurons}{vector of integers describing the architecture.
+Notation c(8,16,8) means 3 layer neural network with 8,16 and 8 neurons in
+1st, 2nd and 3rd layer. Default: c(32,32,32)}
 
-\item{dimensions}{integer from [0,2] setting nnf_softmax dimension for classifier.
-Default: 2 (suggested to use 2 for classifier and 1 for adversarial)}
+\item{dimensions}{integer 0,1 or 2 setting nnf_softmax dimension for
+classifier. Default: 2 (suggested to use 2 for classifier and 1 for
+adversarial)}
 }
 \value{
 neural network model
 }
 \description{
-Provides a method to create a simple neural network model which should be enough for
-tabular data classification tasks. The model consists of nn_linear layers, there are
-no dropouts and the activation function between the layers is nnf_relu(), whereas the
-last one is nnf_softmax. The user can provide demanded architecture of the leyers and
-select a softmaxes dimension.
+Provides a method to create a simple neural network model which should be
+enough for tabular data classification tasks. The model consists of nn_linear
+layers, there are no dropouts and the activation function between the layers
+is nnf_relu(), whereas the last one is nnf_softmax. The user can provide
+demanded architecture of the layers and select a softmaxes dimension.
 }

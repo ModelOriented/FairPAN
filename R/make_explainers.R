@@ -18,13 +18,15 @@
 #' @export
 #'
 #' @examples
+
+
 Single_explainer <- function(target,model,model_name,data_test,data_scaled_test,protected, #explain_PAN, fainess_check_PAN
                              privileged,batch_size,dev,verbose=TRUE){
   if(!is.vector(target)) stop("target must be a vector")
   if(typeof(model)!='closure') stop("models must be neural networks models")
   if(typeof(model_name)!='character') stop("model names must be characters")
-  if(nrow(data_test)!=nrow(data_scaled_test)) stop("number of rows of data_test and data_scaled_test
-                                                   cannot differ")
+  # if(nrow(data_test)!=nrow(data_scaled_test)) stop("number of rows of data_test and data_scaled_test
+  #                                                  cannot differ")
   if(nrow(data_test)!=length(protected)) stop("number of rows of data_test and length of protected
                                               must be the same")
   if(typeof(privileged)!='character') stop("privileged must be character name of label from

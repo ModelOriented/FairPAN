@@ -7,10 +7,11 @@
 verbose_cat(string, verbose = TRUE)
 }
 \arguments{
-\item{string}{character to print}
+\item{string}{character (string) to print}
 
-\item{verbose}{logical indicating if we want to print the string or not}
+\item{verbose}{logical value indicating whether we want to print the string
+or not}
 }
 \description{
-Prints the string if verbose is TRUE
+Prints the provided string if verbose is TRUE.
 }

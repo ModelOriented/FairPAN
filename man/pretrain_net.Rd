@@ -26,22 +26,45 @@ pretrain_net(
 \item{model_type}{indicates which model we train (0 for preadversarial, 1 for
 preclassifier, 2 for classifier only)}
 
-\item{learning_rate}{float from [0,1] setting learning rate for model. Default: 0.001}
+\item{learning_rate}{float from [0,1] setting learning rate for model.
+Default: 0.001}
 
-\item{sensitive_test}{test vector for sensitive variable used to calculate STP}
+\item{sensitive_test}{test vector for sensitive variable used to calculate
+STP}
 
 \item{dev}{device used to calculations (cpu or gpu)}
 
-\item{verbose}{logical indicating if we want to print monitored outputs or not}
+\item{verbose}{logical indicating if we want to print monitored outputs or
+not}
 
-\item{monitor}{logical indicating if we want to monitor the learning process or not
-(monitoring tends to slow down the training proccess, but provides some useful info to
-adjust parameters and training process)}
+\item{monitor}{logical indicating if we want to monitor the learning process
+or not (monitoring tends to slow down the training proccess, but provides
+some useful info to adjust parameters and training process)}
 }
 \value{
 list(train_loss,test_loss,optimizer)
 }
 \description{
-The function pretrain both the classifier and adversarial model. You can select which
+Pretrain for both the classifier and adversarial model. You can select which
 model it is by setting model_type parameter
+}
+\examples{
+
+dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+processed <- torch_load("./zzz/processed")
+dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
+                      processed$test_y, batch_size=5, dev=dev)
+model <- torch_load("./zzz/clf1")
+pretrain_net(
+  n_epochs = 3,
+  model = model,
+  dsl = dsl,
+  model_type = 2,
+  learning_rate = 0.001,
+  sensitive_test = processed$sensitive_test,
+  dev=dev,
+  verbose = TRUE,
+  monitor = TRUE
+)
+
 }

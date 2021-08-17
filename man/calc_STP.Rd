@@ -2,23 +2,38 @@
 % Please edit documentation in R/evaluate.R
 \name{calc_STP}
 \alias{calc_STP}
-\title{Calculates STP ratio for the model}
+\title{Calculates STP ratio}
 \usage{
 calc_STP(model, test_ds, sensitive, dev)
 }
 \arguments{
 \item{model}{neural network model we want to evaluate}
 
-\item{test_ds}{\code{dataset} object from torch used for making predictions for STP}
+\item{test_ds}{\code{dataset} object from torch used for making predictions
+for STP ratio}
 
 \item{sensitive}{numerical vector of sensitive variable}
 
-\item{dev}{device used to calculations (cpu or gpu)}
+\item{dev}{device used for calculations (cpu or gpu)}
 }
 \value{
 float, STP ratio
 }
 \description{
-Calculates Statistical Parity ((TP+FP)/(TP+FP+TN+FN)) ratio between privileged and
-discriminated label for given model, which is the most important fairness metric.
+Calculates Statistical Parity ((TP+FP)/(TP+FP+TN+FN)) ratio between
+privileged and discriminated label for given model, which is the most
+important fairness metric.
+}
+\examples{
+
+dev        <- if (torch::cuda_is_available())
+                torch_device("cuda:0") else "cpu"
+model4     <- torch_load("./zzz/clf3")
+processed  <- torch_load("./zzz/processed")
+dsl        <- dataset_loader(processed$train_x, processed$train_y,
+                             processed$test_x, processed$test_y,
+                             batch_size = 5, dev = dev)
+
+calc_STP(model4, dsl$test_ds, processed$sensitive_test, dev)
+
 }

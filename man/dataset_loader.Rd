@@ -2,7 +2,7 @@
 % Please edit documentation in R/prepare_data.R
 \name{dataset_loader}
 \alias{dataset_loader}
-\title{Create data sets and dataloaders}
+\title{Create datasets and dataloaders}
 \usage{
 dataset_loader(train_x, train_y, test_x, test_y, batch_size = 50, dev)
 }
@@ -15,16 +15,19 @@ dataset_loader(train_x, train_y, test_x, test_y, batch_size = 50, dev)
 
 \item{test_y}{integer, vector of predictors used for testing}
 
-\item{batch_size}{integer indicating a batch size used in dataloader. Default: 50}
+\item{batch_size}{integer indicating a batch size used in dataloader.
+Default: 50}
 
 \item{dev}{device used to calculations (cpu or gpu)}
 }
 \value{
-list of two data sets and two dataloaders for train and test respectively
+list of two data sets and two dataloaders for train and test
+respectively
 }
 \description{
-Create two data sets, from given ..x matrices and ..y vectors and converts them into
-dataloaders with provided batch size.
+Create two torch datasets, from given train_x, test_x matrices and train_y,
+test_y vectors and converts them into torch dataloaders with provided batch
+size.
 }
 \examples{
 train_x = matrix(c(1,2,3,4,5,6),nrow=3)

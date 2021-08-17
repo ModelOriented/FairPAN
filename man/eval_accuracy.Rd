@@ -2,20 +2,34 @@
 % Please edit documentation in R/evaluate.R
 \name{eval_accuracy}
 \alias{eval_accuracy}
-\title{Evaluates model by calculating its accuracy}
+\title{Calculates accuracy}
 \usage{
 eval_accuracy(model, test_ds, dev)
 }
 \arguments{
 \item{model}{neural network model we want to evaluate}
 
-\item{test_ds}{dataset object used for making test predictions and evaluation}
+\item{test_ds}{\code{dataset} object from torch used for making test
+predictions and evaluation}
 
-\item{dev}{device used to calculations (cpu or gpu)}
+\item{dev}{device used for calculations (cpu or gpu)}
 }
 \value{
-float accuracy of provided model
+double accuracy of provided model
 }
 \description{
-Evaluates model by calculating its accuracy
+This function evaluates model by calculating its accuracy
+}
+\examples{
+
+dev        <- if (torch::cuda_is_available())
+                torch_device("cuda:0") else "cpu"
+model4     <- torch_load("./zzz/clf3")
+processed  <- torch_load("./zzz/processed")
+dsl        <- dataset_loader(processed$train_x, processed$train_y,
+                             processed$test_x, processed$test_y,
+                             batch_size = 5, dev = dev)
+
+eval_accuracy(model4, dsl$test_ds, dev)
+
 }

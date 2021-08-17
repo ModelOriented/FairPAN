@@ -13,6 +13,6 @@ plot_fairness(fobject)
 NULL - plots the visualization
 }
 \description{
-This function plots fairness metrics like Equal parity ratio and statistical parity ratio.
-The plot is provided by fairmodels
+This function plots fairness metrics like Equal parity ratio and statistical
+parity ratio. The plot is provided by fairmodels.
 }

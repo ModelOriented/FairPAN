@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_that.R
 \name{plot_monitor}
 \alias{plot_monitor}
-\title{Plots visualizations that show the learning process}
+\title{Plots monitor data}
 \usage{
 plot_monitor(
   STP = NULL,
@@ -14,7 +14,8 @@ plot_monitor(
 \arguments{
 \item{STP}{double vector of Statistical Parity ratio value}
 
-\item{adversary_acc}{double vector of adversarials accuracy}
+\item{adversary_acc}{double, vector containing adversarial models accuracy
+for each epoch}
 
 \item{adversary_losses}{double vector of adversaries losses}
 
@@ -24,5 +25,14 @@ plot_monitor(
 NULL - plots the visualizations
 }
 \description{
-Plots visualizations that show the learning process
+Plots visualizations of monitor metrics (STP ratio, adv accuracy, adv losses
+and classifier losses) epoch by epoch. It is useful for the monitoring of
+the learning process, thus the user can see if everything works properly.
+}
+\examples{
+
+monitor2 <- torch_load("./zzz/monitoring2")
+plot_monitor(monitor2$STP ,monitor2$adversary_acc, monitor2$classifier_acc,
+             monitor2$adversary_losses)
+
 }

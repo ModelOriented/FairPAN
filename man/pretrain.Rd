@@ -30,17 +30,17 @@ pretrain(
 )
 }
 \arguments{
-\item{clf_model}{optional value, provide the pretrain with your own classification
-neural network. Default: NULL}
+\item{clf_model}{optional value, provide the pretrain with your own
+classification neural network. Default: NULL}
 
-\item{adv_model}{optional value, provide the pretrain with your own adversarial
-neural network. Default: NULL}
+\item{adv_model}{optional value, provide the pretrain with your own
+adversarial neural network. Default: NULL}
 
-\item{clf_optimizer}{optional value, provide the optimizer of classifier if you decided
-to provide your own pre trained classifier. Default: NULL}
+\item{clf_optimizer}{optional value, provide the optimizer of classifier if
+you decided to provide your own pre trained classifier. Default: NULL}
 
-\item{trained}{0 if the classificator is untrained, 1 if the classificator is already
-pretrained. Default: 0}
+\item{trained}{0 if the classificator is untrained, 1 if the classificator
+is already pretrained. Default: 0}
 
 \item{train_x}{numeric, scaled matrix of predictors used for training}
 
@@ -50,53 +50,159 @@ pretrained. Default: 0}
 
 \item{sensitive_test}{integer, vector of sensitive values used for testing}
 
-\item{batch_size}{integer indicating a batch size used in dataloader. Default: 50}
+\item{batch_size}{integer indicating a batch size used in dataloader.
+Default: 50}
 
-\item{partition}{float from [0,1] range setting the size of train vector (test size
-equals 1-partition). Default = 0.7.}
+\item{partition}{float from [0,1] range setting the size of train vector
+(test size equals 1-partition). Default = 0.7.}
 
-\item{neurons_clf}{integer vector describing a neural architecture of classifier
-network. Default: c(32,32,32). This notation means that the network has 3 layers with
-32 neurons each.}
+\item{neurons_clf}{integer vector describing a neural architecture of
+classifier network. Default: c(32,32,32). This notation means that the
+network has 3 layers with 32 neurons each.}
 
-\item{neurons_adv}{integer vector describing a neural architecture of adversarial
-network. Default: c(32,32,32). This notation means that the network has 3 layers with
-32 neurons each.}
+\item{neurons_adv}{integer vector describing a neural architecture of
+adversarial network. Default: c(32,32,32). This notation means that the
+network has 3 layers with 32 neurons each.}
 
-\item{dimension_clf}{integer from [0,2] setting nnf_softmax dimension for classifier.
-Default: 2 (suggested to use 2 for classifier and 1 for adversarial)}
+\item{dimension_clf}{integer from [0,2] setting nnf_softmax dimension for
+classifier. Default: 2 (suggested to use 2 for classifier and 1 for
+adversarial)}
 
-\item{dimension_adv}{integer from [0,2] setting nnf_softmax dimension for adversarial.
-Default: 1 (suggested to use 2 for classifier and 1 for adversarial)}
+\item{dimension_adv}{integer from [0,2] setting nnf_softmax dimension for
+adversarial. Default: 1 (suggested to use 2 for classifier and 1 for
+adversarial)}
 
-\item{learning_rate_clf}{float from [0,1] setting learning rate for classifier.
-Default: 0.001}
+\item{learning_rate_clf}{float from [0,1] setting learning rate for
+classifier. Default: 0.001}
 
-\item{learning_rate_adv}{float from [0,1] setting learning rate for classifier.
-Default: 0.001}
+\item{learning_rate_adv}{float from [0,1] setting learning rate for
+classifier. Default: 0.001}
 
-\item{n_ep_preclf}{integer setting number of epochs for preclassifiers training.
-Default: 5}
+\item{n_ep_preclf}{integer setting number of epochs for preclassifiers
+training. Default: 5}
 
-\item{n_ep_preadv}{integer setting number of epochs for preadversarials training.
-Default : 10}
+\item{n_ep_preadv}{integer setting number of epochs for preadversarials
+training. Default : 10}
 
 \item{dsl}{dataset_loader object from pretrain}
 
 \item{dev}{device used to calculations (cpu or gpu)}
 
-\item{verbose}{logical indicating if we want to print monitored outputs or not}
+\item{verbose}{logical indicating if we want to print monitored outputs or
+not}
 
-\item{monitor}{logical indicating if we want to monitor the learning process or not
-(monitoring tends to slow down the training proccess, but provides some useful info to
-adjust parameters and training process)}
+\item{monitor}{logical indicating if we want to monitor the learning process
+or not (monitoring tends to slow down the training proccess, but provides
+some useful info to adjust parameters and training process)}
 }
 \value{
-list of two obejcts: clf_model and adv_model which are pretrained neural
-networks.
+list of two obejcts: clf_model and adv_model which are pretrained
+neural networks.
 }
 \description{
-This function can create and pretrain both classifier and adversarial. The user can
-also provide the structure of both networks (their models). The classifier can be
-pretrained, hovewer the adversarial cannot.
+This function can create and pretrain both classifier and adversarial. The
+user can also provide the structure of both networks (their models). The
+classifier can be pretrained, however the adversarial cannot.
+}
+\examples{
+data("adult")
+
+processed <-
+  preprocess(
+    adult,
+    "salary",
+    "sex",
+    "Male",
+    "Female",
+    c("race"),
+    sample = 0.05,
+    train_size = 0.65,
+    test_size = 0.35,
+    validation_size = 0,
+    seed = 7
+  )
+
+dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+
+dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
+                      processed$test_y, batch_size = 5, dev = dev)
+
+# Both models created with our package
+models <- pretrain(
+  train_x = processed$train_x,
+  train_y = processed$train_y,
+  sensitive_train = processed$sensitive_train,
+  sensitive_test = processed$sensitive_test,
+  batch_size = 5,
+  partition = 0.65,
+  neurons_clf = c(32, 32, 32),
+  neurons_adv = c(32, 32, 32),
+  dimension_clf = 2,
+  dimension_adv = 1,
+  learning_rate_clf = 0.001,
+  learning_rate_adv = 0.001,
+  n_ep_preclf = 1,
+  n_ep_preadv = 1,
+  dsl = dsl,
+  dev = dev,
+  verbose = FALSE,
+  monitor = FALSE
+)
+
+clf                 <- torch_load("./zzz/clf2")
+clf_optimizer_state <- torch_load("./zzz/clf_optimizer2")
+clf_optimizer       <- optim_adam(clf$parameters, lr = 0.001)
+acc2                <- eval_accuracy(clf, dsl$test_ds, dev)
+clf_optimizer$load_state_dict(clf_optimizer_state)
+
+# Clf provided and pretrained
+models2 <- pretrain(
+  clf_model = clf,
+  clf_optimizer = clf_optimizer,
+  trained = TRUE,
+  train_x = processed$train_x,
+  train_y = processed$train_y,
+  sensitive_train = processed$sensitive_train,
+  sensitive_test = processed$sensitive_test,
+  batch_size = 5,
+  partition = 0.65,
+  neurons_clf = c(32, 32, 32),
+  neurons_adv = c(32, 32, 32),
+  dimension_clf = 2,
+  dimension_adv = 1,
+  learning_rate_clf = 0.001,
+  learning_rate_adv = 0.001,
+  n_ep_preclf = 1,
+  n_ep_preadv = 1,
+  dsl = dsl,
+  dev = dev,
+  verbose = FALSE,
+  monitor = FALSE
+)
+
+clf2 <- create_model(processed$train_x, processed$train_y, c(4, 4), 2)
+
+# Clf provided, but not pretrained
+models3 <- pretrain(
+  clf_model = clf2,
+  trained = FALSE,
+  train_x = processed$train_x,
+  train_y = processed$train_y,
+  sensitive_train = processed$sensitive_train,
+  sensitive_test = processed$sensitive_test,
+ batch_size = 5,
+  partition = 0.65,
+  neurons_clf = c(32, 32, 32),
+  neurons_adv = c(32, 32, 32),
+  dimension_clf = 2,
+  dimension_adv = 1,
+  learning_rate_clf = 0.001,
+  learning_rate_adv = 0.001,
+  n_ep_preclf = 1,
+  n_ep_preadv = 1,
+  dsl = dsl,
+  dev = dev,
+  verbose = FALSE,
+  monitor = FALSE
+)
 }

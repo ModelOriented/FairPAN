@@ -2,29 +2,32 @@
 % Please edit documentation in R/prepare_data.R
 \name{prepare_to_adv}
 \alias{prepare_to_adv}
-\title{Prepares data for adversarials pretrain}
+\title{Prepares data for adversarial}
 \usage{
 prepare_to_adv(preds, sensitive, partition = 0.7)
 }
 \arguments{
-\item{preds}{numeric vector of predictions of target value made by classifier (preferably the
-probabilistic ones)}
+\item{preds}{numeric vector of predictions of target value made by
+classifier (preferably the probabilistic ones)}
 
-\item{sensitive}{integer vector of sensitive attribute which adversarial has to predict}
+\item{sensitive}{integer vector of sensitive attribute which adversarial has
+to predict}
 
-\item{partition}{float from [0,1] range setting the size of train vector (test size
-equals 1-partition). Default = 0.7.}
+\item{partition}{float from [0,1] range setting the size of train vector
+(test size equals 1-partition). Default = 0.7.}
 }
 \value{
-list of four numeric lists with x and y data for train and test respectively
+list of four numeric lists with x and y data for train and test
+respectively
 }
 \description{
-Prepares classifiers output for adversarial by splitting original predictions into
-train and test vectors
+Prepares classifiers output for adversarial by splitting original predictions
+into train and test vectors
 }
 \examples{
 
 preds <-c(0.312,0.343,0.932,0.754,0.436,0.185,0.527,0.492,0.743,0.011)
 sensitive <- c(1,1,2,2,1,1,2,2,2,1)
 prepare_to_adv(preds,sensitive,partition=0.6)
+
 }

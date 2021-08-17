@@ -11,20 +11,9 @@ test_that("test-plot_that", {
   dev   <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
 
   data("adult")
-  processed <-
-    preprocess(
-      adult,
-      "salary",
-      "sex",
-      "Male",
-      "Female",
-      c("race"),
-      sample = 0.8,
-      train_size = 0.65,
-      test_size = 0.35,
-      validation_size = 0,
-      seed = 7
-    )
+  processed <- preprocess( adult, "salary", "sex", "Male", "Female", c("race"),
+                           sample = 0.8, train_size = 0.65, test_size = 0.35,
+                           validation_size = 0, seed = 7)
 
   model1    <- torch_load("~/Fairness 2021/FairPAN/tests/zzz/clf1")
 
@@ -45,7 +34,7 @@ test_that("test-plot_that", {
     verbose = FALSE
   )
 
-  plot3 <- plot(exp)
+  plot3 <- plot_fairness(exp)
   expect_s3_class(plot1, "ggplot")
   expect_s3_class(plot2, "ggplot")
   expect_s3_class(plot3, "ggplot")

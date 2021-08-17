@@ -1,10 +1,11 @@
 test_that("test-predict", {
   dev       <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
-  model1    <- torch_load("~/Fairness 2021/FairPAN/tests/zzz/preclf")
-  model2    <- torch_load("~/Fairness 2021/FairPAN/tests/zzz/clf1")
-  model3    <- torch_load("~/Fairness 2021/FairPAN/tests/zzz/clf2")
-  model4    <- torch_load("~/Fairness 2021/FairPAN/tests/zzz/clf3")
-  processed <- torch_load("~/Fairness 2021/FairPAN/tests/zzz/processed")
+  setwd("..")
+  model1    <- torch_load("./zzz/preclf")
+  model2    <- torch_load("./zzz/clf1")
+  model3    <- torch_load("./zzz/clf2")
+  model4    <- torch_load("./zzz/clf3")
+  processed <- torch_load("./zzz/processed")
 
   dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
                         processed$test_y, batch_size=5, dev=dev)

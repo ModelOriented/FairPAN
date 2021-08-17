@@ -21,45 +21,75 @@ preprocess(
 \arguments{
 \item{data}{list representing whole table of data.}
 
-\item{target_name}{character, column name of the target variable. Selected column must be
-interpretable as categorical.}
+\item{target_name}{character, column name of the target variable. Selected
+column must be interpretable as categorical.}
 
-\item{sensitive_name}{character, column name of the sensitive variable.Selected column must
-be interpretable as categorical.}
+\item{sensitive_name}{character, column name of the sensitive variable.
+Selected column must be interpretable as categorical.}
 
 \item{privileged}{character meaning the name of privileged group}
 
 \item{discriminated}{character meaning the name of discriminated group}
 
-\item{drop_also}{character vector, column names of other columns to drop (like other
-sensitive variables).}
+\item{drop_also}{character vector, column names of other columns to drop
+(like other sensitive variables).}
 
-\item{sample}{double from [0,1] setting size of our sample from original data set.
-Default: 1}
+\item{sample}{double from [0,1] setting size of our sample from original
+data set. Default: 1}
 
-\item{train_size}{double from [0,1] setting size of our train. Remember that
+\item{train_size}{double from [0,1] setting size of our train. Note that
 train_size+test_size+validation_size=1. Default=0.7}
 
-\item{test_size}{double from [0,1] setting size of our test Remember that
+\item{test_size}{double from [0,1] setting size of our test Note that
 train_size+test_size+validation_size=1. Default=0.3}
 
-\item{validation_size}{double from [0,1] setting size of our validation. Remember that
-train_size+test_size+validation_size=1. Default=0}
+\item{validation_size}{double from [0,1] setting size of our validation.
+Note that train_size+test_size+validation_size=1. Default=0}
 
 \item{seed}{sets seed for the sampling for code reproduction. Default=NULL}
 }
 \value{
-list of prepared data (train_x,train_y,=sensitive_train,test_x,test_y,sensitive_test,
-valid_x,valid_y,sensitive_valid,data_scaled_test,data_scaled_valid,data_test,
-protected_test,data_valid,protected_valid)
+list of prepared data
+(
+train_x, - numeric scaled matrix for classifier training
+train_y, - numeric scaled vector for classifier training
+sensitive_train, - numeric scaled vector for adversaries training
+test_x, - numeric scaled matrix for classifier testing
+test_y, - numeric scaled vector for classifier testing
+sensitive_test, - numeric scaled vector for adversaries testing
+valid_x, - numeric scaled matrix for classifier validation
+valid_y, - numeric scaled vector for classifier validation
+sensitive_valid, - numeric scaled vector for adversaries validation
+data_scaled_test, - numeric scaled data set for testing
+data_scaled_valid, - numeric scaled data set for validation
+data_test, - whole dataset for testing, unchanged
+protected_test, - character vector of protected values for explainers test
+data_valid, - whole dataset for validation, unchanged
+protected_valid - character vector of protected values for explainers valid
+)
 }
 \description{
-This function prepapres provided dataset to be ready for the training process. It
-makes data suitable for training functions, splits it into train, test and validation,
-provides other data objects that are necessary for our training.
+This function prepares provided dataset to be ready for the training process.
+It  makes data suitable for training functions, splits it into train, test
+and validation, provides other data objects that are necessary for our
+training.
 }
 \examples{
 data("adult")
-preprocess(adult,"salary","sex",c("race"),sample=0.001,train_size=0.7,test_size=0.2,
-validation_size=0.1,seed=7)
+
+processed <-
+  preprocess(
+    adult,
+    "salary",
+    "sex",
+    "Male",
+    "Female",
+    c("race"),
+    sample = 0.05,
+    train_size = 0.65,
+    test_size = 0.35,
+    validation_size = 0,
+    seed = 7
+  )
+
 }
