@@ -29,3 +29,11 @@ layers, there are no dropouts and the activation function between the layers
 is nnf_relu(), whereas the last one is nnf_softmax. The user can provide
 demanded architecture of the layers and select a softmaxes dimension.
 }
+\examples{
+train_x <- matrix(c(1, 2, 3, 4, 5, 6), nrow = 3)
+train_y <- c(1, 2, 3)
+model   <- create_model(train_x,
+                        train_y,
+                        neurons = c(16, 8, 16),
+                        dimensions = 1)
+}

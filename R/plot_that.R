@@ -95,17 +95,17 @@ plot_monitor <- function(STP = NULL,
   }
 }
 
-#' Plots fobject metrics
-#'
-#' This function plots fairness metrics like Equal parity ratio and statistical
-#' parity ratio. The plot is provided by fairmodels.
-#'
-#' @param fobject fairness object from fairmodels
-#'
-#' @return NULL - plots the visualization
-#' @export
-#'
-#' @examples
+# Plots fobject metrics
+#
+# This function plots fairness metrics like Equal parity ratio and statistical
+# parity ratio. The plot is provided by fairmodels.
+#
+# @param fobject fairness object from fairmodels
+#
+# @return NULL - plots the visualization
+# @export
+#
+# @examples
 # dev   <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
 #
 # data("adult")
@@ -134,8 +134,8 @@ plot_monitor <- function(STP = NULL,
 #
 # plot_fairness(exp)
 
-plot_fairness <- function(fobject) {
-
-  plot(fobject)
-
-}
+# plot_fairness <- function(fobject) {
+#
+#   plot(fobject)
+#
+# }

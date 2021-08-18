@@ -1,5 +1,7 @@
 test_that("test-train_PAN", {
+
   dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+
   setwd("..")
 
   model1 <- torch_load("./zzz/preclf")

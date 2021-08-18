@@ -1,4 +1,5 @@
 test_that("test-pretrain", {
+
   setwd("..")
 
   data("adult")
