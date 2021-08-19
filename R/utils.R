@@ -8,10 +8,6 @@
 #'
 #' @return NULL
 #'
-#' @examples
-#' verbose_cat("Hello, world!, verobse = TRUE)
-#' verbose_cat("Not hello :c", verbose = FALSE)
-#'
 verbose_cat <- function(string, verbose = TRUE) {
   if (verbose) {
     cat(string)

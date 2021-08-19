@@ -25,6 +25,8 @@
 #'                         train_y,
 #'                         neurons = c(16, 8, 16),
 #'                         dimensions = 1)
+#' @import magrittr
+#'
 
 create_model <- function(train_x, train_y, neurons=c(32,32,32), dimensions=2){
 
@@ -39,30 +41,32 @@ create_model <- function(train_x, train_y, neurons=c(32,32,32), dimensions=2){
   if (sum(neurons - neurons / 1) != 0)
     stop("neurons must be a vector of integers")
 
-  net <- nn_module(
+  #Without this NA self inside nn_module produces global variable note
+  self <- NA
+
+  net <- torch::nn_module(
     "net",
     initialize = function(n_cont, Neurons, output_dim) {
-
-      torch_manual_seed(7)
-      self$fc1 <- nn_linear(n_cont, Neurons[1])
+      torch::torch_manual_seed(7)
+      self$fc1 <- torch::nn_linear(n_cont, Neurons[1])
       for (i in 2:length(Neurons)) {
-        str<-paste("self$fc",i," <- nn_linear(Neurons[",i-1,"]",
+        str<-paste("self$fc",i," <- torch::nn_linear(Neurons[",i-1,"]",
                    ",Neurons[",i,"])",sep="")
         eval(parse(text = str))
       }
-      self$output <- nn_linear(Neurons[length(Neurons)], output_dim)
+      self$output <- torch::nn_linear(Neurons[length(Neurons)], output_dim)
 
     },
     forward = function(x_cont) {
 
-      all <- torch_cat(x_cont, dim = dimensions)
+      all <- torch::torch_cat(x_cont, dim = dimensions)
 
       for (i in 1:length(neurons)) {
-        str<-paste("all<-all %>% self$fc",i,"() %>% nnf_relu()",sep="")
+        str<-paste("all<-all %>% self$fc",i,"() %>% torch::nnf_relu()",sep="")
         eval(parse(text = str))
       }
 
-      all %>% self$output() %>% nnf_softmax(dim = dimensions)
+      all %>% self$output() %>% torch::nnf_softmax(dim = dimensions)
 
     }
   )

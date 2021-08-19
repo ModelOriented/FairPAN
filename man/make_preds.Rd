@@ -22,14 +22,16 @@ Makes binary predictions for classification model
 }
 \examples{
 
+\dontrun{
 dev       <- if (torch::cuda_is_available())
                torch_device("cuda:0") else "cpu"
 
-model1    <- torch_load("./zzz/preclf")
-processed <- torch_load("./zzz/processed")
+model1    <- torch_load("./tests/zzz/preclf")
+processed <- torch_load("./tests/zzz/processed")
 
 dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
                       processed$test_y, batch_size=5, dev=dev)
 
 preds1   <- make_preds(model1,dsl$test_ds,dev)
+}
 }

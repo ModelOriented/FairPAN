@@ -19,6 +19,43 @@
 #'
 #' @examples
 #'
+#' \dontrun{
+#' dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+#'
+#' adult <- fairmodels::adult
+#'
+#' processed <- preprocess(
+#'   adult,
+#'   "salary",
+#'   "sex",
+#'   "Male",
+#'   "Female",
+#'   c("race"),
+#'   sample = 0.8,
+#'   train_size = 0.65,
+#'   test_size = 0.35,
+#'   validation_size = 0,
+#'   seed = 7
+#' )
+#'
+#' model1 <- torch::torch_load("./tests/zzz/clf1")
+#'
+#' dsl <- dataset_loader(processed$train_x, processed$train_y,
+#'                       processed$test_x, processed$test_y,
+#'                       batch_size=5, dev=dev)
+#'
+#' explainer <- explain_PAN(
+#'   processed$test_y,
+#'   model1,
+#'   "classifier",
+#'   processed$data_test,
+#'   processed$data_scaled_test,
+#'   batch_size = 5,
+#'   dev = dev,
+#'   verbose = FALSE
+#' )
+#' }
+#'
 #'
 
 

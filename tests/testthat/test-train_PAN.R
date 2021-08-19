@@ -4,26 +4,26 @@ test_that("test-train_PAN", {
 
   setwd("..")
 
-  model1 <- torch_load("./zzz/preclf")
-  model2 <- torch_load("./zzz/clf1")
-  model3 <- torch_load("./zzz/clf2")
-  model11 <- torch_load("./zzz/preadv")
-  model22 <- torch_load("./zzz/adv1")
-  model33 <- torch_load("./zzz/adv2")
+  model1 <- torch::torch_load("./zzz/preclf")
+  model2 <- torch::torch_load("./zzz/clf1")
+  model3 <- torch::torch_load("./zzz/clf2")
+  model11 <- torch::torch_load("./zzz/preadv")
+  model22 <- torch::torch_load("./zzz/adv1")
+  model33 <- torch::torch_load("./zzz/adv2")
 
-  model1_optimizer_dict <- torch_load("./zzz/preclf_optimizer")
-  model2_optimizer_dict <- torch_load("./zzz/clf_optimizer1")
-  model3_optimizer_dict <- torch_load("./zzz/clf_optimizer2")
-  model11_optimizer_dict <- torch_load("./zzz/preadv_optimizer")
-  model22_optimizer_dict <- torch_load("./zzz/adv_optimizer1")
-  model33_optimizer_dict <- torch_load("./zzz/adv_optimizer2")
+  model1_optimizer_dict <- torch::torch_load("./zzz/preclf_optimizer")
+  model2_optimizer_dict <- torch::torch_load("./zzz/clf_optimizer1")
+  model3_optimizer_dict <- torch::torch_load("./zzz/clf_optimizer2")
+  model11_optimizer_dict <- torch::torch_load("./zzz/preadv_optimizer")
+  model22_optimizer_dict <- torch::torch_load("./zzz/adv_optimizer1")
+  model33_optimizer_dict <- torch::torch_load("./zzz/adv_optimizer2")
 
-  model1_optimizer <- optim_adam(model1$parameters, lr = 0.001)
-  model2_optimizer <- optim_adam(model2$parameters, lr = 0.001)
-  model3_optimizer <- optim_adam(model3$parameters, lr = 0.001)
-  model11_optimizer <- optim_adam(model11$parameters, lr = 0.001)
-  model22_optimizer <- optim_adam(model22$parameters, lr = 0.001)
-  model33_optimizer <- optim_adam(model33$parameters, lr = 0.001)
+  model1_optimizer <- torch::optim_adam(model1$parameters, lr = 0.001)
+  model2_optimizer <- torch::optim_adam(model2$parameters, lr = 0.001)
+  model3_optimizer <- torch::optim_adam(model3$parameters, lr = 0.001)
+  model11_optimizer <- torch::optim_adam(model11$parameters, lr = 0.001)
+  model22_optimizer <- torch::optim_adam(model22$parameters, lr = 0.001)
+  model33_optimizer <- torch::optim_adam(model33$parameters, lr = 0.001)
 
   model1_optimizer$load_state_dict(model1_optimizer_dict)
   model2_optimizer$load_state_dict(model2_optimizer_dict)
@@ -32,7 +32,7 @@ test_that("test-train_PAN", {
   model22_optimizer$load_state_dict(model22_optimizer_dict)
   model33_optimizer$load_state_dict(model33_optimizer_dict)
 
-  processed <- torch_load("./zzz/processed")
+  processed <- torch::torch_load("./zzz/processed")
 
   dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
                         processed$test_y, batch_size=5, dev=dev)

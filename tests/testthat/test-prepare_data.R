@@ -8,32 +8,30 @@ test_that("test-prepare_data", {
 
   dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
   dsl <- dataset_loader(train_x,train_y,test_x,test_y,batch_size=1,dev)
-  typeof(dsl$train_ds$x_cont)
-  torch_tensor(train_x)
 
   expect_equal(typeof(dsl), "list")
   expect_equal(typeof(dsl$train_ds), "environment")
   expect_equal(typeof(dsl$train_ds$y), "externalptr")
 
-  expect_true(torch_equal(dsl$train_ds$x_cont, torch_tensor(train_x)))
-  expect_true(torch_equal(dsl$test_ds$x_cont, torch_tensor(test_x)))
-  expect_true(torch_equal(dsl$train_ds$y,
-                          torch_tensor(train_y, dtype = torch_long())))
-  expect_true(torch_equal(dsl$test_ds$y,
-                          torch_tensor(test_y, dtype = torch_long())))
+  expect_true(torch::torch_equal(dsl$train_ds$x_cont, torch::torch_tensor(train_x)))
+  expect_true(torch::torch_equal(dsl$test_ds$x_cont, torch::torch_tensor(test_x)))
+  expect_true(torch::torch_equal(dsl$train_ds$y,
+                          torch::torch_tensor(train_y, dtype = torch::torch_long())))
+  expect_true(torch::torch_equal(dsl$test_ds$y,
+                          torch::torch_tensor(test_y, dtype = torch::torch_long())))
 
-  expect_true(torch_equal(dsl$train_dl$dataset$x_cont, torch_tensor(train_x)))
+  expect_true(torch::torch_equal(dsl$train_dl$dataset$x_cont, torch::torch_tensor(train_x)))
 
-  expect_true(torch_equal(dsl$test_dl$dataset$x_cont, torch_tensor(test_x)))
+  expect_true(torch::torch_equal(dsl$test_dl$dataset$x_cont, torch::torch_tensor(test_x)))
 
-  expect_true(torch_equal(
+  expect_true(torch::torch_equal(
     dsl$train_dl$dataset$y,
-    torch_tensor(train_y, dtype = torch_long())
+    torch::torch_tensor(train_y, dtype = torch::torch_long())
   ))
 
-  expect_true(torch_equal(
+  expect_true(torch::torch_equal(
     dsl$test_dl$dataset$y,
-    torch_tensor(test_y, dtype = torch_long())
+    torch::torch_tensor(test_y, dtype = torch::torch_long())
   ))
   expect_equal(dsl$train_dl$batch_size, 1)
 
@@ -55,7 +53,7 @@ test_that("test-prepare_data", {
   expect_equal(typeof(prepared), "list")
 
 
-  data("adult")
+  adult <- fairmodels::adult
 
   processed <-
     preprocess(

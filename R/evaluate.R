@@ -12,15 +12,19 @@
 #'
 #' @examples
 #'
+#' \dontrun{
 #' dev        <- if (torch::cuda_is_available())
 #'                 torch_device("cuda:0") else "cpu"
-#' model4     <- torch_load("./zzz/clf3")
-#' processed  <- torch_load("./zzz/processed")
+#' # model     <- torch_load("./tests/zzz/clf2")
+#' # processed  <- torch_load("./tests/zzz/processed")
 #' dsl        <- dataset_loader(processed$train_x, processed$train_y,
 #'                              processed$test_x, processed$test_y,
 #'                              batch_size = 5, dev = dev)
 #'
-#' eval_accuracy(model4, dsl$test_ds, dev)
+#' eval_accuracy(model, dsl$test_ds, dev)
+#' }
+#'
+#' @import torch
 #'
 eval_accuracy <- function(model, test_ds, dev) {
   if (typeof(model) != 'closure')
@@ -32,10 +36,11 @@ eval_accuracy <- function(model, test_ds, dev) {
   if (!dev %in% c("gpu", "cpu"))
     stop("dev must be gpu or cpu")
   model$eval()
-  test_dl     <- dataloader(test_ds, batch_size = test_ds$.length(),
+  test_dl     <- torch::dataloader(test_ds, batch_size = test_ds$.length(),
                             shuffle = FALSE)
   iter        <- test_dl$.iter()
   b           <- iter$.next()
+  # tutaj jest problem bo to całe torch_cat kryje się w środku i dając import czy cokolwiek i tak nam się wywala
   output      <- model(b$x_cont$to(device = dev))
   preds       <- as.array(output$to(device = "cpu"))
   preds       <- ifelse(preds[, 1] < preds[, 2], 2, 1)
@@ -65,15 +70,19 @@ eval_accuracy <- function(model, test_ds, dev) {
 #'
 #' @examples
 #'
+#' \dontrun{
 #' dev        <- if (torch::cuda_is_available())
 #'                 torch_device("cuda:0") else "cpu"
-#' model4     <- torch_load("./zzz/clf3")
-#' processed  <- torch_load("./zzz/processed")
+#'
+#' model     <- torch_load("./tests/zzz/clf2")
+#' processed  <- torch_load("./tests/zzz/processed")
+#'
 #' dsl        <- dataset_loader(processed$train_x, processed$train_y,
 #'                              processed$test_x, processed$test_y,
 #'                              batch_size = 5, dev = dev)
 #'
-#' calc_STP(model4, dsl$test_ds, processed$sensitive_test, dev)
+#' calc_STP(model, dsl$test_ds, processed$sensitive_test, dev)
+#' }
 #'
 calc_STP <- function(model, test_ds, sensitive, dev) {
 

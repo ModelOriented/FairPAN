@@ -10,7 +10,7 @@ preprocess(
   sensitive_name,
   privileged,
   discriminated,
-  drop_also,
+  drop_also = NULL,
   sample = 1,
   train_size = 0.7,
   test_size = 0.3,
@@ -19,7 +19,8 @@ preprocess(
 )
 }
 \arguments{
-\item{data}{list representing whole table of data.}
+\item{data}{list representing whole table of data (categorical variables
+must be factors).}
 
 \item{target_name}{character, column name of the target variable. Selected
 column must be interpretable as categorical.}
@@ -75,7 +76,7 @@ and validation, provides other data objects that are necessary for our
 training.
 }
 \examples{
-data("adult")
+adult <- fairmodels::adult
 
 processed <-
   preprocess(

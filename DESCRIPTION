@@ -14,13 +14,15 @@ License: GPL-3
 Encoding: UTF-8
 LazyData: true
 Depends: 
-    DALEX, 
-    ggplot2,
+    torch
+Imports:
     fairmodels,
-    torch,
-    data.table,
+    coro,
     mltools,
-    coro
+    stats,
+    magrittr,
+    ggplot2,
+    DALEX
 Language: en-US
 RoxygenNote: 7.1.1
 Suggests: 

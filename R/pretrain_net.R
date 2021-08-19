@@ -23,12 +23,12 @@
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
 #' dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
-#' processed <- torch_load("./zzz/processed")
+#' processed <- torch_load("./tests/zzz/processed")
 #' dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
 #'                       processed$test_y, batch_size=5, dev=dev)
-#' model <- torch_load("./zzz/clf1")
+#' model <- torch_load("./tests/zzz/clf1")
 #' pretrain_net(
 #'   n_epochs = 3,
 #'   model = model,
@@ -40,6 +40,7 @@
 #'   verbose = TRUE,
 #'   monitor = TRUE
 #' )
+#' }
 #'
 pretrain_net <- function(n_epochs = 15,
                          model,
@@ -77,10 +78,10 @@ pretrain_net <- function(n_epochs = 15,
       !is.logical(monitor))
     stop("verbose and monitor must be logical")
 
-    optimizer <- optim_adam(model$parameters, lr = learning_rate)
+    optimizer <- torch::optim_adam(model$parameters, lr = learning_rate)
 
     calc_loss <- function(output, batch) {
-      loss <- nnf_cross_entropy(output, batch)
+      loss <- torch::nnf_cross_entropy(output, batch)
       return(loss)
     }
 
@@ -114,8 +115,7 @@ pretrain_net <- function(n_epochs = 15,
           acc <- eval_accuracy(model, dsl$test_ds, dev)
           verbose_cat(
             sprintf(
-              "Preadversary at epoch %d: training loss: %3.3f,
-              validation: %3.3f, accuracy: %3.3f\n",
+              "Preadversary at epoch %d: training loss: %3.3f, validation: %3.3f, accuracy: %3.3f\n",
               epoch, losses$train_loss, losses$test_loss, acc
             ),
             verbose = verbose
@@ -141,8 +141,7 @@ pretrain_net <- function(n_epochs = 15,
           stp <- calc_STP(model, dsl$test_ds, sensitive_test, dev)
           verbose_cat(
             sprintf(
-              "Preclassifier at epoch %d: training loss: %3.3f,
-              validation: %3.3f, accuracy: %3.3f, STPR: %3.3f\n",
+              "Preclassifier at epoch %d: training loss: %3.3f, validation: %3.3f, accuracy: %3.3f, STPR: %3.3f\n",
               epoch, losses$train_loss, losses$test_loss, acc, stp
             ),
             verbose = verbose
@@ -167,8 +166,7 @@ pretrain_net <- function(n_epochs = 15,
           stp <- calc_STP(model, dsl$test_ds, sensitive_test, dev)
           verbose_cat(
             sprintf(
-              "Classifier only at epoch %d: training loss: %3.3f,
-              validation: %3.3f, accuracy: %3.3f, STPR: %3.3f\n",
+              "Classifier only at epoch %d: training loss: %3.3f, validation: %3.3f, accuracy: %3.3f, STPR: %3.3f\n",
               epoch, losses$train_loss, losses$test_loss, acc, stp
             ),
             verbose = verbose
@@ -176,8 +174,7 @@ pretrain_net <- function(n_epochs = 15,
         } else{
           verbose_cat(
             sprintf(
-              "Classifier only at epoch %d: training loss: %3.3f,
-              validation: %3.3f\n",
+              "Classifier only at epoch %d: training loss: %3.3f, validation: %3.3f\n",
               epoch, losses$train_loss, losses$test_loss
             ),
             verbose = verbose

@@ -1,6 +1,6 @@
 test_that("test-pretrain_net", {
 
-  data("adult")
+  adult               <- fairmodels::adult
 
   adult               <- adult[1:200, ]
   sensitive           <- adult$sex

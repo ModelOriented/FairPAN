@@ -22,14 +22,16 @@ This function evaluates model by calculating its accuracy
 }
 \examples{
 
+\dontrun{
 dev        <- if (torch::cuda_is_available())
                 torch_device("cuda:0") else "cpu"
-model4     <- torch_load("./zzz/clf3")
-processed  <- torch_load("./zzz/processed")
+# model     <- torch_load("./tests/zzz/clf2")
+# processed  <- torch_load("./tests/zzz/processed")
 dsl        <- dataset_loader(processed$train_x, processed$train_y,
                              processed$test_x, processed$test_y,
                              batch_size = 5, dev = dev)
 
-eval_accuracy(model4, dsl$test_ds, dev)
+eval_accuracy(model, dsl$test_ds, dev)
+}
 
 }

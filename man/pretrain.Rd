@@ -105,7 +105,8 @@ user can also provide the structure of both networks (their models). The
 classifier can be pretrained, however the adversarial cannot.
 }
 \examples{
-data("adult")
+\dontrun{
+adult <- fairmodels::adult
 
 processed <-
   preprocess(
@@ -149,8 +150,8 @@ models <- pretrain(
   monitor = FALSE
 )
 
-clf                 <- torch_load("./zzz/clf2")
-clf_optimizer_state <- torch_load("./zzz/clf_optimizer2")
+clf                 <- torch_load("./tests/zzz/clf2")
+clf_optimizer_state <- torch_load("./tests/zzz/clf_optimizer2")
 clf_optimizer       <- optim_adam(clf$parameters, lr = 0.001)
 acc2                <- eval_accuracy(clf, dsl$test_ds, dev)
 clf_optimizer$load_state_dict(clf_optimizer_state)
@@ -205,4 +206,5 @@ models3 <- pretrain(
   verbose = FALSE,
   monitor = FALSE
 )
+}
 }

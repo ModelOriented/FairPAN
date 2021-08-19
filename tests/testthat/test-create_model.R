@@ -15,13 +15,13 @@ test_that("test-create_model", {
                  neurons = c(16, 16, 16),
                  dimensions = 1)
   #tests for seed
-  expect_true(torch_equal(model$fc1$weight, model2$fc1$weight))
-  expect_true(torch_equal(model$fc2$weight, model2$fc2$weight))
-  expect_true(torch_equal(model$fc3$weight, model2$fc3$weight))
+  expect_true(torch::torch_equal(model$fc1$weight, model2$fc1$weight))
+  expect_true(torch::torch_equal(model$fc2$weight, model2$fc2$weight))
+  expect_true(torch::torch_equal(model$fc3$weight, model2$fc3$weight))
 
-  expect_true(torch_equal(model$fc1$weight, model3$fc1$weight))
-  expect_false(torch_equal(model$fc2$weight, model3$fc2$weight))
-  expect_false(torch_equal(model$fc3$weight, model3$fc3$weight))
+  expect_true(torch::torch_equal(model$fc1$weight, model3$fc1$weight))
+  expect_false(torch::torch_equal(model$fc2$weight, model3$fc2$weight))
+  expect_false(torch::torch_equal(model$fc3$weight, model3$fc3$weight))
 
   expect_equal(typeof(model), "closure")
 

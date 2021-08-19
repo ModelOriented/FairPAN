@@ -14,18 +14,19 @@
 #' @export
 #'
 #' @examples
-#'
-#' monitor2 <- torch_load("./zzz/monitoring2")
+#' \dontrun{
+#' monitor2 <- torch_load("./tests/zzz/monitoring2")
 #' plot_monitor(monitor2$STP ,monitor2$adversary_acc, monitor2$classifier_acc,
 #'              monitor2$adversary_losses)
+#' }
+#' @import ggplot2
 #'
 plot_monitor <- function(STP = NULL,
                          adversary_acc = NULL,
                          adversary_losses = NULL,
                          classifier_acc = NULL) {
 
-  if (!is.null(STP) &&
-      !is.vector(STP))
+  if (!is.null(STP) && !is.vector(STP))
     stop("STP must be a double vector")
   if (!is.null(adversary_acc) &&
       !is.vector(adversary_acc))
@@ -37,12 +38,12 @@ plot_monitor <- function(STP = NULL,
       !is.vector(classifier_acc))
     stop("classifier_acc must be a double vector")
 
-  stats <- data.table(STP, adversary_acc, adversary_losses, classifier_acc)
+  stats <- data.frame(STP, adversary_acc, adversary_losses, classifier_acc)
 
   if (!is.null(STP)) {
     STP_plot <- ggplot(stats, aes(x = 1:nrow(stats))) +
       geom_line(aes(y = STP), color = "darkred") +
-      theme_drwhy() +
+      DALEX::theme_drwhy() +
       labs(x = 'Number of epochs', y = "STPR",
            title = "Value of STPR by the number of epochs ") +
       theme(
@@ -56,7 +57,7 @@ plot_monitor <- function(STP = NULL,
   if (!is.null(adversary_acc)) {
     adv_acc_plot <- ggplot(stats, aes(x = 1:nrow(stats))) +
       geom_line(aes(y = adversary_acc), color = "darkblue") +
-      theme_drwhy() +
+      DALEX::theme_drwhy() +
       labs(x = 'Number of epochs', y = "Accuracy", title =
              "Adversarial accuracy ") +
       theme(
@@ -70,7 +71,7 @@ plot_monitor <- function(STP = NULL,
   if (!is.null(adversary_losses)) {
     adv_loss_plot <- ggplot(stats, aes(x = 1:nrow(stats))) +
       geom_line(aes(y = adversary_losses), color = "darkgreen") +
-      theme_drwhy() +
+      DALEX::theme_drwhy() +
       labs(x = 'Number of epochs', y = "Loss", title = "Adversarial loss ") +
       theme(
         axis.text = element_text(size = 20),
@@ -83,7 +84,7 @@ plot_monitor <- function(STP = NULL,
   if (!is.null(classifier_acc)) {
     clf_acc_plot <- ggplot(stats, aes(x = 1:nrow(stats))) +
       geom_line(aes(y = classifier_acc), color = "purple") +
-      theme_drwhy() +
+      DALEX::theme_drwhy() +
       labs(x = 'Number of epochs', y = "Accuracy", title =
              "Classifier accuracy ") +
       theme(

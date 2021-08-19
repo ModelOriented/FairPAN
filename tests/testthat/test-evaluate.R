@@ -1,13 +1,13 @@
 test_that("test-evaluate", {
 
-  dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+  dev <- if (torch::cuda_is_available()) torch::torch_device("cuda:0") else "cpu"
   setwd("..")
 
-  model1    <- torch_load("./zzz/preclf")
-  model2    <- torch_load("./zzz/clf1")
-  model3    <- torch_load("./zzz/clf2")
-  model4     <- torch_load("./zzz/clf3")
-  processed <- torch_load("./zzz/processed")
+  model1    <- torch::torch_load("./zzz/preclf")
+  model2    <- torch::torch_load("./zzz/clf1")
+  model3    <- torch::torch_load("./zzz/clf2")
+  model4    <- torch::torch_load("./zzz/clf3")
+  processed <- torch::torch_load("./zzz/processed")
   dsl       <- dataset_loader(processed$train_x, processed$train_y,
                               processed$test_x, processed$test_y,
                               batch_size = 5, dev = dev)

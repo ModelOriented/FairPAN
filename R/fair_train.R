@@ -31,13 +31,14 @@
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
 #'
-#' model1 <- torch_load("./zzz/preclf")
-#' model11 <- torch_load("./zzz/preadv")
+#' model1 <- torch_load("./tests/zzz/preclf")
+#' model11 <- torch_load("./tests/zzz/preadv")
 #'
-#' model1_optimizer_dict <- torch_load("./zzz/preclf_optimizer")
-#' model11_optimizer_dict <- torch_load("./zzz/preadv_optimizer")
+#' model1_optimizer_dict <- torch_load("./tests/zzz/preclf_optimizer")
+#' model11_optimizer_dict <- torch_load("./tests/zzz/preadv_optimizer")
 #'
 #' model1_optimizer <- optim_adam(model1$parameters, lr = 0.001)
 #' model11_optimizer <- optim_adam(model11$parameters, lr = 0.001)
@@ -45,7 +46,7 @@
 #' model1_optimizer$load_state_dict(model1_optimizer_dict)
 #' model11_optimizer$load_state_dict(model11_optimizer_dict)
 #'
-#' processed <- torch_load("./zzz/processed")
+#' processed <- torch_load("./tests/zzz/processed")
 #'
 #' dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
 #'                       processed$test_y, batch_size=5, dev=dev)
@@ -67,6 +68,7 @@
 #'   verbose = TRUE,
 #'   monitor = TRUE
 #' )
+#' }
 
 
 fair_train <- function(n_ep_pan = 50,

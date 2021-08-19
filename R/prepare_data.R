@@ -46,16 +46,20 @@ dataset_loader <- function(train_x,
   if (!is.numeric(batch_size))
     stop("batch size must be numeric")
 
-  new_dataset <- dataset(
+  #Without this NA self inside data_set produces global variable note
+  self <- NA
+
+  new_dataset <- torch::dataset(
 
     name = "new_dataset",
 
     initialize = function(df,y2) {
-      df <- na.omit(df)
+      df <- stats::na.omit(df)
       x_cont <- df
       #create tensors for x and y and pass it to device
-      self$x_cont <- torch_tensor(x_cont)$to(device = dev)
-      self$y <- torch_tensor(y2, dtype = torch_long())$to(device = dev)
+      self$x_cont <- torch::torch_tensor(x_cont)$to(device = dev)
+      self$y <-
+        torch::torch_tensor(y2, dtype = torch::torch_long())$to(device = dev)
     },
     .getitem = function(i) {
       list(x_cont = self$x_cont[i, ], y=self$y[i])
@@ -68,8 +72,10 @@ dataset_loader <- function(train_x,
   #create datasets and data loaders
   train_ds <- new_dataset(train_x, train_y)
   test_ds  <- new_dataset(test_x, test_y)
-  train_dl <- dataloader(train_ds, batch_size = batch_size, shuffle = FALSE)
-  test_dl  <- dataloader(test_ds, batch_size = batch_size, shuffle = FALSE)
+  train_dl <- torch::dataloader(train_ds, batch_size = batch_size,
+                                shuffle = FALSE)
+  test_dl  <- torch::dataloader(test_ds, batch_size = batch_size,
+                                shuffle = FALSE)
 
   return(list("train_ds" = train_ds,"test_ds"=test_ds,
               "train_dl"=train_dl,"test_dl"=test_dl))
@@ -125,7 +131,8 @@ prepare_to_adv <- function(preds, sensitive, partition=0.7){
 #' and validation, provides other data objects that are necessary for our
 #' training.
 #'
-#' @param data list representing whole table of data.
+#' @param data list representing whole table of data (categorical variables
+#' must be factors).
 #' @param target_name character, column name of the target variable. Selected
 #' column must be interpretable as categorical.
 #' @param sensitive_name character, column name of the sensitive variable.
@@ -165,7 +172,7 @@ prepare_to_adv <- function(preds, sensitive, partition=0.7){
 #' @export
 #'
 #' @examples
-#' data("adult")
+#' adult <- fairmodels::adult
 #'
 #' processed <-
 #'   preprocess(
@@ -187,7 +194,7 @@ preprocess <- function(data,
                        sensitive_name,
                        privileged,
                        discriminated,
-                       drop_also,
+                       drop_also = NULL,
                        sample = 1,
                        train_size = 0.7,
                        test_size = 0.3,
@@ -200,7 +207,7 @@ preprocess <- function(data,
     stop("train_size+test_size+validation_size must equal 1")
   if (!is.character(target_name) || !is.character(sensitive_name))
     stop("target_name and sensitive_name must be characters")
-  if (!is.character(drop_also))
+  if (!is.null(drop_also) && !is.character(drop_also))
     stop("drop_also must be a character vector")
   if (!is.list(data))
     stop("data must be a list")
@@ -212,13 +219,13 @@ preprocess <- function(data,
   df_new <- data[col == privileged,][1:M,]
   df_new <- rbind(df_new, data[col == discriminated,][1:M,])
   data   <- df_new
-  data   <- na.omit(data)
+  data   <- stats::na.omit(data)
 
   set.seed(seed)
 
   sample_indices <- sample(1:nrow(data), nrow(data) * sample)
   data           <- data[sample_indices, ]
-  data           <- na.omit(data)
+  data           <- stats::na.omit(data)
 
   sensitive <-
     as.integer (eval(parse(text = paste(
@@ -231,15 +238,21 @@ preprocess <- function(data,
     ))))
 
   #drop columns we dont want to be in learning set
-  data_coded <- data[, -which(names(data) %in%
+  if(is.null(drop_also)){
+    data_coded <- data[, -which(names(data) %in%
+                                  c(target_name, sensitive_name))]
+    data_coded <- data.frame(data_coded)
+  }else{
+    data_coded <- data[, -which(names(data) %in%
                                 c(target_name, sensitive_name, drop_also))]
+    data_coded <- data.frame(data_coded)
+  }
   #encode columns which are not numeric
   for (i in 1:ncol(data_coded)) {
     if (!is.numeric(data_coded[, i])) {
       data_coded[, i] <- as.integer(data_coded[, i])
     }
   }
-
   #prepare data with scaling
   data_matrix <- matrix(unlist(data_coded), ncol = ncol(data_coded))
   data_scaled <- scale(data_matrix, center = TRUE, scale = TRUE)

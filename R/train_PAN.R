@@ -101,8 +101,8 @@ train_PAN <- function(n_ep_pan,
   for (epoch in 1:n_ep_pan) {
 
     verbose_cat(sprintf("PAN epoch %d \n", epoch), verbose)
-    train_dl <- dataloader(dsl$train_ds, batch_size = dsl$train_ds$.length(),
-                                  shuffle = FALSE)
+    train_dl <- torch::dataloader(dsl$train_ds, batch_size =
+                                    dsl$train_ds$.length(),shuffle = FALSE)
     iter <- train_dl$.iter()
     b <- iter$.next()
     output <- clf_model(b$x_cont$to(device = dev))
@@ -118,7 +118,8 @@ train_PAN <- function(n_ep_pan,
     train_losses <- c()
     coro::loop(for (b in adv_dsl$train_dl) {
       output <- adv_model(b$x_cont$to(device = dev))
-      loss <- torch_mul(nnf_cross_entropy(output, b$y$to(device = dev)), lambda)
+      loss <- torch::torch_mul(torch::nnf_cross_entropy
+                               (output, b$y$to(device = dev)),lambda)
       adv_optimizer$zero_grad()
       loss$backward()
       adv_optimizer$step()
@@ -139,13 +140,13 @@ train_PAN <- function(n_ep_pan,
     b          <- iter$.next()
     clf_output <- clf_model(b$x_cont$to(device = dev))
     preds      <- clf_output[, 2]$to(device = "cpu")
-    preds      <- torch_reshape(preds, list(batch_size, 1))
+    preds      <- torch::torch_reshape(preds, list(batch_size, 1))
     batch      <- iterator$.next()
     output     <- adv_model(preds$to(device = dev))
-    loss       <- torch_mul(nnf_cross_entropy(output, batch$y$to(device = dev)),
-                            lambda)
-    clf_loss   <- torch_sub(nnf_cross_entropy(clf_output, b$y$to(device = dev)),
-                            loss)
+    loss       <- torch::torch_mul(torch::nnf_cross_entropy
+                                   (output, batch$y$to(device = dev)),lambda)
+    clf_loss   <- torch::torch_sub(torch::nnf_cross_entropy
+                                   (clf_output, b$y$to(device = dev)),loss)
     clf_optimizer$zero_grad()
     clf_loss$backward()
     clf_optimizer$step()

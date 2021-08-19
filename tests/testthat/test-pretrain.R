@@ -2,7 +2,7 @@ test_that("test-pretrain", {
 
   setwd("..")
 
-  data("adult")
+  adult <- fairmodels::adult
 
   processed <-
     preprocess(
@@ -52,9 +52,9 @@ test_that("test-pretrain", {
   expect_true(typeof(models$clf_optimizer) == "environment")
   expect_true(typeof(models$adv_optimizer) == "environment")
 
-  clf                 <- torch_load("./zzz/clf2")
-  clf_optimizer_state <- torch_load("./zzz/clf_optimizer2")
-  clf_optimizer       <- optim_adam(clf$parameters, lr = 0.001)
+  clf                 <- torch::torch_load("./zzz/clf2")
+  clf_optimizer_state <- torch::torch_load("./zzz/clf_optimizer2")
+  clf_optimizer       <- torch::optim_adam(clf$parameters, lr = 0.001)
   acc2                <- eval_accuracy(clf, dsl$test_ds, dev)
   clf_optimizer$load_state_dict(clf_optimizer_state)
 
@@ -120,7 +120,7 @@ test_that("test-pretrain", {
 
   acc4 <- eval_accuracy(models3$clf_model, dsl$test_ds, dev)
   expect_true(acc4 != acc3)
-  expect_true(round(acc4, 7) == 0.2891247)
+  expect_true(round(acc4, 7) == 0.806366)
   expect_true(typeof(models3$adv_model) == "closure")
   expect_true(typeof(models3$clf_optimizer) == "environment")
   expect_true(typeof(models3$adv_optimizer) == "environment")

@@ -12,16 +12,18 @@
 #'
 #' @examples
 #'
+#' \dontrun{
 #' dev       <- if (torch::cuda_is_available())
 #'                torch_device("cuda:0") else "cpu"
 #'
-#' model1    <- torch_load("./zzz/preclf")
-#' processed <- torch_load("./zzz/processed")
+#' model1    <- torch_load("./tests/zzz/preclf")
+#' processed <- torch_load("./tests/zzz/processed")
 #'
 #' dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
 #'                       processed$test_y, batch_size=5, dev=dev)
 #'
 #' preds1   <- make_preds(model1,dsl$test_ds,dev)
+#' }
 
 
 make_preds <- function(model, test_ds, dev) {
@@ -37,7 +39,7 @@ make_preds <- function(model, test_ds, dev) {
 
   model$eval()
 
-  test_dl <- dataloader(test_ds, batch_size = test_ds$.length(),
+  test_dl <- torch::dataloader(test_ds, batch_size = test_ds$.length(),
                         shuffle = FALSE)
   iter    <- test_dl$.iter()
   b       <- iter$.next()
@@ -62,6 +64,7 @@ make_preds <- function(model, test_ds, dev) {
 #' @export
 #'
 #' @examples
+#' \dontrun{
 #' dev       <- if (torch::cuda_is_available())
 #'                torch_device("cuda:0") else "cpu"
 #'
@@ -72,6 +75,7 @@ make_preds <- function(model, test_ds, dev) {
 #'                       processed$test_y, batch_size=5, dev=dev)
 #'
 #' preds1   <- make_preds_prob(model1,dsl$test_ds,dev)
+#' }
 #'
 make_preds_prob <- function(model, test_ds, dev) {
 
@@ -86,7 +90,7 @@ make_preds_prob <- function(model, test_ds, dev) {
 
   model$eval()
 
-  test_dl <- dataloader(test_ds, batch_size = test_ds$.length(),
+  test_dl <- torch::dataloader(test_ds, batch_size = test_ds$.length(),
                         shuffle = FALSE)
   iter    <- test_dl$.iter()
   b       <- iter$.next()

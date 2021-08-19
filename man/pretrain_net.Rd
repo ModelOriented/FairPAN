@@ -49,12 +49,12 @@ Pretrain for both the classifier and adversarial model. You can select which
 model it is by setting model_type parameter
 }
 \examples{
-
+\dontrun{
 dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
-processed <- torch_load("./zzz/processed")
+processed <- torch_load("./tests/zzz/processed")
 dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
                       processed$test_y, batch_size=5, dev=dev)
-model <- torch_load("./zzz/clf1")
+model <- torch_load("./tests/zzz/clf1")
 pretrain_net(
   n_epochs = 3,
   model = model,
@@ -66,5 +66,6 @@ pretrain_net(
   verbose = TRUE,
   monitor = TRUE
 )
+}
 
 }

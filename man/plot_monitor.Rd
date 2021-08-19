@@ -30,9 +30,9 @@ and classifier losses) epoch by epoch. It is useful for the monitoring of
 the learning process, thus the user can see if everything works properly.
 }
 \examples{
-
-monitor2 <- torch_load("./zzz/monitoring2")
+\dontrun{
+monitor2 <- torch_load("./tests/zzz/monitoring2")
 plot_monitor(monitor2$STP ,monitor2$adversary_acc, monitor2$classifier_acc,
              monitor2$adversary_losses)
-
+}
 }

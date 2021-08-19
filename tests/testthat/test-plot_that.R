@@ -2,8 +2,8 @@ test_that("test-plot_that", {
 
   setwd("..")
 
-  monitor2 <- torch_load("./zzz/monitoring2")
-  monitor3 <- torch_load("./zzz/monitoring3")
+  monitor2 <- torch::torch_load("./zzz/monitoring2")
+  monitor3 <- torch::torch_load("./zzz/monitoring3")
 
   plot1 <- plot_monitor(monitor2$STP ,monitor2$adversary_acc,
                         monitor2$classifier_acc, monitor2$adversary_losses)

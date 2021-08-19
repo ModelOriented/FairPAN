@@ -1,7 +1,7 @@
 test_that("test-make_explainers", {
   dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
 
-  data("adult")
+  adult <- fairmodels::adult
 
   processed <- preprocess(
       adult,
@@ -18,7 +18,7 @@ test_that("test-make_explainers", {
     )
 
   setwd("..")
-  model1 <- torch_load("./zzz/clf1")
+  model1 <- torch::torch_load("./zzz/clf1")
 
   dsl <- dataset_loader(processed$train_x, processed$train_y,
                         processed$test_x, processed$test_y,
