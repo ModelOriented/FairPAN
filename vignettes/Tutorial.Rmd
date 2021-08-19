@@ -1,0 +1,281 @@
+---
+title: "Tutorial"
+author: "Hubert Ruczyński"
+output: 
+  html_document: 
+    df_print: paged
+    toc: true
+    toc_float: true
+    number_sections: true      
+vignette: >
+  %\VignetteIndexEntry{tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+  
+---
+# FairPAN
+
+In this tutorial you will get to know when, why and how to use `FairPAN`. 
+`FairPAN` is a tool for creating fair predictive adversarial networks. 
+
+
+## How does it work?
+
+## Why?
+
+## Data
+
+The dataset used in our tutorial is called adult. It contains 15 columns with
+both numerical and categorical data about citizens of USA. Our *target* here is
+a `salary` column. As *sensitive* variables we can perceive `sex` and `race`
+however we will focus only on `sex`
+
+```{r}
+library(FairPAN)
+adult <- fairmodels::adult
+head(adult)
+```
+
+# Workflow (?)
+
+## Preprocessing
+
+At the beginning we have to preprocess our dataset so we can train a neural
+network on it and divide it into train and test subsets. One can do it on your
+own, however we will use built in function called preprocess which will create
+16 objects which are needed for other features.
+
+To use this function we have to provide a dataset with categorical columns 
+provided as factors. Then we define that `salary` is our target and `sex` is a
+sensitive variable with privileged level `Male` and discriminated `Female`. 
+As we noticed before, `race` could also be considered as a sensitive variable
+so we want to remove it from our learning dataset too. In the end we sample a
+small part of the dataset for our process to save our time in this example and
+define proportions of train, test and validation subsets. We also set seed for
+reproduction.
+
+Inside, the function encodes the categorical columns as integers based on their
+factors levels. After that all variables are rescaled to ensure better learning
+process. Moreover to ensure that adversarial model works properly, we also 
+balance a dataset to have the same number of privileged and discriminated
+records.
+
+```{r}
+data <- preprocess( data = adult,               # dataset 
+                    target_name = "salary",     # name of target column
+                    sensitive_name = "sex",     # name of sensitive column
+                    privileged = "Male",        # level of privileged class
+                    discriminated = "Female",   # level of discriminated class
+                    drop_also = c("race"),      # columns to drop (perhaps 
+                                                # other sensitive variable)
+                    sample = 0.04,              # sample size from dataset
+                    train_size = 0.6,           # size of train set
+                    test_size = 0.4,            # size of test set
+                    validation_size = 0,        # size of validation set
+                    seed = 7                    # seed for reproduction.
+)
+
+head(data$train_x,2)
+head(data$train_y,2)
+head(data$sensitive_train,2)
+head(data$test_x,2)
+head(data$test_y,2)
+head(data$sensitive_test,2)
+head(data$data_scaled_test,2)
+head(data$data_test,2)
+head(data$protected_test,2)
+
+```
+
+We've decided to show the most important objects created by preprocess above.
+
+Our next step is setting a computational device `dev`, which might be GPU with 
+cuda or cpu if we don't have cuda installed. Even more importantly we create a 
+dataset_loader object which stores data as tensor for our neural network in 4
+objects. First two of them are torch `datasets` for storing all the tensors 
+and the other two are torch `dataloaders` which store tensors in batches
+described by `batch_size`.
+
+```{r}
+dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+
+dsl <- dataset_loader(train_x = data$train_x,
+                      train_y = data$train_y,
+                      test_x = data$test_x,
+                      test_y = data$test_y,
+                      batch_size = 5,
+                      dev = dev
+)
+print(dsl$train_dl$.iter()$.next())
+```
+
+In the end of preprocessing you can see how the single batch of train data
+loader looks like.
+
+## Model creation and pretrain
+
+Finally we are ready to create and pretrain both adversarial and classifier
+models. `FairPAN` provides multiple options in this case, because one can not 
+only create and pretrain both models with our interface, but also provide their
+own neural network models (`clf_model` and `adv_model`). The classifier model 
+can be also pretrained, but then `clf_optimizer` from that training must be 
+provided and `trained` changed to TRUE.
+
+In our first example we will focus on pretraining both models with creation by
+the `pretrain` function. 
+To do that you don't have to provide first four
+variables, because they are set like that on default. One has to provide `data`
+in next four variables and then, the other two describe inner `dataset_loader` 
+for adversarial network. Next block describes the structure of our models. Neural
+architecture is provided as a simple vector where c(32,16,8) describes a network
+with 3 layers with 32, 16 and 8 neurons. This layers are connected with 
+`nn_linear` and during forward pass, inner layers have `nnf_relu` with 
+`nnf_softmax` in the end. User can also define dimension for softmax, however we
+advice not to do so. In the end one can also provide learning rates and numbers
+of epochs for both models.
+In the end we have to provide a dataset_loader with device and choose whether
+we want to monitor more metrics and print them out.
+
+```{r}
+
+models <- pretrain(clf_model = NULL,                       # classifier model
+                   adv_model = NULL,                       # adversarial model
+                   clf_optimizer = NULL,                   # classifiers optimizer
+                   trained = FALSE,                        # indicates whether provided classifier is trained
+                   
+                   train_x = data$train_x,                 # train predictors
+                   train_y = data$train_y,                 # train target
+                   sensitive_train = data$sensitive_train, # train sensitives
+                   sensitive_test = data$sensitive_test,   # test sensitives
+                   
+                   batch_size = 5,                         # inner dataset_loader batch size
+                   partition = 0.6,                        # partition for inner adversaries dataset_loader preparation
+                   
+                   neurons_clf = c(32, 32, 32),            # classifiers neural architecture
+                   neurons_adv = c(32, 32, 32),            # adversaries neural architecture
+                   dimension_clf = 2,                      # dimension for classifier (always set 2)
+                   dimension_adv = 1,                      # dimension for adversarial (always set 1)
+                   learning_rate_clf = 0.001,              # learning rate of classifier
+                   learning_rate_adv = 0.001,              # learning rate of adversarial
+                   n_ep_preclf = 5,                        # number of epochs for classifier pretrain
+                   n_ep_preadv = 10,                       # number of epochs for adversarial pretrain
+                   
+                   dsl = dsl,                              # dataset_loader
+                   dev = dev,                              # computational device
+                   verbose = TRUE,                         # if TRUE prints metrics
+                   monitor = TRUE                          # if TRUE aquires more data ( also to print)
+)
+
+```
+```{r}
+
+clf <- create_model(train_x = data$train_x,                # train predictors
+                    train_y = data$train_y,                # train target 
+                    neurons = c(32,32,32),                 # models neural architecture
+                    dimensions = 2                         # dimension for model (always set 2 for classifier 1 for adversary)
+)
+
+opt <- pretrain_net(n_epochs = 5,                          # number of epochs for model pretrain
+                    model = clf,                           # neural network model
+                    dsl = dsl,                             # dataset_loader
+                    model_type = 1,                        # model type (1 means precalssifer)
+                    learning_rate = 0.001,                 # learning rate of classifier
+                    sensitive_test = data$sensitive_test,  # test sensitives
+                    dev = dev,                             # computational device
+                    verbose = TRUE,                        # if TRUE prints metrics
+                    monitor = TRUE                         # if TRUE aquires more data ( also to print)
+)
+
+print(opt$optimizer)
+
+clf_optimizer <- opt$optimizer
+    
+models <- pretrain(clf_model = clf,                        # classifier model
+                   adv_model = NULL,                       # adversarial model
+                   clf_optimizer = clf_optimizer,          # classifiers optimizer
+                   trained = TRUE,                         # indicates whether provided classifier is trained
+                   train_x = data$train_x,                 # train predictors
+                   train_y = data$train_y,                 # train target
+                   sensitive_train = data$sensitive_train, # train sensitives
+                   sensitive_test = data$sensitive_test,   # test sensitives
+                   batch_size = 5,                         # inner dataset_loader batch size
+                   partition = 0.6,                        # partition for inner adversaries dataset_loader preparation
+                   neurons_clf = c(32, 32, 32),            # classifiers neural architecture
+                   neurons_adv = c(32, 32, 32),            # adversaries neural architecture
+                   dimension_clf = 2,                      # dimension for classifier (always set 2)
+                   dimension_adv = 1,                      # dimension for adversarial (always set 1)
+                   learning_rate_clf = 0.001,              # learning rate of classifier
+                   learning_rate_adv = 0.001,              # learning rate of adversarial
+                   n_ep_preclf = 5,                        # number of epochs for classifier pretrain
+                   n_ep_preadv = 10,                       # number of epochs for adversarial pretrain
+                   dsl = dsl,                              # dataset_loader
+                   dev = dev,                              # computational device
+                   verbose = TRUE,                         # if TRUE prints metrics
+                   monitor = TRUE                          # if TRUE aquires more data ( also to print)
+)
+```
+
+```{r}
+exp_clf <- explain_PAN(target = data$test_y,                     # test target
+                       model = models$clf_model,                 # classifier model
+                       model_name = "Classifier",                # classifiers name
+                       data_test = data$data_test,               # original data for test
+                       data_scaled_test = data$data_scaled_test, # scaled numeric data for test
+                       batch_size = 5,                           # batch_size used in dataset_loader
+                       dev = dev,                                # computational device
+                       verbose = TRUE                            #if TRUE prints monitor info
+)
+```
+
+## Fairtrain
+
+```{r}
+monitor <- fair_train( n_ep_pan = 30,                           # number of epochs for pan training
+                       dsl = dsl,                               # dataset_loader
+                       clf_model = models$clf_model,            # classifier model
+                       adv_model = models$adv_model,            # adv model
+                       clf_optimizer = models$clf_optimizer,    # classifiers optimizer
+                       adv_optimizer = models$adv_optimizer,    # adversaries optimizer
+                       dev = dev,                               # computational device
+                       sensitive_train = data$sensitive_train,  # train sensitives
+                       sensitive_test = data$sensitive_test,    # test sensitives
+                       batch_size = 5,                          # inner dataset_loader batch size
+                       learning_rate_adv = 0.001,               # learning rate of adversarial
+                       learning_rate_clf = 0.001,               # learning rate of classifier
+                       lambda = 130,                            # train controlling parameter (the bigger the better STPR results)
+                       verbose = TRUE,                          # if TRUE prints metrics
+                       monitor = TRUE                           # if TRUE aquires more data ( also to print)
+)
+monitor
+```
+
+## Metrics and Visualizations
+```{r}
+plot_monitor(STP = monitor$STP, 
+             adversary_acc = monitor$adversary_acc, 
+             adversary_losses = monitor$adversary_losses, 
+             classifier_acc = monitor$classifier_acc)
+```
+
+
+```{r}
+exp_PAN <- explain_PAN(target = data$test_y,                     # test target
+                       model = models$clf_model,                 # classifier model
+                       model_name = "PAN",                       # classifiers name
+                       data_test = data$data_test,               # original data for test
+                       data_scaled_test = data$data_scaled_test, # scaled numeric data for test
+                       batch_size = 5,                           # batch_size used in dataset_loader
+                       dev = dev,                                # computational device
+                       verbose = TRUE                            #if TRUE prints monitor info
+)
+DALEX::model_performance(exp_PAN)
+DALEX::model_performance(exp_clf)
+```
+
+```{r}
+fobject <- fairmodels::fairness_check(exp_PAN,exp_clf,
+                            protected = data$protected_test,
+                            privileged = "Male", 
+                            verbose = TRUE)
+plot(fobject)
+```
