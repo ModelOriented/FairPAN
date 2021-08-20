@@ -1,6 +1,7 @@
 # library(testthat)
 # library(roxygen2)
 # library(devtools)
+# check(vignettes = FALSE)
 
 #use_r("dataset_loader")
 #use_package("forcats")

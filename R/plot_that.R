@@ -44,8 +44,8 @@ plot_monitor <- function(STP = NULL,
     STP_plot <- ggplot(stats, aes(x = 1:nrow(stats))) +
       geom_line(aes(y = STP), color = "darkred") +
       DALEX::theme_drwhy() +
-      labs(x = 'Number of epochs', y = "STPR",
-           title = "Value of STPR by the number of epochs ") +
+      labs(x = 'Number of epochs', y = "STP ratio",
+           title = "STP ratio") +
       theme(
         axis.text = element_text(size = 20),
         axis.title = element_text(size = 22),
