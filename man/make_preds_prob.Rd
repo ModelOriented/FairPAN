@@ -18,20 +18,23 @@ predictions}
 float (probabilistic) vector of predictions
 }
 \description{
-Makes probabilistic predictions for classification model
+Makes probabilistic predictions for neural network with classification task.
 }
 \examples{
 \dontrun{
 dev       <- if (torch::cuda_is_available())
                torch_device("cuda:0") else "cpu"
 
-model1    <- torch_load("./zzz/preclf")
-processed <- torch_load("./zzz/processed")
+# presaved torch model
+model1    <- torch_load("./tests/zzz/preclf")
 
-dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
-                      processed$test_y, batch_size=5, dev=dev)
+# presaved output of preprocess function
+processed <- torch_load("./tests/zzz/processed")
 
-preds1   <- make_preds_prob(model1,dsl$test_ds,dev)
+dsl       <- dataset_loader(processed$train_x, processed$train_y,
+             processed$test_x,processed$test_y, batch_size=5, dev=dev)
+
+preds1    <- make_preds_prob(model1,dsl$test_ds,dev)
 }
 
 }

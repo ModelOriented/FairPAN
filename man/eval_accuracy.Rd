@@ -7,7 +7,7 @@
 eval_accuracy(model, test_ds, dev)
 }
 \arguments{
-\item{model}{neural network model we want to evaluate}
+\item{model}{net, nn_module, neural network model we want to evaluate}
 
 \item{test_ds}{\code{dataset} object from torch used for making test
 predictions and evaluation}

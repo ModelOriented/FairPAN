@@ -15,10 +15,9 @@
 #' (https://godatadriven.com/blog/towards-fairness-in-ml-with-adversarial-networks/)
 #'
 #'
-#' @param n_ep_pan number of epochs for PAN training. Default: 50.
 #' @param dsl \code{dataset_loader} object for classificator network.
-#' @param clf_model classifier model (preferably after pretrain).
-#' @param adv_model adversarial model (preferably after pretrain).
+#' @param clf_model net, nn_module, classifier model (preferably after pretrain).
+#' @param adv_model net, nn_module, adversarial model (preferably after pretrain).
 #' @param clf_optimizer optimizer for classificator model from pretrain.
 #' @param adv_optimizer optimizer for adversarial model from pretrain.
 #' @param dev device used for computation ("cuda" or "cpu").
@@ -26,6 +25,7 @@
 #' adversarial models training.
 #' @param sensitive_test integer vector of sensitive attribute used for
 #' adversarial models testing.
+#' @param n_ep_pan number of epochs for PAN training. Default: 50.
 #' @param batch_size batch size used in adversarial models \code{dataset_loader}
 #' Default: 50.
 #' @param learning_rate_adv learning rate of adversarial. Default: 0.001.
@@ -87,8 +87,7 @@
 #' }
 
 
-fair_train <- function(n_ep_pan = 50,
-                       dsl,
+fair_train <- function(dsl,
                        clf_model,
                        adv_model,
                        clf_optimizer,
@@ -96,6 +95,7 @@ fair_train <- function(n_ep_pan = 50,
                        dev,
                        sensitive_train,
                        sensitive_test,
+                       n_ep_pan = 50,
                        batch_size = 50,
                        learning_rate_adv = 0.001,
                        learning_rate_clf = 0.001,
@@ -104,8 +104,7 @@ fair_train <- function(n_ep_pan = 50,
                        monitor = TRUE) {
 
 
-  train_PAN(n_ep_pan,
-           dsl,
+  train_PAN(dsl,
            clf_model,
            adv_model,
            clf_optimizer,
@@ -113,6 +112,7 @@ fair_train <- function(n_ep_pan = 50,
            dev,
            sensitive_train,
            sensitive_test,
+           n_ep_pan,
            batch_size,
            learning_rate_adv,
            learning_rate_clf,

@@ -284,11 +284,11 @@ In the end we want to create an explainer for our classification model, but we
 will say more about it later.
 
 ```{r explain_clf}
-exp_clf <- explain_PAN(target = data$test_y,                     # test target
+exp_clf <- explain_PAN(y = data$test_y,                          # test target
                        model = models$clf_model,                 # classifier model
-                       model_name = "Classifier",                # classifiers name
-                       data_test = data$data_test,               # original data for test
-                       data_scaled_test = data$data_scaled_test, # scaled numeric data for test
+                       label = "Classifier",                     # classifiers name
+                       data = data$data_test,                    # original data for test
+                       data_scaled = data$data_scaled_test,      # scaled numeric data for test
                        batch_size = 5,                           # batch_size used in dataset_loader
                        dev = dev,                                # computational device
                        verbose = TRUE                            # if TRUE prints monitor info

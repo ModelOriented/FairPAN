@@ -5,7 +5,6 @@
 \title{Trains PAN model}
 \usage{
 train_PAN(
-  n_ep_pan,
   dsl,
   clf_model,
   adv_model,
@@ -14,6 +13,7 @@ train_PAN(
   dev,
   sensitive_train,
   sensitive_test,
+  n_ep_pan = 50,
   batch_size,
   learning_rate_adv,
   learning_rate_clf,
@@ -23,13 +23,11 @@ train_PAN(
 )
 }
 \arguments{
-\item{n_ep_pan}{number of epochs for PAN training}
-
 \item{dsl}{\code{dataset_loader} object for classificator network}
 
-\item{clf_model}{classifier model (preferably after pretrain)}
+\item{clf_model}{net, nn_module, classifier model (preferably after pretrain)}
 
-\item{adv_model}{adversarial model (preferably after pretrain)}
+\item{adv_model}{net, nn_module, adversarial model (preferably after pretrain)}
 
 \item{clf_optimizer}{optimizer for classificator model from pretrain}
 
@@ -41,6 +39,8 @@ train_PAN(
 training}
 
 \item{sensitive_test}{integer vector of sensitive attribute used for testing}
+
+\item{n_ep_pan}{number of epochs for PAN training}
 
 \item{batch_size}{batch size used in adversarial models \code{dataset_loader}}
 

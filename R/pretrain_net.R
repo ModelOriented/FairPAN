@@ -6,7 +6,7 @@
 #' which is usefull for monitoring the learning process and making adjustments.
 #'
 #' @param n_epochs integer setting number of epochs for training. Default: 15
-#' @param model neural network model we want to train
+#' @param model net, nn_module, neural network model we want to train
 #' @param dsl dataset_loader object for the training
 #' @param model_type indicates which model we train (0 for preadversarial, 1 for
 #' preclassifier, 2 for classifier only)

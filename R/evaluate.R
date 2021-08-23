@@ -2,7 +2,7 @@
 #'
 #' This function evaluates the model by calculating its accuracy
 #'
-#' @param model neural network model we want to evaluate
+#' @param model net, nn_module, neural network model we want to evaluate
 #' @param test_ds \code{dataset} object from torch used for making test
 #' predictions and evaluation
 #' @param dev device used for calculations (cpu or gpu)
@@ -60,11 +60,11 @@ eval_accuracy <- function(model, test_ds, dev) {
 #' Calculates STP ratio
 #'
 #' Calculates Statistical Parity ((TP+FP)/(TP+FP+TN+FN)) ratio between
-#' privileged and discriminated label for given model, which is the most
-#' important fairness metric for us, because it measures how similar the
+#' privileged and discriminated label for given model, which is one of the most
+#' important fairness metrics for us, because it measures how similar the
 #' distributions of sensitive values are.
 #'
-#' @param model neural network model we want to evaluate
+#' @param model net, nn_module, neural network model we want to evaluate
 #' @param test_ds \code{dataset} object from torch used for making predictions
 #' for STP ratio
 #' @param sensitive numerical vector of sensitive variable
@@ -104,6 +104,8 @@ calc_STP <- function(model, test_ds, sensitive, dev) {
     stop("dev must be gpu or cpu")
   if (!is.vector(sensitive))
     stop("sensitive must be a vector")
+  if (!is.numeric(sensitive))
+    stop("senstivie mus be numeric")
 
   # We substract 1 from every prediction to get 0/1 labels
   preds <- make_preds(model, test_ds, dev) - 1

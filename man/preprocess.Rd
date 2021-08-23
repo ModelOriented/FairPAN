@@ -75,6 +75,12 @@ It  makes data suitable for training functions, splits it into train, test
 and validation, provides other data objects that are necessary for our
 training.
 }
+\details{
+WARNING! So far the code in other functions is not fully prepared for
+validation dataset and is designed for using test as test and validation.
+Well understanding users however can use validation set in place of test if
+they are sure it makes sense there.
+}
 \examples{
 adult <- fairmodels::adult
 

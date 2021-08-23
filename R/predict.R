@@ -2,7 +2,7 @@
 #'
 #' Makes binary predictions for neural network with classification task.
 #'
-#' @param model neural network classification model
+#' @param model net, nn_module, neural network classification model
 #' @param test_ds \code{dataset} object from torch used for making test
 #' predictions
 #' @param dev device used for calculations (cpu or gpu)

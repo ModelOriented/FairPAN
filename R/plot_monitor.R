@@ -40,9 +40,14 @@ plot_monitor <- function(STP = NULL,
   # Creation of dataset for plots
   stats <- data.frame(STP, adversary_acc, adversary_losses, classifier_acc)
 
+  STP_plot      <- NULL
+  adv_acc_plot  <- NULL
+  adv_loss_plot <- NULL
+  clf_acc_plot  <- NULL
+
   if (!is.null(STP)) {
     STP_plot <- ggplot(stats, aes(x = 1:nrow(stats))) +
-      geom_line(aes(y = STP), color = "darkred") +
+      geom_line(aes(y = STP), color = "#4378bf") +
       DALEX::theme_drwhy() +
       labs(x = 'Number of epochs', y = "STP ratio",
            title = "STP ratio") +
@@ -56,7 +61,7 @@ plot_monitor <- function(STP = NULL,
 
   if (!is.null(adversary_acc)) {
     adv_acc_plot <- ggplot(stats, aes(x = 1:nrow(stats))) +
-      geom_line(aes(y = adversary_acc), color = "darkblue") +
+      geom_line(aes(y = adversary_acc), color = "#4378bf") +
       DALEX::theme_drwhy() +
       labs(x = 'Number of epochs', y = "Accuracy", title =
              "Adversarial accuracy ") +
@@ -70,7 +75,7 @@ plot_monitor <- function(STP = NULL,
 
   if (!is.null(adversary_losses)) {
     adv_loss_plot <- ggplot(stats, aes(x = 1:nrow(stats))) +
-      geom_line(aes(y = adversary_losses), color = "darkgreen") +
+      geom_line(aes(y = adversary_losses), color = "#4378bf") +
       DALEX::theme_drwhy() +
       labs(x = 'Number of epochs', y = "Loss", title = "Adversarial loss ") +
       theme(
@@ -83,7 +88,7 @@ plot_monitor <- function(STP = NULL,
 
   if (!is.null(classifier_acc)) {
     clf_acc_plot <- ggplot(stats, aes(x = 1:nrow(stats))) +
-      geom_line(aes(y = classifier_acc), color = "purple") +
+      geom_line(aes(y = classifier_acc), color = "#4378bf") +
       DALEX::theme_drwhy() +
       labs(x = 'Number of epochs', y = "Accuracy", title =
              "Classifier accuracy ") +
@@ -94,49 +99,5 @@ plot_monitor <- function(STP = NULL,
       )
     plot(clf_acc_plot)
   }
+
 }
-
-# Plots fobject metrics
-#
-# This function plots fairness metrics like Equal parity ratio and statistical
-# parity ratio. The plot is provided by fairmodels.
-#
-# @param fobject fairness object from fairmodels
-#
-# @return NULL - plots the visualization
-# @export
-#
-# @examples
-# dev   <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
-#
-# data("adult")
-# processed <- preprocess( adult, "salary", "sex", "Male", "Female", c("race"),
-#                          sample = 0.8, train_size = 0.65, test_size = 0.35,
-#                          validation_size = 0, seed = 7)
-#
-# model1    <- torch_load("./zzz/clf1")
-#
-# dsl       <- dataset_loader(processed$train_x, processed$train_y,
-#                             processed$test_x, processed$test_y,
-#                             batch_size=5, dev=dev)
-#
-# exp <- Single_explainer(
-#   processed$test_y,
-#   model1,
-#   "classifier",
-#   processed$data_test,
-#   processed$data_scaled_test,
-#   processed$protected_test,
-#   privileged = "Male",
-#   batch_size = 5,
-#   dev = dev,
-#   verbose = FALSE
-# )
-#
-# plot_fairness(exp)
-
-# plot_fairness <- function(fobject) {
-#
-#   plot(fobject)
-#
-# }

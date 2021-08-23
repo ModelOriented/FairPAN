@@ -4,16 +4,16 @@
 #' with the mutual training of adversarial model on whole dataloader and
 #' classifier on a single mini batch. The result is a fairer classifier.
 #'
-#' @param n_ep_pan number of epochs for PAN training
 #' @param dsl \code{dataset_loader} object for classificator network
-#' @param clf_model classifier model (preferably after pretrain)
-#' @param adv_model adversarial model (preferably after pretrain)
+#' @param clf_model net, nn_module, classifier model (preferably after pretrain)
+#' @param adv_model net, nn_module, adversarial model (preferably after pretrain)
 #' @param clf_optimizer optimizer for classificator model from pretrain
 #' @param adv_optimizer optimizer for adversarial model from pretrain
 #' @param dev device used to computation ("cuda" or "cpu")
 #' @param sensitive_train integer vector of sensitive attribute used for
 #' training
 #' @param sensitive_test integer vector of sensitive attribute used for testing
+#' @param n_ep_pan number of epochs for PAN training
 #' @param batch_size batch size used in adversarial models \code{dataset_loader}
 #' @param learning_rate_adv learning rate of adversarial
 #' @param learning_rate_clf learning rate of classifier
@@ -26,8 +26,7 @@
 #' some useful info to adjust parameters and training process)
 #'
 #' @return NULL if monitor is FALSE, list of metrics if it is TRUE
-train_PAN <- function(n_ep_pan,
-                      dsl,
+train_PAN <- function(dsl,
                       clf_model,
                       adv_model,
                       clf_optimizer,
@@ -35,6 +34,7 @@ train_PAN <- function(n_ep_pan,
                       dev,
                       sensitive_train,
                       sensitive_test,
+                      n_ep_pan = 50,
                       batch_size,
                       learning_rate_adv,
                       learning_rate_clf,
@@ -98,11 +98,11 @@ train_PAN <- function(n_ep_pan,
   adv_model$train()
   clf_model$train()
 
-  for (epoch in 1:n_ep_pan) {
+  for (epoch in seq_len(n_ep_pan)) {
 
     verbose_cat(sprintf("PAN epoch %d \n", epoch), verbose)
     train_dl <- torch::dataloader(dsl$train_ds, batch_size =
-                                    dsl$train_ds$.length(),shuffle = FALSE)
+                                    dsl$train_ds$.length(), shuffle = FALSE)
     iter    <- train_dl$.iter()
     b       <- iter$.next()
     output  <- clf_model(b$x_cont$to(device = dev))

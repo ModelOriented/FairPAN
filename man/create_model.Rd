@@ -4,7 +4,13 @@
 \alias{create_model}
 \title{Creates a simple neural network model}
 \usage{
-create_model(train_x, train_y, neurons = c(32, 32, 32), dimensions = 2)
+create_model(
+  train_x,
+  train_y,
+  neurons = c(32, 32, 32),
+  dimensions = 2,
+  seed = 7
+)
 }
 \arguments{
 \item{train_x}{numeric, scaled matrix of predictors used for training. Here
@@ -13,16 +19,18 @@ it is used for getting its size to build suitable neural network.}
 \item{train_y}{numeric, scaled vector of target used for training Here
 it is used for getting its size to build suitable neural network.}
 
-\item{neurons}{vector of integers describing the architecture.
+\item{neurons}{numeric, vector of integers describing the architecture.
 Notation c(8,16,8) means 3 layer neural network with 8,16 and 8 neurons in
 1st, 2nd and 3rd layer. Default: c(32,32,32)}
 
 \item{dimensions}{integer 0,1 or 2 setting nnf_softmax dimension for
 classifier. Default: 2 (suggested to use 2 for classifier and 1 for
 adversarial)}
+
+\item{seed}{integer, seed for initial weights, set NULL for none. Default: 7.}
 }
 \value{
-neural network model
+net,nn_module, neural network model
 }
 \description{
 Provides a method to create a simple neural network model which should be
@@ -37,5 +45,6 @@ train_y <- c(1, 2, 3)
 model   <- create_model(train_x,
                         train_y,
                         neurons = c(16, 8, 16),
-                        dimensions = 1)
+                        dimensions = 1,
+                        seed=7)
 }

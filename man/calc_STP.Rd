@@ -7,7 +7,7 @@
 calc_STP(model, test_ds, sensitive, dev)
 }
 \arguments{
-\item{model}{neural network model we want to evaluate}
+\item{model}{net, nn_module, neural network model we want to evaluate}
 
 \item{test_ds}{\code{dataset} object from torch used for making predictions
 for STP ratio}
@@ -21,8 +21,8 @@ float, STP ratio
 }
 \description{
 Calculates Statistical Parity ((TP+FP)/(TP+FP+TN+FN)) ratio between
-privileged and discriminated label for given model, which is the most
-important fairness metric for us, because it measures how similar the
+privileged and discriminated label for given model, which is one of the most
+important fairness metrics for us, because it measures how similar the
 distributions of sensitive values are.
 }
 \examples{
@@ -30,6 +30,7 @@ distributions of sensitive values are.
 \dontrun{
 dev        <- if (torch::cuda_is_available())
                 torch_device("cuda:0") else "cpu"
+
 # presaved torch model
 model     <- torch_load("./tests/zzz/clf2")
 

@@ -10,14 +10,15 @@
 #' it is used for getting its size to build suitable neural network.
 #' @param train_y numeric, scaled vector of target used for training Here
 #' it is used for getting its size to build suitable neural network.
-#' @param neurons vector of integers describing the architecture.
+#' @param neurons numeric, vector of integers describing the architecture.
 #' Notation c(8,16,8) means 3 layer neural network with 8,16 and 8 neurons in
 #' 1st, 2nd and 3rd layer. Default: c(32,32,32)
 #' @param dimensions integer 0,1 or 2 setting nnf_softmax dimension for
 #' classifier. Default: 2 (suggested to use 2 for classifier and 1 for
 #' adversarial)
+#' @param seed integer, seed for initial weights, set NULL for none. Default: 7.
 #'
-#' @return neural network model
+#' @return net,nn_module, neural network model
 #' @export
 #'
 #' @examples
@@ -26,11 +27,12 @@
 #' model   <- create_model(train_x,
 #'                         train_y,
 #'                         neurons = c(16, 8, 16),
-#'                         dimensions = 1)
+#'                         dimensions = 1,
+#'                         seed=7)
 #' @import magrittr
 #'
 
-create_model <- function(train_x, train_y, neurons=c(32,32,32), dimensions=2){
+create_model <- function(train_x, train_y, neurons=c(32,32,32), dimensions=2, seed=7){
 
   if (!dimensions %in% c(0, 1, 2))
     stop("dimensions must be a 0,1 or 2")
@@ -50,10 +52,12 @@ create_model <- function(train_x, train_y, neurons=c(32,32,32), dimensions=2){
     "net",
     initialize = function(n_cont, Neurons, output_dim) {
       # We're setting seed to have the same initial weights
-      torch::torch_manual_seed(7)
+      if(!is.null(seed)){
+        torch::torch_manual_seed(seed)
+      }
       self$fc1 <- torch::nn_linear(n_cont, Neurons[1])
       # We automatically create next layers of the network
-      for (i in 2:length(Neurons)) {
+      for (i in seq_len(length(Neurons)-1)+1) {
         str<-paste("self$fc",i," <- torch::nn_linear(Neurons[",i-1,"]",
                    ",Neurons[",i,"])",sep="")
         eval(parse(text = str))
@@ -65,7 +69,7 @@ create_model <- function(train_x, train_y, neurons=c(32,32,32), dimensions=2){
       # We concatenate the given batch of tensors
       all <- torch::torch_cat(x_cont, dim = dimensions)
       # Then we add Relu activation for inner layers
-      for (i in 1:length(neurons)) {
+      for (i in seq_len(length(neurons))) {
         str<-paste("all<-all %>% self$fc",i,"() %>% torch::nnf_relu()",sep="")
         eval(parse(text = str))
       }

@@ -19,7 +19,7 @@ pretrain_net(
 \arguments{
 \item{n_epochs}{integer setting number of epochs for training. Default: 15}
 
-\item{model}{neural network model we want to train}
+\item{model}{net, nn_module, neural network model we want to train}
 
 \item{dsl}{dataset_loader object for the training}
 
@@ -46,14 +46,20 @@ list(train_loss,test_loss,optimizer)
 }
 \description{
 Pretrain for both the classifier and adversarial model. You can select which
-model it is by setting model_type parameter
+model it is by setting model_type parameter (it customizes the prints properly).
+Pretrain can also collect more data to training analysis and print it out
+which is usefull for monitoring the learning process and making adjustments.
 }
 \examples{
 \dontrun{
 dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+
+# presaved output of preprocess function
 processed <- torch_load("./tests/zzz/processed")
 dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
                       processed$test_y, batch_size=5, dev=dev)
+
+# presaved torch model
 model <- torch_load("./tests/zzz/clf1")
 pretrain_net(
   n_epochs = 3,

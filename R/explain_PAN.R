@@ -4,7 +4,7 @@
 #' All DALEX functions such as model_performance or
 #'
 #' @param y numerical target of classification task
-#' @param model the model we want to explain
+#' @param model net, nn_module, the model we want to explain
 #' @param label character providing the label (name) to first model
 #' @param data numerical list (table) of predictors
 #' @param data_scaled scaled matrix of numerical values representing
@@ -14,7 +14,7 @@
 #' @param verbose logical indicating if we want to print monitored outputs or
 #' not. Default: TRUE.
 #'
-#' @return fobject - fairness object
+#' @return DALEX model explainer
 #' @export
 #'
 #' @examples

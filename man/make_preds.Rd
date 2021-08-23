@@ -7,26 +7,28 @@
 make_preds(model, test_ds, dev)
 }
 \arguments{
-\item{model}{neural network classification model}
+\item{model}{net, nn_module, neural network classification model}
 
 \item{test_ds}{\code{dataset} object from torch used for making test
 predictions}
 
-\item{dev}{device used to calculations (cpu or gpu)}
+\item{dev}{device used for calculations (cpu or gpu)}
 }
 \value{
 integer (binary) vector of predictions
 }
 \description{
-Makes binary predictions for classification model
+Makes binary predictions for neural network with classification task.
 }
 \examples{
 
 \dontrun{
-dev       <- if (torch::cuda_is_available())
-               torch_device("cuda:0") else "cpu"
+dev <- if (torch::cuda_is_available())torch_device("cuda:0") else "cpu"
 
+# presaved torch model
 model1    <- torch_load("./tests/zzz/preclf")
+
+# presaved output of preprocess function
 processed <- torch_load("./tests/zzz/processed")
 
 dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,

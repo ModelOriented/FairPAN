@@ -1,12 +1,15 @@
 #' Pretrains both classifier and adversarial
 #'
 #' This function can create and pretrain both classifier and adversarial. The
-#' user can also provide the structure of both networks (their models). The
-#' classifier can be pretrained, however the adversarial cannot.
+#' user is able to provide its own architecture of both models through clf_model
+#' and adv_model parameters. Moreover the classifier can be also trained, but then
+#' one has to change trained to TRUE and provide the optimizer from this training.
+#' It is also possible to create both models from our interface witch is described
+#' in create_model documentation.
 #'
-#' @param clf_model optional value, provide the pretrain with your own
+#' @param clf_model optional value, net, nn_module, provide the pretrain with your own
 #' classification neural network. Default: NULL
-#' @param adv_model optional value, provide the pretrain with your own
+#' @param adv_model optional value, net, nn_module, provide the pretrain with your own
 #' adversarial neural network. Default: NULL
 #' @param clf_optimizer optional value, provide the optimizer of classifier if
 #' you decided to provide your own pre trained classifier. Default: NULL
@@ -47,9 +50,10 @@
 #' @param monitor logical indicating if we want to monitor the learning process
 #' or not (monitoring tends to slow down the training proccess, but provides
 #' some useful info to adjust parameters and training process)
+#' @param seed integer, seed for initial weights, set NULL for none. Default: 7.
 #'
-#' @return list of two obejcts: clf_model and adv_model which are pretrained
-#' neural networks.
+#' @return list of two obejcts : clf_model and adv_model which are pretrained
+#' neural networks (net, nn_module).
 #' @export
 #'
 #' @examples
@@ -178,7 +182,8 @@ pretrain <- function(clf_model = NULL,
                      dsl,
                      dev,
                      verbose = TRUE,
-                     monitor = TRUE) {
+                     monitor = TRUE,
+                     seed = 7) {
 
 
   if (n_ep_preclf != n_ep_preclf / 1 || n_ep_preclf < 0)
@@ -234,7 +239,7 @@ pretrain <- function(clf_model = NULL,
     if (nrow(train_x) != length(train_y))
       stop("length of train_y must be equal
                                             number of rows of train_x")
-    clf_model <- create_model(train_x, train_y, neurons_clf, dimension_clf)
+    clf_model <- create_model(train_x, train_y, neurons_clf, dimension_clf, seed = seed)
   }
   if (typeof(clf_model) != 'closure')
     stop("provide a neural network as a model")
@@ -275,7 +280,8 @@ pretrain <- function(clf_model = NULL,
       prepared_data$train_x,
       prepared_data$train_y,
       neurons = neurons_adv,
-      dimensions = dimension_adv
+      dimensions = dimension_adv,
+      seed = seed
     )
   }
   if(typeof(adv_model)!='closure')

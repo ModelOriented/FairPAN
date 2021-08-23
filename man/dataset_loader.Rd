@@ -2,7 +2,7 @@
 % Please edit documentation in R/prepare_data.R
 \name{dataset_loader}
 \alias{dataset_loader}
-\title{Create datasets and dataloaders}
+\title{Creates datasets and dataloaders}
 \usage{
 dataset_loader(train_x, train_y, test_x, test_y, batch_size = 50, dev)
 }
@@ -18,22 +18,23 @@ dataset_loader(train_x, train_y, test_x, test_y, batch_size = 50, dev)
 \item{batch_size}{integer indicating a batch size used in dataloader.
 Default: 50}
 
-\item{dev}{device used to calculations (cpu or gpu)}
+\item{dev}{device used for calculations (cpu or gpu)}
 }
 \value{
 list of two data sets and two dataloaders for train and test
 respectively
 }
 \description{
-Create two torch datasets, from given train_x, test_x matrices and train_y,
+Creates two torch datasets, from given train_x, test_x matrices and train_y,
 test_y vectors and converts them into torch dataloaders with provided batch
-size.
+size. It is used for both classifier and adversarial. During initialization
+NAs are ommited.
 }
 \examples{
-train_x = matrix(c(1,2,3,4,5,6),nrow=3)
-train_y = c(1,2,3)
-test_x = matrix(c(1,2,3,4),nrow=2)
-test_y = c(1,2)
-dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+train_x <- matrix(c(1,2,3,4,5,6),nrow=3)
+train_y <- c(1,2,3)
+test_x  <- matrix(c(1,2,3,4),nrow=2)
+test_y  <- c(1,2)
+dev     <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
 dataset_loader(train_x,train_y,test_x,test_y,batch_size=1,dev)
 }
