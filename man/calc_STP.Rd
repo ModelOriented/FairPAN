@@ -22,15 +22,18 @@ float, STP ratio
 \description{
 Calculates Statistical Parity ((TP+FP)/(TP+FP+TN+FN)) ratio between
 privileged and discriminated label for given model, which is the most
-important fairness metric.
+important fairness metric for us, because it measures how similar the
+distributions of sensitive values are.
 }
 \examples{
 
 \dontrun{
 dev        <- if (torch::cuda_is_available())
                 torch_device("cuda:0") else "cpu"
-
+# presaved torch model
 model     <- torch_load("./tests/zzz/clf2")
+
+# presaved output of `preprocess` function
 processed  <- torch_load("./tests/zzz/processed")
 
 dsl        <- dataset_loader(processed$train_x, processed$train_y,

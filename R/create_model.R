@@ -1,13 +1,15 @@
-#' Creates simple neural network model
+#' Creates a simple neural network model
 #'
 #' Provides a method to create a simple neural network model which should be
-#' enough for tabular data classification tasks. The model consists of nn_linear
+#' enough for tabular data classification tasks. The model consists of `nn_linear`
 #' layers, there are no dropouts and the activation function between the layers
-#' is nnf_relu(), whereas the last one is nnf_softmax. The user can provide
+#' is `nnf_relu`, whereas the last one is `nnf_softmax`. The user can provide
 #' demanded architecture of the layers and select a softmaxes dimension.
 #'
-#' @param train_x numeric, scaled matrix of predictors used for training
-#' @param train_y numeric, scaled vector of target used for training
+#' @param train_x numeric, scaled matrix of predictors used for training. Here
+#' it is used for getting its size to build suitable neural network.
+#' @param train_y numeric, scaled vector of target used for training Here
+#' it is used for getting its size to build suitable neural network.
 #' @param neurons vector of integers describing the architecture.
 #' Notation c(8,16,8) means 3 layer neural network with 8,16 and 8 neurons in
 #' 1st, 2nd and 3rd layer. Default: c(32,32,32)
@@ -47,8 +49,10 @@ create_model <- function(train_x, train_y, neurons=c(32,32,32), dimensions=2){
   net <- torch::nn_module(
     "net",
     initialize = function(n_cont, Neurons, output_dim) {
+      # We're setting seed to have the same initial weights
       torch::torch_manual_seed(7)
       self$fc1 <- torch::nn_linear(n_cont, Neurons[1])
+      # We automatically create next layers of the network
       for (i in 2:length(Neurons)) {
         str<-paste("self$fc",i," <- torch::nn_linear(Neurons[",i-1,"]",
                    ",Neurons[",i,"])",sep="")
@@ -58,18 +62,19 @@ create_model <- function(train_x, train_y, neurons=c(32,32,32), dimensions=2){
 
     },
     forward = function(x_cont) {
-
+      # We concatenate the given batch of tensors
       all <- torch::torch_cat(x_cont, dim = dimensions)
-
+      # Then we add Relu activation for inner layers
       for (i in 1:length(neurons)) {
         str<-paste("all<-all %>% self$fc",i,"() %>% torch::nnf_relu()",sep="")
         eval(parse(text = str))
       }
-
+      # And softmax for the last one
       all %>% self$output() %>% torch::nnf_softmax(dim = dimensions)
 
     }
   )
+  # Here we use train_x and train_y for getting our dimensions
   model <- net(
     n_cont = ncol(data.frame(train_x)),
     Neurons = neurons,

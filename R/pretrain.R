@@ -97,7 +97,7 @@
 #'   verbose = FALSE,
 #'   monitor = FALSE
 #' )
-#'
+#' # presaved models and states of the optimizers
 #' clf                 <- torch_load("./tests/zzz/clf2")
 #' clf_optimizer_state <- torch_load("./tests/zzz/clf_optimizer2")
 #' clf_optimizer       <- optim_adam(clf$parameters, lr = 0.001)

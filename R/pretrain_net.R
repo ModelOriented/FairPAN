@@ -1,7 +1,9 @@
 #' Pretrains the neural network
 #'
 #' Pretrain for both the classifier and adversarial model. You can select which
-#' model it is by setting model_type parameter
+#' model it is by setting model_type parameter (it customizes the prints properly).
+#' Pretrain can also collect more data to training analysis and print it out
+#' which is usefull for monitoring the learning process and making adjustments.
 #'
 #' @param n_epochs integer setting number of epochs for training. Default: 15
 #' @param model neural network model we want to train
@@ -25,9 +27,13 @@
 #' @examples
 #' \dontrun{
 #' dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+#'
+#' # presaved output of preprocess function
 #' processed <- torch_load("./tests/zzz/processed")
 #' dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
 #'                       processed$test_y, batch_size=5, dev=dev)
+#'
+#' # presaved torch model
 #' model <- torch_load("./tests/zzz/clf1")
 #' pretrain_net(
 #'   n_epochs = 3,
@@ -53,29 +59,23 @@ pretrain_net <- function(n_epochs = 15,
                          monitor = TRUE) {
 
 
-  if (n_epochs != n_epochs / 1 ||
-      n_epochs < 0)
+  if (n_epochs != n_epochs / 1 || n_epochs < 0)
     stop("n_epochs must be a positive integer")
   if (typeof(model) != 'closure')
     stop("provide a neural network as a model")
   if (typeof(dsl) != "list")
-    stop("dsl must be list of 2 data sets and 2 data loaders from
-         dataset_loader function")
+    stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
   if (typeof(dsl$test_ds) != "environment")
-    stop("dsl must be list of 2 data sets and 2 data loaders from
-         dataset_loader function")
+    stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
   if (typeof(dsl$test_ds$y) != "externalptr")
-    stop("dsl must be list of 2 data sets and 2 data loaders from
-         dataset_loader function")
-  if (learning_rate > 1 ||
-      learning_rate < 0)
+    stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
+  if (learning_rate > 1 || learning_rate < 0)
     stop("learning_rate must be between 0 and 1")
   if (!dev %in% c("gpu", "cpu"))
     stop("dev must be gpu or cpu")
   if (!is.vector(sensitive_test))
     stop("sensitive_test must be a vector")
-  if (!is.logical(verbose) ||
-      !is.logical(monitor))
+  if (!is.logical(verbose) || !is.logical(monitor))
     stop("verbose and monitor must be logical")
 
     optimizer <- torch::optim_adam(model$parameters, lr = learning_rate)
@@ -123,8 +123,7 @@ pretrain_net <- function(n_epochs = 15,
         } else{
           verbose_cat(
             sprintf(
-              "Preadversary at epoch %d: training loss: %3.3f,
-              validation: %3.3f\n",
+              "Preadversary at epoch %d: training loss: %3.3f,validation: %3.3f\n",
               epoch, losses$train_loss, losses$test_loss
             ),
             verbose = verbose
@@ -149,8 +148,7 @@ pretrain_net <- function(n_epochs = 15,
         } else{
           verbose_cat(
             sprintf(
-              "Preclassifier at epoch %d: training loss: %3.3f,
-              validation: %3.3f\n",
+              "Preclassifier at epoch %d: training loss: %3.3f,validation: %3.3f\n",
               epoch, losses$train_loss, losses$test_loss
             ),
             verbose = verbose

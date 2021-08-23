@@ -103,10 +103,10 @@ train_PAN <- function(n_ep_pan,
     verbose_cat(sprintf("PAN epoch %d \n", epoch), verbose)
     train_dl <- torch::dataloader(dsl$train_ds, batch_size =
                                     dsl$train_ds$.length(),shuffle = FALSE)
-    iter <- train_dl$.iter()
-    b <- iter$.next()
-    output <- clf_model(b$x_cont$to(device = dev))
-    preds <- output[, 2]$to(device = "cpu")
+    iter    <- train_dl$.iter()
+    b       <- iter$.next()
+    output  <- clf_model(b$x_cont$to(device = dev))
+    preds   <- output[, 2]$to(device = "cpu")
 
     train_x <- as.numeric(preds)
     train_x <- matrix(train_x, ncol = 1)

@@ -15,18 +15,20 @@ predictions and evaluation}
 \item{dev}{device used for calculations (cpu or gpu)}
 }
 \value{
-double accuracy of provided model
+double, accuracy of provided model
 }
 \description{
-This function evaluates model by calculating its accuracy
+This function evaluates the model by calculating its accuracy
 }
 \examples{
 
 \dontrun{
 dev        <- if (torch::cuda_is_available())
-                torch_device("cuda:0") else "cpu"
-# model     <- torch_load("./tests/zzz/clf2")
-# processed  <- torch_load("./tests/zzz/processed")
+                 torch_device("cuda:0") else "cpu"
+# presaved torch model
+model      <- torch_load("./tests/zzz/clf2")
+# presaved output of `preprocess` function
+processed  <- torch_load("./tests/zzz/processed")
 dsl        <- dataset_loader(processed$train_x, processed$train_y,
                              processed$test_x, processed$test_y,
                              batch_size = 5, dev = dev)

@@ -17,7 +17,8 @@ vignette: >
 
 In this tutorial you will get to know when, why and how to use `FairPAN` and 
 you will also learn about how this model works from theoretical side.
-`FairPAN` is a tool not only for creating fair predictive adversarial networks,
+`FairPAN`, which stands for `Fair Predictive Adversarial Network`, is a tool 
+not only for creating fair predictive adversarial networks,
 but also for monitoring the training process and visualizing its outcomes. This
 package is really flexible, because the user can not only provide its own neural 
 network models, but also create them with our functions.
@@ -38,6 +39,7 @@ was proposed in [Generative Adversarial Nets, Ian Goodfellow](https://arxiv.org/
 FairPANs are the solution to bring fairness into neural networks. We mimic the GANs by subsetting generator with classifier (predictor) and adversarial has to predict the sensitive value (such as sex, race, etc) from the output of the predictor. This process eventually leads the classifier to make predictions with indistinguishable sensitive values. The idea comes from blogs: [Towards fairness in ML with adversarial networks, Stijn Tonk](https://godatadriven.com/blog/towards-fairness-in-ml-with-adversarial-networks/) and [Fairness in Machine Learning with PyTorch, Henk Griffoen](https://godatadriven.com/blog/fairness-in-machine-learning-with-pytorch/) however, our implementation in R offers slightly different solutions. And the exact idea behind using GANs for Fairness is described in [Achieving Fairness through Adversarial Learning: an Application to Recidivism Prediction, Christina Wadsworth, Francesca Vera, Chris Piech](https://stanford.edu/~cpiech/bio/papers/fairnessAdversary.pdf).
 
 ![](images/architecture_PAN.png)
+The diagram above represents the architecture of our model and is strongly inspired by aformentioned blogs
 
 ### Custom Loss Function
 
@@ -57,7 +59,12 @@ Firstly we pretrain classifier and adversarial. Later we begin the proper PAN tr
 
 Regular mitigation techniques tend to worsen performance of the classifier a lot
 by decreasing accuracy for example, whereas FairPAN has no such drawback and
-worsening of the performance is really small.
+worsening of the performance is really small. Moreover, our package is very 
+flexible because it enables to provide your own neural networks, but also
+to create one with our functions. The outcomes are also created with the usage of
+`DALEX` and `fairmodels`, so one can use their methods and visualizations. 
+Additionally the workflow of the package is really simple and clean, because of 
+multiple features available for user, such as `preprocess` function.
 
 ## Data
 
@@ -91,7 +98,7 @@ define proportions of train, test and validation subsets. We also set seed for
 reproduction.
 
 Inside, the function encodes the categorical columns as integers based on their
-factors levels. After that all variables are rescaled to ensure better learning
+factor levels. After that all variables are rescaled to ensure better learning
 process. Moreover to ensure that adversarial model works properly, we also 
 balance a dataset to have the same number of privileged and discriminated
 records.
@@ -126,7 +133,7 @@ head(data$protected_test,2)
 We've decided to show the most important objects created by preprocess above.
 
 Our next step is setting a computational device `dev`, which might be GPU with 
-cuda or cpu if we don't have cuda installed. Even more importantly we create a 
+CUDA or cpu if we don't have CUDA installed. Even more importantly we create a 
 dataset_loader object which stores data as tensor for our neural network in 4
 objects. First two of them are torch `datasets` for storing all the tensors 
 and the other two are torch `dataloaders` which store tensors in batches
@@ -163,11 +170,12 @@ To do that you don't have to provide first four variables, because they are set
 like that on default. One has to provide `data`
 in next four variables and then, the other two describe inner `dataset_loader` 
 for adversarial network. Next block describes the structure of our models. Neural
-architecture is provided as a simple vector where c(32,16,8) describes a network
+architecture is provided as a simple vector where, for example, c(32,16,8) describes a network
 with 3 layers with 32, 16 and 8 neurons. This layers are connected with 
 `nn_linear` and during forward pass, inner layers have `nnf_relu` with 
 `nnf_softmax` in the end. User can also define dimension for softmax, however we
-advice not to do so. In the end one can also provide learning rates and numbers
+advice not to do so, because other approaches are not sufficiently tested. 
+In the end one can also provide learning rates and numbers
 of epochs for both models.
 In the end we have to provide a dataset_loader with device and choose whether
 we want to monitor more metrics and print them out.
@@ -339,7 +347,7 @@ monitor
 After the training process we'd like to visualize the final outcome and the
 monitor of metrics throughout learning. To achieve that we have to use `monitor`
 in `fair_train` and apply `plot_monitor` function to it. This function is
-especially convenient in the process of parameters tuning and model adjustions,
+especially convenient in the process of parameters tuning and model adjustments,
 because one can easily check if the model learns properly.
 
 ```{r plot_monitor}
@@ -349,16 +357,16 @@ plot_monitor(STP = monitor$STP,                                  # monitor for S
              classifier_acc = monitor$classifier_acc)            # monitor for classifiers accuracy
 ```
 
-As fairness is recall close with XAI, we also propose an option to create an
+As fairness is closely connected with XAI, we also propose an option to create an
 explainer for our neural network models with `explain_PAN` which is 
 `DALEX::explain` function with proper adjustments for neural network models.
 
 ```{r explain_PAN}
-exp_PAN <- explain_PAN(target = data$test_y,                     # test target
+exp_PAN <- explain_PAN(y = data$test_y,                          # test target
                        model = models$clf_model,                 # classifier model
-                       model_name = "PAN",                       # classifiers name
-                       data_test = data$data_test,               # original data for test
-                       data_scaled_test = data$data_scaled_test, # scaled numeric data for test
+                       label = "PAN",                            # classifiers name
+                       data = data$data_test,                    # original data for test
+                       data_scaled = data$data_scaled_test,      # scaled numeric data for test
                        batch_size = 5,                           # batch_size used in dataset_loader
                        dev = dev,                                # computational device
                        verbose = TRUE                            # if TRUE prints additional info

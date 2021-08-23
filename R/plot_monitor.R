@@ -3,19 +3,22 @@
 #' Plots visualizations of monitor metrics (STP ratio, adv accuracy, adv losses
 #' and classifier losses) epoch by epoch. It is useful for the monitoring of
 #' the learning process, thus the user can see if everything works properly.
+#' To use this, the user has to set monitor on during the fair_train process.
 #'
-#' @param STP double vector of Statistical Parity ratio value
+#' @param STP double, vector of Statistical Parity ratio value
 #' @param adversary_acc double, vector containing adversarial models accuracy
 #' for each epoch
-#' @param adversary_losses double vector of adversaries losses
-#' @param classifier_acc double vector of adversarials accuracy
+#' @param adversary_losses double, vector of adversaries losses
+#' @param classifier_acc double, vector of adversaries accuracy
 #'
 #' @return NULL - plots the visualizations
 #' @export
 #'
 #' @examples
 #' \dontrun{
+#' # presaved monitoring data
 #' monitor2 <- torch_load("./tests/zzz/monitoring2")
+#'
 #' plot_monitor(monitor2$STP ,monitor2$adversary_acc, monitor2$classifier_acc,
 #'              monitor2$adversary_losses)
 #' }
@@ -28,16 +31,13 @@ plot_monitor <- function(STP = NULL,
 
   if (!is.null(STP) && !is.vector(STP))
     stop("STP must be a double vector")
-  if (!is.null(adversary_acc) &&
-      !is.vector(adversary_acc))
+  if (!is.null(adversary_acc) && !is.vector(adversary_acc))
     stop("adversary_acc must be a double vector")
-  if (!is.null(adversary_losses) &&
-      !is.vector(adversary_losses))
+  if (!is.null(adversary_losses) && !is.vector(adversary_losses))
     stop("adversary_losses must be a double vector")
-  if (!is.null(classifier_acc) &&
-      !is.vector(classifier_acc))
+  if (!is.null(classifier_acc) && !is.vector(classifier_acc))
     stop("classifier_acc must be a double vector")
-
+  # Creation of dataset for plots
   stats <- data.frame(STP, adversary_acc, adversary_losses, classifier_acc)
 
   if (!is.null(STP)) {

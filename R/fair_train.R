@@ -1,19 +1,31 @@
-#' Trains PAN model
+#' Trains fairly the PAN model
 #'
 #' Trains Predictive Adversarial Network model, which means that it proceeds
 #' with the mutual training of adversarial model on whole dataloader and
 #' classifier on a single mini batch. The result is a fairer classifier.
 #'
+#' Trains Predictive Adversarial Network model. After the pretrain stage we
+#' finally start proper fair training operation. We take all data from the
+#' previous stage (models, optimizers and batch size) and engage the models
+#' into a zero-sum-game where classifier starts to deceive adversarial and
+#' in the end it ends with fair predictions. For a basic understanding of how
+#' this process works it is advisable to read a vignette from this package. To
+#' deeply understand this process you can read:
+#' [Towards fairness in ML with adversarial networks, Stijn Tonk]
+#' (https://godatadriven.com/blog/towards-fairness-in-ml-with-adversarial-networks/)
+#'
+#'
 #' @param n_ep_pan number of epochs for PAN training. Default: 50.
-#' @param dsl \code{dataset_loader} object for classificator network
-#' @param clf_model classifier model (preferably after pretrain)
-#' @param adv_model adversarial model (preferably after pretrain)
-#' @param clf_optimizer optimizer for classificator model from pretrain
-#' @param adv_optimizer optimizer for adversarial model from pretrain
-#' @param dev device used to computation ("cuda" or "cpu")
+#' @param dsl \code{dataset_loader} object for classificator network.
+#' @param clf_model classifier model (preferably after pretrain).
+#' @param adv_model adversarial model (preferably after pretrain).
+#' @param clf_optimizer optimizer for classificator model from pretrain.
+#' @param adv_optimizer optimizer for adversarial model from pretrain.
+#' @param dev device used for computation ("cuda" or "cpu").
 #' @param sensitive_train integer vector of sensitive attribute used for
-#' training
-#' @param sensitive_test integer vector of sensitive attribute used for testing
+#' adversarial models training.
+#' @param sensitive_test integer vector of sensitive attribute used for
+#' adversarial models testing.
 #' @param batch_size batch size used in adversarial models \code{dataset_loader}
 #' Default: 50.
 #' @param learning_rate_adv learning rate of adversarial. Default: 0.001.
@@ -33,19 +45,23 @@
 #' @examples
 #' \dontrun{
 #' dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
-#'
+#' # presaved torch models from pretrain phase
 #' model1 <- torch_load("./tests/zzz/preclf")
 #' model11 <- torch_load("./tests/zzz/preadv")
 #'
+#' # presaved optimizers dictionaries from pretrain phase
 #' model1_optimizer_dict <- torch_load("./tests/zzz/preclf_optimizer")
 #' model11_optimizer_dict <- torch_load("./tests/zzz/preadv_optimizer")
 #'
+#' # Recreating optimizers
 #' model1_optimizer <- optim_adam(model1$parameters, lr = 0.001)
 #' model11_optimizer <- optim_adam(model11$parameters, lr = 0.001)
 #'
+#' # Loading saved optimizer state
 #' model1_optimizer$load_state_dict(model1_optimizer_dict)
 #' model11_optimizer$load_state_dict(model11_optimizer_dict)
 #'
+#' # presaved output of `preprocess` function
 #' processed <- torch_load("./tests/zzz/processed")
 #'
 #' dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,

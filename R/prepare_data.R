@@ -1,8 +1,8 @@
-#' Create datasets and dataloaders
+#' Creates datasets and dataloaders
 #'
-#' Create two torch datasets, from given train_x, test_x matrices and train_y,
+#' Creates two torch datasets, from given train_x, test_x matrices and train_y,
 #' test_y vectors and converts them into torch dataloaders with provided batch
-#' size.
+#' size. It is used for both classifier and adversarial.
 #'
 #' @param train_x numeric, scaled matrix of predictors used for training
 #' @param test_x integer, matrix of predictors used for testing
@@ -10,18 +10,18 @@
 #' @param test_y integer, vector of predictors used for testing
 #' @param batch_size integer indicating a batch size used in dataloader.
 #' Default: 50
-#' @param dev device used to calculations (cpu or gpu)
+#' @param dev device used for calculations (cpu or gpu)
 #'
 #' @return list of two data sets and two dataloaders for train and test
 #' respectively
 #' @export
 #'
 #' @examples
-#' train_x = matrix(c(1,2,3,4,5,6),nrow=3)
-#' train_y = c(1,2,3)
-#' test_x = matrix(c(1,2,3,4),nrow=2)
-#' test_y = c(1,2)
-#' dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+#' train_x <- matrix(c(1,2,3,4,5,6),nrow=3)
+#' train_y <- c(1,2,3)
+#' test_x  <- matrix(c(1,2,3,4),nrow=2)
+#' test_y  <- c(1,2)
+#' dev     <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
 #' dataset_loader(train_x,train_y,test_x,test_y,batch_size=1,dev)
 
 
@@ -81,26 +81,27 @@ dataset_loader <- function(train_x,
               "train_dl"=train_dl,"test_dl"=test_dl))
 }
 
-#' Prepares data for adversarial
+#' Prepares data for adversarial model
 #'
 #' Prepares classifiers output for adversarial by splitting original predictions
-#' into train and test vectors
+#' into train and test vectors.
 #'
 #' @param preds numeric vector of predictions of target value made by
-#' classifier (preferably the probabilistic ones)
+#' classifier (preferably the probabilistic ones).
 #' @param sensitive integer vector of sensitive attribute which adversarial has
-#' to predict
+#' to predict.
 #' @param partition float from [0,1] range setting the size of train vector
 #' (test size equals 1-partition). Default = 0.7.
 #'
 #' @return list of four numeric lists with x and y data for train and test
-#' respectively
+#' respectively.
 #' @export
 #'
 #' @examples
 #'
 #' preds <-c(0.312,0.343,0.932,0.754,0.436,0.185,0.527,0.492,0.743,0.011)
 #' sensitive <- c(1,1,2,2,1,1,2,2,2,1)
+#'
 #' prepare_to_adv(preds,sensitive,partition=0.6)
 #'
 prepare_to_adv <- function(preds, sensitive, partition=0.7){
@@ -130,6 +131,11 @@ prepare_to_adv <- function(preds, sensitive, partition=0.7){
 #' It  makes data suitable for training functions, splits it into train, test
 #' and validation, provides other data objects that are necessary for our
 #' training.
+#'
+#' WARNING! So far the code in other functions is not fully prepared for
+#' validation dataset and is designed for using test as test and validation.
+#' Well understanding users however can use validation set in place of test if
+#' they are sure it makes sense there.
 #'
 #' @param data list representing whole table of data (categorical variables
 #' must be factors).
