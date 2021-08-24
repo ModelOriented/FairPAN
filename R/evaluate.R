@@ -76,8 +76,7 @@ eval_accuracy <- function(model, test_ds, dev) {
 #' @examples
 #'
 #' \dontrun{
-#' dev        <- if (torch::cuda_is_available())
-#'                 torch_device("cuda:0") else "cpu"
+#' dev        <-  "cpu"
 #'
 #' # presaved torch model
 #' model     <- torch_load("./tests/zzz/clf2")

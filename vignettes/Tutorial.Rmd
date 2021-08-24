@@ -141,7 +141,7 @@ and the other two are torch `dataloaders` which store tensors in batches
 described by `batch_size`.
 
 ```{r dataset_loader}
-dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+dev <-  "cpu"
 
 dsl <- dataset_loader(train_x = data$train_x,
                       train_y = data$train_y,

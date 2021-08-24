@@ -36,7 +36,7 @@ library(FairPAN)
 
 adult <- fairmodels::adult
 
-# ------------ step 1 - prepare data  -----------------
+# ------------------- step 1 - prepare data  ------------------------
 
 data <- preprocess( data = adult,
                     target_name = "salary",
@@ -87,7 +87,7 @@ models <- pretrain(clf_model = NULL,
                    monitor = TRUE
 )
 
-# ------------ step 3 - train for fairness  -----------------
+# --------------- step 3 - train for fairness  --------------------
 
 monitor <- fair_train( n_ep_pan = 17,
                        dsl = dsl,
@@ -106,7 +106,7 @@ monitor <- fair_train( n_ep_pan = 17,
                        monitor = TRUE
 )
 
-# ------------ step 4 - prepare outcomes and plot them  -----------------
+# --------- step 4 - prepare outcomes and plot them  --------------
 
 plot_monitor(STP = monitor$STP,
              adversary_acc = monitor$adversary_acc,

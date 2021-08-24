@@ -20,7 +20,7 @@
 #' @examples
 #'
 #' \dontrun{
-#' dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+#' dev <- "cpu"
 #'
 #' adult <- fairmodels::adult
 #'

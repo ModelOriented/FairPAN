@@ -22,7 +22,7 @@
 #' train_y <- c(1,2,3)
 #' test_x  <- matrix(c(1,2,3,4),nrow=2)
 #' test_y  <- c(1,2)
-#' dev     <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+#' dev     <- if "cpu"
 #' dataset_loader(train_x,train_y,test_x,test_y,batch_size=1,dev)
 
 
