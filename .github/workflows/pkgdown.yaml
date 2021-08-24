@@ -1,25 +1,21 @@
 on:
   push:
     branches:
-      - master
-    tags:
-      -'*'
+      - main
 
 name: pkgdown
 
 jobs:
   pkgdown:
-    runs-on: ubuntu-18.04
+    runs-on: macOS-latest
     env:
       GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
-
     steps:
       - uses: actions/checkout@v2
 
-      - uses: r-lib/actions/setup-r@v1
-        id: install-r
+      - uses: r-lib/actions/setup-r@master
 
-      - uses: r-lib/actions/setup-pandoc@v1
+      - uses: r-lib/actions/setup-pandoc@master
 
       - name: Query dependencies
         run: |
@@ -27,6 +23,12 @@ jobs:
           saveRDS(remotes::dev_package_deps(dependencies = TRUE), ".github/depends.Rds", version = 2)
         shell: Rscript {0}
 
+      - name: Cache R packages
+        uses: actions/cache@v1
+        with:
+          path: ${{ env.R_LIBS_USER }}
+          key: macOS-r-4.0-1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: macOS-r-4.0-1-
 
       - name: Install dependencies
         run: |
@@ -37,13 +39,13 @@ jobs:
           install.packages("textshaping")
         shell: Rscript {0}
 
-      - uses: r-lib/actions/install-r-dependencies@master
+
 
       - name: Install package
         run: R CMD INSTALL .
 
-      - name: Build and deploy pkgdown site
+      - name: Deploy package
         run: |
-          git config --local user.name "$GITHUB_ACTOR"
-          git config --local user.email "$GITHUB_ACTOR@users.noreply.github.com"
+          git config --local user.email "actions@github.com"
+          git config --local user.name "GitHub Actions"
           Rscript -e 'pkgdown::deploy_to_branch(new_process = FALSE)'
