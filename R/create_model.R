@@ -53,7 +53,7 @@ create_model <- function(train_x, train_y, neurons=c(32,32,32), dimensions=2, se
     initialize = function(n_cont, Neurons, output_dim) {
       # We're setting seed to have the same initial weights
       if(!is.null(seed)){
-        torch::torch_manual_seed(seed)
+        #torch::torch_manual_seed(seed)
       }
       self$fc1 <- torch::nn_linear(n_cont, Neurons[1])
       # We automatically create next layers of the network
