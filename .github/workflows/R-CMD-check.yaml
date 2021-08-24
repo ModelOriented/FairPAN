@@ -1,10 +1,15 @@
 on:
   push:
     branches:
-      - master
       - main
+      - master
+  pull_request:
+    branches:
+      - main
+      - master
     paths:
       - '**.R'
+      - '**.r'
       - '*DESCRIPTION'
       - '**.Rmd'
       - '**.rmd'
@@ -12,9 +17,6 @@ on:
       - '**.Rda'
       - '**.rds'
       - '**.Rds'
-  pull_request:
-    branches:
-      - master
 
 name: R-CMD-check
 
@@ -22,23 +24,35 @@ jobs:
   R-CMD-check:
     runs-on: ${{ matrix.config.os }}
 
+
     name: ${{ matrix.config.os }} (${{ matrix.config.r }})
 
     strategy:
       fail-fast: false
       matrix:
         config:
-          - {os: windows-latest, r: 'devel'}
-          - {os: windows-latest, r: '4.0'}
-          #- {os: windows-latest, r: '3.6'}
-          - {os: macOS-latest,   r: '4.0'}
-          #- {os: macOS-latest,   r: '3.6'}
-          - {os: ubuntu-16.04,   r: '4.0', rspm: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
-          #- {os: ubuntu-16.04,   r: '3.6', rspm: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
+          - {os: windows-latest,   r: 'devel'}
+          - {os: macOS-latest,   r: '4.1.1'}
+          # - {os: macOS-latest,   r: '4.0'}
+          # - {os: macOS-latest,   r: '3.6'}
+          # - {os: macOS-latest,   r: '3.5'}
+          - {os: windows-latest, r: '4.1.1'}
+          # - {os: windows-latest, r: '4.0'}
+          # - {os: windows-latest, r: '3.6'}
+          # - {os: windows-latest, r: '3.5'}
+          # - {os: ubuntu-16.04, r: '4.1', rspm: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
+          # - {os: ubuntu-16.04, r: '4.0', rspm: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
+          # - {os: ubuntu-16.04, r: '3.6', rspm: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
+          # - {os: ubuntu-16.04, r: '3.5', rspm: "https://demo.rstudiopm.com/all/__linux__/xenial/latest"}
+          # - {os: ubuntu-16.04, r: '4.0', cran: "https://cran.r-project.org"}
+          #- {os: ubuntu-18.04, r: '4.0', cran: "https://packagemanager.rstudio.com/cran/__linux__/bionic/latest"}
+          # - {os: ubuntu-20.04, r: '4.0', cran: "https://packagemanager.rstudio.com/cran/__linux__/focal/latest"}
+
 
     env:
       R_REMOTES_NO_ERRORS_FROM_WARNINGS: true
       RSPM: ${{ matrix.config.rspm }}
+      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
 
     steps:
       - uses: actions/checkout@v2
@@ -71,6 +85,7 @@ jobs:
           Rscript -e "remotes::install_github('r-hub/sysreqs')"
           sysreqs=$(Rscript -e "cat(sysreqs::sysreq_commands('DESCRIPTION'))")
           sudo -s eval "$sysreqs"
+          sudo apt-get install -y qpdf
       - name: Install dependencies
         run: |
           remotes::install_deps(dependencies = TRUE)
@@ -78,9 +93,8 @@ jobs:
         shell: Rscript {0}
 
       - name: Check
-        env:
-          _R_CHECK_CRAN_INCOMING_REMOTE_: false
-        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran", "--run-donttest", "--run-dontrun"), error_on = "warning", check_dir = "check")
+        run: rcmdcheck::rcmdcheck(args = c("--no-manual", "--as-cran", "--run-donttest", "--run-dontrun"),
+                                  build_args = "--compact-vignettes=no", error_on = "warning", check_dir = "check")
         shell: Rscript {0}
 
       - name: Upload check results
