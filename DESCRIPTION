@@ -14,15 +14,15 @@ Encoding: UTF-8
 LazyData: true
 VignetteBuilder: knitr
 Depends: 
-    torch
+    torch (>=0.5.0)
 Imports:
-    fairmodels,
+    fairmodels (>= 1.1.0),
     coro,
     mltools,
     stats,
     magrittr,
-    ggplot2,
-    DALEX
+    ggplot2 ( >= 3.3.5),
+    DALEX (>= 2.3.0)
 Language: en-US
 RoxygenNote: 7.1.1
 Suggests: 
