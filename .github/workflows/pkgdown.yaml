@@ -1,16 +1,12 @@
 on:
   push:
-    branches:
-      - main
-      - master
+    branches: master
 
 name: pkgdown
 
 jobs:
   pkgdown:
     runs-on: macOS-latest
-    env:
-      GITHUB_PAT: ${{ secrets.GITHUB_TOKEN }}
     steps:
       - uses: actions/checkout@v2
 
@@ -28,19 +24,16 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: macOS-r-4.0-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys: macOS-r-4.0-1-
+          key: macOS-r-4.0.1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: macOS-r-4.0.1-
 
       - name: Install dependencies
         run: |
           install.packages("remotes")
           remotes::install_deps(dependencies = TRUE)
-          install.packages("pkgdown")
+          remotes::install_dev("pkgdown")
           remotes::install_github("ModelOriented/DrWhyTemplate")
-          install.packages("textshaping")
         shell: Rscript {0}
-
-
 
       - name: Install package
         run: R CMD INSTALL .

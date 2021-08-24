@@ -1,11 +1,10 @@
+
 on:
   push:
     branches:
-      - main
       - master
   pull_request:
     branches:
-      - main
       - master
 
 name: test-coverage
@@ -30,8 +29,8 @@ jobs:
         uses: actions/cache@v1
         with:
           path: ${{ env.R_LIBS_USER }}
-          key: macOS-r-4.0-1-${{ hashFiles('.github/depends.Rds') }}
-          restore-keys:  macOS-r-4.0-1-
+          key: macOS-r-4.0.1-${{ hashFiles('.github/depends.Rds') }}
+          restore-keys: macOS-r-4.0.1-
 
       - name: Install dependencies
         run: |
