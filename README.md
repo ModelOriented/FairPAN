@@ -1,4 +1,4 @@
-# FairPAN
+# FairPAN - Fair Predictive Adversarial Network
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/ModelOriented/FairPAN/workflows/R-CMD-check/badge.svg)](https://github.com/ModelOriented/FairPAN/actions)
 [![Codecov test coverage](https://codecov.io/gh/ModelOriented/FairPAN/branch/master/graph/badge.svg)](https://codecov.io/gh/ModelOriented/FairPAN?branch=master)
@@ -15,7 +15,10 @@ outcomes. R package FairPAN additionally allows you to use lots of
 [DALEX](https://github.com/ModelOriented/DALEX) 
 and [fairmodels](https://github.com/ModelOriented/fairmodels)
 functions such as `DALEX::model_performance()` or `fairmodels::fairness_check()`.
+
 *If you have problems with the training process remember to use monitor parameter and plot_monitor function for parameter adjustments*
+
+Check [FairPAN Website](https://modeloriented.github.io/FairPAN/)!
 
 ## Installation
 
