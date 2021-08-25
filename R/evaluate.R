@@ -12,7 +12,11 @@
 #'
 #' @examples
 #'
+<<<<<<< HEAD
 #'
+=======
+#' \dontrun{
+>>>>>>> 7685861ef90041f2b61df0d179168d49d1159418
 #' dev        <- "cpu"
 #' # presaved torch model
 #' model      <- torch_load(system.file("extdata","clf2",package="FairPAN"))
