@@ -17,7 +17,7 @@
 #' @examples
 #' \dontrun{
 #' # presaved monitoring data
-#' monitor2 <- torch_load("./tests/zzz/monitoring2")
+#' monitor2 <- torch_load(system.file("extdata","monitoring2",package="FairPAN"))
 #'
 #' plot_monitor(monitor2$STP ,monitor2$adversary_acc, monitor2$classifier_acc,
 #'              monitor2$adversary_losses)

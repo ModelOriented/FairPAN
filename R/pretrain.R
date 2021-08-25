@@ -102,8 +102,8 @@
 #'   monitor = FALSE
 #' )
 #' # presaved models and states of the optimizers
-#' clf                 <- torch_load("./tests/zzz/clf2")
-#' clf_optimizer_state <- torch_load("./tests/zzz/clf_optimizer2")
+#' clf                 <- torch_load(system.file("extdata","clf2",package="FairPAN"))
+#' clf_optimizer_state <- torch_load(system.file("extdata","clf_optimizer2",package="FairPAN"))
 #' clf_optimizer       <- optim_adam(clf$parameters, lr = 0.001)
 #' acc2                <- eval_accuracy(clf, dsl$test_ds, dev)
 #' clf_optimizer$load_state_dict(clf_optimizer_state)

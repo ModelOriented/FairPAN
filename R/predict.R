@@ -16,10 +16,10 @@
 #' dev <- "cpu"
 #'
 #' # presaved torch model
-#' model1    <- torch_load("./tests/zzz/preclf")
+#' model1    <- torch_load(system.file("extdata","preclf",package="FairPAN"))
 #'
 #' # presaved output of preprocess function
-#' processed <- torch_load("./tests/zzz/processed")
+#' processed <- torch_load(system.file("extdata","processed",package="FairPAN"))
 #'
 #' dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
 #'                       processed$test_y, batch_size=5, dev=dev)
@@ -70,10 +70,10 @@ make_preds <- function(model, test_ds, dev) {
 #' dev       <-  "cpu"
 #'
 #' # presaved torch model
-#' model1    <- torch_load("./tests/zzz/preclf")
+#' model1    <- torch_load(system.file("extdata","preclf",package="FairPAN"))
 #'
 #' # presaved output of preprocess function
-#' processed <- torch_load("./tests/zzz/processed")
+#' processed <- torch_load(system.file("extdata","processed",package="FairPAN"))
 #'
 #' dsl       <- dataset_loader(processed$train_x, processed$train_y,
 #'              processed$test_x,processed$test_y, batch_size=5, dev=dev)

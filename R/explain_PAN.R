@@ -38,7 +38,7 @@
 #'   seed = 7
 #' )
 #' # presaved torch model
-#' model1 <- torch::torch_load("./tests/zzz/clf1")
+#' model1 <- torch::torch_load(system.file("extdata","clf1",package="FairPAN"))
 #'
 #' dsl <- dataset_loader(processed$train_x, processed$train_y,
 #'                       processed$test_x, processed$test_y,
