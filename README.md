@@ -24,7 +24,7 @@ functions such as `DALEX::model_performance()` or `fairmodels::fairness_check()`
 Install the developer version from GitHub:
 
 ```
-devtools::install_github("ModelOriented/FairPAN")
+devtools::install_github("ModelOriented/FairPAN",build_vignettes = TRUE)
 ```
 ## Example
 
