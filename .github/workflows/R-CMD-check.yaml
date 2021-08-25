@@ -21,7 +21,7 @@ jobs:
         config:
           - {os: windows-latest,   r: 'devel'}
           - {os: macOS-latest,   r: '4.1'}
-          - {os: macOS-latest,   r: '4.0'}
+          # - {os: macOS-latest,   r: '4.0'}
           # Warning: Torch failed to start, restart your R session to try again. D:\a\_temp\Library\torch\deps\lantern.dll - %1 is not a valid Win32 application.
           # - {os: windows-latest, r: '4.1'}
           # - {os: windows-latest, r: '4.0'}
