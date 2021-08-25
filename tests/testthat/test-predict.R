@@ -41,8 +41,7 @@ test_that("test-predict", {
                 round(max(p_preds1[1:5] - pp1), 7))
   expect_true(round(min(p_preds2[1:5] - pp2), 7) ==
                 round(max(p_preds2[1:5] - pp2), 7))
-  expect_true(round(min(p_preds3[1:5] - pp3), 7) ==
-                round(max(p_preds3[1:5] - pp3), 7))
+  expect_true(round(min(p_preds3[1:5] - pp3), 5) == round(max(p_preds3[1:5] - pp3), 5))
   expect_true(round(min(p_preds4[1:5] - pp4), 7) ==
                 round(max(p_preds4[1:5] - pp4), 7))
 
