@@ -1,5 +1,5 @@
 ---
-title: "Tutorial"
+title: "FairPAN Tutorial"
 author: "Hubert Ruczyński"
 output: 
   html_document: 
@@ -74,7 +74,7 @@ both numerical and categorical data about citizens of USA. Our target here is
 a `salary` column. As sensitive variables we can perceive `sex` and `race`
 however we will focus only on `sex`.
 
-```{r eval = FALSE, import-adult}
+```{r eval = TRUE, import-adult}
 library(FairPAN)
 adult <- fairmodels::adult
 head(adult)
@@ -104,7 +104,7 @@ process. Moreover to ensure that adversarial model works properly, we also
 balance a dataset to have the same number of privileged and discriminated
 records.
 
-```{r eval = FALSE, preprocess}
+```{r eval = TRUE, preprocess}
 data <- preprocess( data = adult,               # dataset 
                     target_name = "salary",     # name of target column
                     sensitive_name = "sex",     # name of sensitive column
@@ -140,7 +140,7 @@ objects. First two of them are torch `datasets` for storing all the tensors
 and the other two are torch `dataloaders` which store tensors in batches
 described by `batch_size`.
 
-```{r eval = FALSE, dataset_loader}
+```{r eval = TRUE, dataset_loader}
 dev <-  "cpu"
 
 dsl <- dataset_loader(train_x = data$train_x,
@@ -183,7 +183,7 @@ we want to monitor more metrics and print them out.
 As a result we will obtain pretrained neural network models (classifier and 
 adversarial) and optimizers for those two models.
 
-```{r eval = FALSE, auto-pretrain}
+```{r eval = TRUE, auto-pretrain}
 
 models <- pretrain(clf_model = NULL,                       # classifier model
                    adv_model = NULL,                       # adversarial model
@@ -230,7 +230,7 @@ losses and optimizer from the learning process.
 As you can see, in `pretrain` we provide `clf_model`,`clf_optimizer` and change 
 `trained` to TRUE as stated before.
 
-```{r eval = FALSE, advanced-pretrain}
+```{r eval = TRUE, advanced-pretrain}
 
 clf <- create_model(train_x = data$train_x,                # train predictors
                     train_y = data$train_y,                # train target 
@@ -284,7 +284,7 @@ models <- pretrain(clf_model = clf,                        # classifier model
 In the end we want to create an explainer for our classification model, but we
 will say more about it later.
 
-```{r eval = FALSE, explain_clf}
+```{r eval = TRUE, explain_clf}
 exp_clf <- explain_PAN(y = data$test_y,                          # test target
                        model = models$clf_model,                 # classifier model
                        label = "Classifier",                     # classifiers name
@@ -317,7 +317,7 @@ time so turning `monitor` off is good when you're sure that your model works
 properly. This function returns NULL if `monitor` is off and aforementioned 
 metrics if it is on.
 
-```{r eval = FALSE, fairtrain}
+```{r eval = TRUE, fairtrain}
 monitor <- fair_train( n_ep_pan = 17,                           # number of epochs for pan training
                        dsl = dsl,                               # dataset_loader
                        
@@ -351,7 +351,7 @@ in `fair_train` and apply `plot_monitor` function to it. This function is
 especially convenient in the process of parameters tuning and model adjustments,
 because one can easily check if the model learns properly.
 
-```{r eval = FALSE, plot_monitor}
+```{r eval = TRUE, plot_monitor}
 plot_monitor(STP = monitor$STP,                                  # monitor for STP
              adversary_acc = monitor$adversary_acc,              # monitor for adversaries accuracy
              adversary_losses = monitor$adversary_losses,        # monitor for adversaries loss
@@ -362,7 +362,7 @@ As fairness is closely connected with XAI, we also propose an option to create a
 explainer for our neural network models with `explain_PAN` which is 
 `DALEX::explain` function with proper adjustments for neural network models.
 
-```{r eval = FALSE, explain_PAN}
+```{r eval = TRUE, explain_PAN}
 exp_PAN <- explain_PAN(y = data$test_y,                          # test target
                        model = models$clf_model,                 # classifier model
                        label = "PAN",                            # classifiers name
@@ -384,7 +384,7 @@ ordinary classification model. As we can see below it is true that performance
 of PAN slightly diminished (but it's only 1.2% on accuracy!), but the next plot
 will show us why it is okay for us.
 
-```{r eval = FALSE, model_preformance}
+```{r eval = TRUE, model_preformance}
 DALEX::model_performance(exp_PAN)
 DALEX::model_performance(exp_clf)
 ```
@@ -396,7 +396,7 @@ one by one and ensure that they have different labels. After creating fairness
 object (`fobject`) we can plot it with regular `plot` function.
 
 
-```{r eval = FALSE, fairness_check}
+```{r eval = TRUE, fairness_check}
 fobject <- fairmodels::fairness_check(exp_PAN,exp_clf,        # explainers given one by one
                             protected = data$protected_test,  # protected column
                             privileged = "Male",              # privileged class from protected
