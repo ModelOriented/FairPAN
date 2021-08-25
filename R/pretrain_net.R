@@ -25,16 +25,16 @@
 #' @export
 #'
 #' @examples
-#' \dontrun{
+#'
 #' dev <- "cpu"
 #'
 #' # presaved output of preprocess function
-#' processed <- torch_load("./tests/zzz/processed")
+#' processed <- torch_load(system.file("extdata","processed",package="FairPAN"))
 #' dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
 #'                       processed$test_y, batch_size=5, dev=dev)
 #'
 #' # presaved torch model
-#' model <- torch_load("./tests/zzz/clf1")
+#' model <- torch_load(system.file("extdata","clf1",package="FairPAN"))
 #' pretrain_net(
 #'   n_epochs = 3,
 #'   model = model,
@@ -46,7 +46,7 @@
 #'   verbose = TRUE,
 #'   monitor = TRUE
 #' )
-#' }
+#'
 #'
 pretrain_net <- function(n_epochs = 15,
                          model,

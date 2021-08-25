@@ -81,15 +81,15 @@ deeply understand this process you can read:
 (https://godatadriven.com/blog/towards-fairness-in-ml-with-adversarial-networks/)
 }
 \examples{
-\dontrun{
+
 dev <- "cpu"
 # presaved torch models from pretrain phase
-model1 <- torch_load("./tests/zzz/preclf")
-model11 <- torch_load("./tests/zzz/preadv")
+model1 <- torch_load(system.file("extdata","preclf",package="FairPAN"))
+model11 <- torch_load(system.file("extdata","preadv",package="FairPAN"))
 
 # presaved optimizers dictionaries from pretrain phase
-model1_optimizer_dict <- torch_load("./tests/zzz/preclf_optimizer")
-model11_optimizer_dict <- torch_load("./tests/zzz/preadv_optimizer")
+model1_optimizer_dict <- torch_load(system.file("extdata","preclf_optimizer",package="FairPAN"))
+model11_optimizer_dict <- torch_load(system.file("extdata","preadv_optimizer",package="FairPAN"))
 
 # Recreating optimizers
 model1_optimizer <- optim_adam(model1$parameters, lr = 0.001)
@@ -100,7 +100,7 @@ model1_optimizer$load_state_dict(model1_optimizer_dict)
 model11_optimizer$load_state_dict(model11_optimizer_dict)
 
 # presaved output of `preprocess` function
-processed <- torch_load("./tests/zzz/processed")
+processed <- torch_load(system.file("extdata","processed",package="FairPAN"))
 
 dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
                       processed$test_y, batch_size=5, dev=dev)
@@ -122,5 +122,5 @@ fair_train(
   verbose = TRUE,
   monitor = TRUE
 )
-}
+
 }

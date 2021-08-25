@@ -27,20 +27,20 @@ distributions of sensitive values are.
 }
 \examples{
 
-\dontrun{
+
 dev        <-  "cpu"
 
 # presaved torch model
-model     <- torch_load("./tests/zzz/clf2")
+model     <- torch_load(system.file("extdata","clf2",package="FairPAN"))
 
 # presaved output of preprocess function
-processed  <- torch_load("./tests/zzz/processed")
+processed  <- torch_load(system.file("extdata","processed",package="FairPAN"))
 
 dsl        <- dataset_loader(processed$train_x, processed$train_y,
                              processed$test_x, processed$test_y,
                              batch_size = 5, dev = dev)
 
 calc_STP(model, dsl$test_ds, processed$sensitive_test, dev)
-}
+
 
 }

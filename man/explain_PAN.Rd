@@ -43,7 +43,7 @@ All DALEX functions such as model_performance or
 }
 \examples{
 
-\dontrun{
+
 dev <- "cpu"
 
 adult <- fairmodels::adult
@@ -62,7 +62,7 @@ processed <- preprocess(
   seed = 7
 )
 # presaved torch model
-model1 <- torch::torch_load("./tests/zzz/clf1")
+model1 <- torch::torch_load(system.file("extdata","clf1",package="FairPAN"))
 
 dsl <- dataset_loader(processed$train_x, processed$train_y,
                       processed$test_x, processed$test_y,
@@ -72,13 +72,13 @@ explainer <- explain_PAN(
   processed$test_y,
   model1,
   "classifier",
-  processed$data,
-  processed$data_scaled,
+  processed$data_test,
+  processed$data_scaled_test,
   batch_size = 5,
   dev = dev,
   verbose = FALSE
 )
-}
+
 
 
 }
