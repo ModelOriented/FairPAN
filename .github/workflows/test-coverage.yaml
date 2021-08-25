@@ -11,6 +11,10 @@ name: test-coverage
 jobs:
   test-coverage:
     runs-on: macOS-latest
+
+    env:
+      TORCH_INSTALL: 1
+      TORCH_TEST: 1
     steps:
       - uses: actions/checkout@v2
 
