@@ -62,10 +62,10 @@ dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
 # presaved torch model
 model <- torch_load(system.file("extdata","clf1",package="FairPAN"))
 pretrain_net(
-  n_epochs = 3,
+  n_epochs = 1,
   model = model,
   dsl = dsl,
-  model_type = 2,
+  model_type = 1,
   learning_rate = 0.001,
   sensitive_test = processed$sensitive_test,
   dev=dev,

@@ -23,6 +23,7 @@ This function evaluates the model by calculating its accuracy
 \examples{
 
 
+
 dev        <- "cpu"
 # presaved torch model
 model      <- torch_load(system.file("extdata","clf2",package="FairPAN"))

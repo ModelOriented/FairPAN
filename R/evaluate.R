@@ -13,7 +13,7 @@
 #' @examples
 #'
 #'
-#' \dontrun{
+#'
 #' dev        <- "cpu"
 #' # presaved torch model
 #' model      <- torch_load(system.file("extdata","clf2",package="FairPAN"))
@@ -26,7 +26,7 @@
 #'                              batch_size = 5, dev = dev)
 #'
 #' eval_accuracy(model, dsl$test_ds, dev)
-#'}
+#'
 #'
 #' @import torch
 #'

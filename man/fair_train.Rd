@@ -81,7 +81,7 @@ deeply understand this process you can read:
 (https://godatadriven.com/blog/towards-fairness-in-ml-with-adversarial-networks/)
 }
 \examples{
-
+\dontrun{
 dev <- "cpu"
 # presaved torch models from pretrain phase
 model1 <- torch_load(system.file("extdata","preclf",package="FairPAN"))
@@ -122,5 +122,5 @@ fair_train(
   verbose = TRUE,
   monitor = TRUE
 )
-
+}
 }

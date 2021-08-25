@@ -155,6 +155,7 @@ models <- pretrain(
   verbose = FALSE,
   monitor = FALSE
 )
+\dontrun{
 # presaved models and states of the optimizers
 clf                 <- torch_load(system.file("extdata","clf2",package="FairPAN"))
 clf_optimizer_state <- torch_load(system.file("extdata","clf_optimizer2",package="FairPAN"))
@@ -186,7 +187,9 @@ models2 <- pretrain(
   verbose = FALSE,
   monitor = FALSE
 )
+}
 
+\dontrun{
 clf2 <- create_model(processed$train_x, processed$train_y, c(4, 4), 2)
 
 # Clf provided, but not pretrained
@@ -212,5 +215,6 @@ models3 <- pretrain(
   verbose = FALSE,
   monitor = FALSE
 )
+}
 
 }
