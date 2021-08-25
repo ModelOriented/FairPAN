@@ -23,7 +23,8 @@ Imports:
     stats,
     magrittr (>= 2.0.1),
     ggplot2  (>= 3.3.0),
-    DALEX  (>= 2.3.0)
+    DALEX  (>= 2.3.0),
+    Rcpp
 Language: en-US
 RoxygenNote: 7.1.1
 Suggests: 
@@ -33,3 +34,5 @@ Suggests:
     testthat (>= 3.0.4),
     covr (>= 3.5.1)
 Config/testthat/edition: 3
+LinkingTo: 
+    Rcpp
