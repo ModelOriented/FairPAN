@@ -82,7 +82,7 @@ deeply understand this process you can read:
 }
 \examples{
 \dontrun{
-dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+dev <- "cpu"
 # presaved torch models from pretrain phase
 model1 <- torch_load("./tests/zzz/preclf")
 model11 <- torch_load("./tests/zzz/preadv")

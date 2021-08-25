@@ -52,7 +52,7 @@ which is usefull for monitoring the learning process and making adjustments.
 }
 \examples{
 \dontrun{
-dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+dev <- "cpu"
 
 # presaved output of preprocess function
 processed <- torch_load("./tests/zzz/processed")

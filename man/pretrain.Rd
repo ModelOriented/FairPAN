@@ -129,7 +129,7 @@ processed <-
     seed = 7
   )
 
-dev <- if (torch::cuda_is_available()) torch_device("cuda:0") else "cpu"
+dev <- "cpu"
 
 dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
                       processed$test_y, batch_size = 5, dev = dev)

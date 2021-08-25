@@ -23,7 +23,7 @@ Makes binary predictions for neural network with classification task.
 \examples{
 
 \dontrun{
-dev <- if (torch::cuda_is_available())torch_device("cuda:0") else "cpu"
+dev <- "cpu"
 
 # presaved torch model
 model1    <- torch_load("./tests/zzz/preclf")

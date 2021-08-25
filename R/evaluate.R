@@ -81,7 +81,7 @@ eval_accuracy <- function(model, test_ds, dev) {
 #' # presaved torch model
 #' model     <- torch_load("./tests/zzz/clf2")
 #'
-#' # presaved output of `preprocess` function
+#' # presaved output of preprocess function
 #' processed  <- torch_load("./tests/zzz/processed")
 #'
 #' dsl        <- dataset_loader(processed$train_x, processed$train_y,
