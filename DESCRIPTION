@@ -34,5 +34,3 @@ Suggests:
     testthat (>= 3.0.4),
     covr (>= 3.5.1)
 Config/testthat/edition: 3
-LinkingTo: 
-    Rcpp
