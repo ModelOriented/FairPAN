@@ -44,8 +44,8 @@ test_that("test-make_explainers", {
 
   expect_true(4 == sum(explainer$data[1, c(2, 4, 6, 14)] == data))
   expect_true(sum(y == explainer$y[1:10]) == 10)
-  expect_true(sum(round(explainer$y_hat[1:5], 10) == y_hat) == 5)
-  expect_true(sum(round(explainer$residuals[1:5], 10) == residuals) == 5)
+  expect_true(sum(round(explainer$y_hat[1:5], 5) == round(y_hat, 5)) == 5)
+  expect_true(sum(round(explainer$residuals[1:5], 5) == round(residuals,5 )) == 5)
   expect_true(sum(explainer$class == c("net", "nn_module")) == 2)
   expect_true(explainer$label == "classifier")
   expect_true(is.null(explainer$weights))
