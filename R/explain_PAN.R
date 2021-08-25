@@ -80,7 +80,7 @@ explain_PAN <- function(y,
     stop("data_scaled must be a matrix")
   if (nrow(data_scaled) != nrow(data))
     stop("data_scaled and data must have equal number of rows")
-  if (batch_size != batch_size / 1)
+  if (batch_size != as.integer(batch_size / 1))
     stop("batch size must be an integer")
   if (!dev %in% c("gpu", "cpu"))
     stop("dev must be gpu or cpu")

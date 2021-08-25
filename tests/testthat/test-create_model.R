@@ -25,4 +25,50 @@ test_that("test-create_model", {
 
   expect_equal(typeof(model), "closure")
 
+  expect_error(
+    create_model(
+      train_x,
+      train_y,
+      neurons = c(16, 8, 16),
+      dimensions = -3
+    )
+  )
+
+  expect_error(
+    create_model(
+      train_x,
+      as.matrix(train_y),
+      neurons = c(16, 8, 16),
+      dimensions = 1
+    )
+  )
+
+  expect_error(
+    create_model(
+      as.list(train_x),
+      train_y,
+      neurons = c(16, 8, 16),
+      dimensions = 1
+    )
+  )
+
+  expect_error(
+    create_model(
+      train_x,
+      as.matrix(train_y,nrow = 2),
+      neurons = c(16, 8, 16),
+      dimensions = 1
+    )
+  )
+
+  expect_error(
+    create_model(
+      train_x,
+      train_y,
+      neurons = c(16, 8, 16),
+      dimensions = 0.5
+    )
+  )
+
+
 })

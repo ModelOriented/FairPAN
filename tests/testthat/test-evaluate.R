@@ -32,4 +32,46 @@ test_that("test-evaluate", {
   expect_equal(round(stp3, 7), 0.3270079)
   expect_equal(round(stp4, 7), 0.3942961)
 
+  # accuracy
+
+  #not a model
+  expect_error(
+    eval_accuracy(7, dsl$test_ds, dev)
+  )
+  # not an environment
+  expect_error(
+    eval_accuracy(model1, 7, dev)
+  )
+  # not a dev
+  expect_error(
+    eval_accuracy(model1, dsl$test_ds, "GGPPUU")
+  )
+
+  # STP
+
+  #not a model
+  expect_error(
+    calc_STP(7, dsl$test_ds, processed$sensitive_test, dev)
+  )
+  # not an environment
+  expect_error(
+    calc_STP(model1, 7, processed$sensitive_test, dev)
+  )
+  # not a dev
+  expect_error(
+    calc_STP(model1, dsl$test_ds, processed$sensitive_test, "GGPPUU")
+  )
+  # not a vector
+  expect_error(
+    calc_STP(model1, dsl$test_ds, as.matrix(processed$sensitive_test), dev)
+  )
+  # not numeric
+  expect_error(
+    calc_STP(model1, dsl$test_ds, "processed$sensitive_test", dev)
+  )
+
+
+
+
+
 })
