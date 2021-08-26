@@ -42,9 +42,9 @@ test_that("test-pretrain_net", {
 
   loss1 <- pretrain_net(3, clf_model, dsl, model_type = 1, 0.001,
                         sensitive_test, dev,verbose = FALSE, monitor = FALSE)
-  loss2 <- pretrain_net(3, clf_model, dsl, model_type = 1, 0.001,
+  loss2 <- pretrain_net(3, clf_model, dsl, model_type = 2, 0.001,
                         sensitive_test, dev,verbose = FALSE, monitor = FALSE)
-  loss3 <- pretrain_net(3, clf_model, dsl, model_type = 1, 0.001,
+  loss3 <- pretrain_net(3, clf_model, dsl, model_type = 0, 0.001,
                         sensitive_test, dev,verbose = FALSE, monitor = FALSE)
 
   expect_false(loss1$test_loss == loss2$test_loss)
@@ -54,5 +54,109 @@ test_that("test-pretrain_net", {
   expect_false(loss1$train_loss == loss2$train_loss)
   expect_false(loss2$train_loss == loss3$train_loss)
   expect_false(loss3$train_loss == loss1$train_loss)
+  # wrong epoch
+  expect_error(
+    pretrain_net(
+      n_epochs = 3.5,
+      model = clf_model,
+      dsl = dsl,
+      model_type = 1,
+      learning_rate = 0.001,
+      sensitive_test = sensitive_test,
+      dev = dev,
+      verbose = FALSE,
+      monitor = FALSE)
+  )
+  # wrong model
+  expect_error(
+    pretrain_net(
+      n_epochs = 3,
+      model = 7,
+      dsl = dsl,
+      model_type = 1,
+      learning_rate = 0.001,
+      sensitive_test = sensitive_test,
+      dev = dev,
+      verbose = FALSE,
+      monitor = FALSE)
+  )
+  # not a dsl
+  expect_error(
+    pretrain_net(
+      n_epochs = 3,
+      model = clf_model,
+      dsl = 7,
+      model_type = 1,
+      learning_rate = 0.001,
+      sensitive_test = sensitive_test,
+      dev = dev,
+      verbose = FALSE,
+      monitor = FALSE)
+  )
+  # wrong LR
+  expect_error(
+    pretrain_net(
+      n_epochs = 3,
+      model = clf_model,
+      dsl = dsl,
+      model_type = 1,
+      learning_rate = 1.5,
+      sensitive_test = sensitive_test,
+      dev = dev,
+      verbose = FALSE,
+      monitor = FALSE)
+  )
+  # wrong dev
+  expect_error(
+    pretrain_net(
+      n_epochs = 3,
+      model = clf_model,
+      dsl = dsl,
+      model_type = 1,
+      learning_rate = 0.001,
+      sensitive_test = sensitive_test,
+      dev = "GGPPUU",
+      verbose = FALSE,
+      monitor = FALSE)
+  )
+  # sens test not a vector
+  expect_error(
+    pretrain_net(
+      n_epochs = 3,
+      model = clf_model,
+      dsl = dsl,
+      model_type = 1,
+      learning_rate = 0.001,
+      sensitive_test = as.matrix(sensitive_test),
+      dev = dev,
+      verbose = FALSE,
+      monitor = FALSE)
+  )
+  # monitor not logical
+  expect_error(
+    pretrain_net(
+      n_epochs = 3,
+      model = clf_model,
+      dsl = dsl,
+      model_type = 1,
+      learning_rate = 0.001,
+      sensitive_test = sensitive_test,
+      dev = dev,
+      verbose = 7,
+      monitor = FALSE)
+  )
+  # wrong model type
+  expect_error(
+    pretrain_net(
+      n_epochs = 3,
+      model = clf_model,
+      dsl = dsl,
+      model_type = 7,
+      learning_rate = 0.001,
+      sensitive_test = sensitive_test,
+      dev = dev,
+      verbose = FALSE,
+      monitor = FALSE)
+  )
 
 })

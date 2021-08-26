@@ -105,4 +105,265 @@ test_that("test-train_PAN", {
   expect_true(round(monitoring3$adversary_acc[1], 7) == 0.6157143)
   expect_true(round(monitoring3$classifier_acc[1], 7) == 0.8381963)
   expect_true(round(monitoring3$adversary_losses[1], 4) == 100.0369)
+
+  # wrong n ep pan
+  expect_error(
+    train_PAN(
+      n_ep_pan = 1.5,
+      dsl = dsl,
+      clf_model = model3,
+      adv_model = model33,
+      clf_optimizer = model3_optimizer,
+      adv_optimizer = model33_optimizer,
+      dev = dev,
+      sensitive_train = processed$sensitive_train,
+      sensitive_test = processed$sensitive_test,
+      batch_size = 5,
+      learning_rate_adv = 0.001,
+      learning_rate_clf = 0.001,
+      lambda = 150,
+      verbose = FALSE,
+      monitor = TRUE
+    )
+  )
+  # wrong clf model
+  expect_error(
+    train_PAN(
+      n_ep_pan = 1,
+      dsl = dsl,
+      clf_model = 7,
+      adv_model = model33,
+      clf_optimizer = model3_optimizer,
+      adv_optimizer = model33_optimizer,
+      dev = dev,
+      sensitive_train = processed$sensitive_train,
+      sensitive_test = processed$sensitive_test,
+      batch_size = 5,
+      learning_rate_adv = 0.001,
+      learning_rate_clf = 0.001,
+      lambda = 150,
+      verbose = FALSE,
+      monitor = TRUE
+    )
+  )
+  # wrong adv model
+  expect_error(
+    train_PAN(
+      n_ep_pan = 1,
+      dsl = dsl,
+      clf_model = model3,
+      adv_model = 7,
+      clf_optimizer = model3_optimizer,
+      adv_optimizer = model33_optimizer,
+      dev = dev,
+      sensitive_train = processed$sensitive_train,
+      sensitive_test = processed$sensitive_test,
+      batch_size = 5,
+      learning_rate_adv = 0.001,
+      learning_rate_clf = 0.001,
+      lambda = 150,
+      verbose = FALSE,
+      monitor = TRUE
+    )
+  )
+  # wrong dsl
+  expect_error(
+    train_PAN(
+      n_ep_pan = 1,
+      dsl = 7,
+      clf_model = model3,
+      adv_model = model33,
+      clf_optimizer = model3_optimizer,
+      adv_optimizer = model33_optimizer,
+      dev = dev,
+      sensitive_train = processed$sensitive_train,
+      sensitive_test = processed$sensitive_test,
+      batch_size = 5,
+      learning_rate_adv = 0.001,
+      learning_rate_clf = 0.001,
+      lambda = 150,
+      verbose = FALSE,
+      monitor = TRUE
+    )
+  )
+  # wrong lr adv
+  expect_error(
+    train_PAN(
+      n_ep_pan = 1,
+      dsl = dsl,
+      clf_model = model3,
+      adv_model = model33,
+      clf_optimizer = model3_optimizer,
+      adv_optimizer = model33_optimizer,
+      dev = dev,
+      sensitive_train = processed$sensitive_train,
+      sensitive_test = processed$sensitive_test,
+      batch_size = 5,
+      learning_rate_adv = 7,
+      learning_rate_clf = 0.001,
+      lambda = 150,
+      verbose = FALSE,
+      monitor = TRUE
+    )
+  )
+  # wrong lr clf
+  expect_error(
+    train_PAN(
+      n_ep_pan = 1,
+      dsl = dsl,
+      clf_model = model3,
+      adv_model = model33,
+      clf_optimizer = model3_optimizer,
+      adv_optimizer = model33_optimizer,
+      dev = dev,
+      sensitive_train = processed$sensitive_train,
+      sensitive_test = processed$sensitive_test,
+      batch_size = 5,
+      learning_rate_adv = 0.001,
+      learning_rate_clf = 7,
+      lambda = 150,
+      verbose = FALSE,
+      monitor = TRUE
+    )
+  )
+  # wrong clf optimizer
+  expect_error(
+    train_PAN(
+      n_ep_pan = 1,
+      dsl = dsl,
+      clf_model = model3,
+      adv_model = model33,
+      clf_optimizer = 7,
+      adv_optimizer = model33_optimizer,
+      dev = dev,
+      sensitive_train = processed$sensitive_train,
+      sensitive_test = processed$sensitive_test,
+      batch_size = 5,
+      learning_rate_adv = 0.001,
+      learning_rate_clf = 0.001,
+      lambda = 150,
+      verbose = FALSE,
+      monitor = TRUE
+    )
+  )
+  # wrong adv optimizer
+  expect_error(
+    train_PAN(
+      n_ep_pan = 1,
+      dsl = dsl,
+      clf_model = model3,
+      adv_model = model33,
+      clf_optimizer = model3_optimizer,
+      adv_optimizer = 7,
+      dev = dev,
+      sensitive_train = processed$sensitive_train,
+      sensitive_test = processed$sensitive_test,
+      batch_size = 5,
+      learning_rate_adv = 0.001,
+      learning_rate_clf = 0.001,
+      lambda = 150,
+      verbose = FALSE,
+      monitor = TRUE
+    )
+  )
+  # wrong dev
+  expect_error(
+    train_PAN(
+      n_ep_pan = 1,
+      dsl = dsl,
+      clf_model = model3,
+      adv_model = model33,
+      clf_optimizer = model3_optimizer,
+      adv_optimizer = model33_optimizer,
+      dev = "GGPPUU",
+      sensitive_train = processed$sensitive_train,
+      sensitive_test = processed$sensitive_test,
+      batch_size = 5,
+      learning_rate_adv = 0.001,
+      learning_rate_clf = 0.001,
+      lambda = 150,
+      verbose = FALSE,
+      monitor = TRUE
+    )
+  )
+  # sensitive train not a vector
+  expect_error(
+    train_PAN(
+      n_ep_pan = 1,
+      dsl = dsl,
+      clf_model = model3,
+      adv_model = model33,
+      clf_optimizer = model3_optimizer,
+      adv_optimizer = model33_optimizer,
+      dev = dev,
+      sensitive_train = as.matrix(processed$sensitive_train),
+      sensitive_test = processed$sensitive_test,
+      batch_size = 5,
+      learning_rate_adv = 0.001,
+      learning_rate_clf = 0.001,
+      lambda = 150,
+      verbose = FALSE,
+      monitor = TRUE
+    )
+  )
+  # sensitive test not a vector
+  expect_error(
+    train_PAN(
+      n_ep_pan = 1,
+      dsl = dsl,
+      clf_model = model3,
+      adv_model = model33,
+      clf_optimizer = model3_optimizer,
+      adv_optimizer = model33_optimizer,
+      dev = dev,
+      sensitive_train = processed$sensitive_train,
+      sensitive_test = as.matrix(processed$sensitive_test),
+      batch_size = 5,
+      learning_rate_adv = 0.001,
+      learning_rate_clf = 0.001,
+      lambda = 150,
+      verbose = FALSE,
+      monitor = TRUE
+    )
+  )
+  # monitor not logical
+  expect_error(
+    train_PAN(
+      n_ep_pan = 1,
+      dsl = dsl,
+      clf_model = model3,
+      adv_model = model33,
+      clf_optimizer = model3_optimizer,
+      adv_optimizer = model33_optimizer,
+      dev = dev,
+      sensitive_train = processed$sensitive_train,
+      sensitive_test = processed$sensitive_test,
+      batch_size = 5,
+      learning_rate_adv = 0.001,
+      learning_rate_clf = 0.001,
+      lambda = 150,
+      verbose = FALSE,
+      monitor = 7
+    )
+  )
+  # wrong lambda
+  expect_error(
+    train_PAN(
+      n_ep_pan = 1,
+      dsl = dsl,
+      clf_model = model3,
+      adv_model = model33,
+      clf_optimizer = model3_optimizer,
+      adv_optimizer = model33_optimizer,
+      dev = dev,
+      sensitive_train = processed$sensitive_train,
+      sensitive_test = processed$sensitive_test,
+      batch_size = 5,
+      learning_rate_adv = 0.001,
+      learning_rate_clf = 0.001,
+      lambda = "150",
+      verbose = FALSE,
+      monitor = TRUE
+    )
+  )
 })

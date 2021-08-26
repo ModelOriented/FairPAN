@@ -77,6 +77,8 @@ pretrain_net <- function(n_epochs = 15,
     stop("sensitive_test must be a vector")
   if (!is.logical(verbose) || !is.logical(monitor))
     stop("verbose and monitor must be logical")
+  if (!model_type %in% c(0,1,2))
+    stop("model type must be 0 or 1 or 2")
 
     optimizer <- torch::optim_adam(model$parameters, lr = learning_rate)
 

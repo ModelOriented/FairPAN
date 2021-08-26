@@ -50,14 +50,11 @@ train_PAN <- function(dsl,
   if (typeof(adv_model) != 'closure')
     stop("provide a neural network as a adv_model")
   if (typeof(dsl) != "list")
-    stop("dsl must be list of 2 data sets and 2 data loaders from
-         dataset_loader function")
+    stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
   if (typeof(dsl$test_ds) != "environment")
-    stop("dsl must be list of 2 data sets and 2 data loaders from
-         dataset_loader function")
+    stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
   if (typeof(dsl$test_ds$y) != "externalptr")
-    stop("dsl must be list of 2 data sets and 2 data loaders from
-         dataset_loader function")
+    stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
   if (learning_rate_clf > 1 ||  learning_rate_clf < 0)
     stop("learning_rate_clf must be between 0 and 1")
   if (learning_rate_adv > 1 || learning_rate_adv < 0)
