@@ -2,7 +2,7 @@
 #'
 #' Creates two torch datasets, from given train_x, test_x matrices and train_y,
 #' test_y vectors and converts them into torch dataloaders with provided batch
-#' size. It is used for both classifier and adversarial. During initialization
+#' size. It is used for both classifier and adversarial. During the initialization
 #' NAs are ommited.
 #'
 #' @param train_x numeric, scaled matrix of predictors used for training
@@ -128,7 +128,7 @@ prepare_to_adv <- function(preds, sensitive, partition=0.7){
 
 #' Preprocesses data for training
 #'
-#' This function prepares provided dataset to be ready for the training process.
+#' Prepares provided dataset to be ready for the training process.
 #' It  makes data suitable for training functions, splits it into train, test
 #' and validation, provides other data objects that are necessary for our
 #' training.

@@ -5,13 +5,11 @@ Version: 0.1.0
 Authors@R:
     c(person("Hubert", "Ruczyński", role=c("aut","cre"),
               email = "hruczynski21@interia.pl"),
-      person("Jakub", "Wiśniewski", role = c("aut"),
+      person("Jakub", "Wiśniewski", role = c("aut","rev"),
              email = "jakwisn@gmail.com"))
-Maintainer: Hubert Ruczynski <hruczynski21@interia.pl>
 Description: The tool not only for creating fair predictive adversarial networks, but also for monitoring the training process and visualizing its outcomes. This package is really flexible, because the user can not only provide its own neural network models, but also create them with our functions.
 License: GPL-3
 Encoding: UTF-8
-LazyData: true
 VignetteBuilder: knitr
 Depends: 
     torch (>= 0.5.0),

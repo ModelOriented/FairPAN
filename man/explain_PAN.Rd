@@ -38,12 +38,13 @@ not. Default: TRUE.}
 DALEX model explainer
 }
 \description{
-This function creates DALEX explainer for PAN model (or other neural network)
-All DALEX functions such as model_performance or
+Creates DALEX explainer for PAN model (or other neural network)
+All DALEX functions such as model_performance are possible to use on the
+returned explainer.
 }
 \examples{
 
-
+\dontrun{
 dev <- "cpu"
 
 adult <- fairmodels::adult
@@ -78,7 +79,7 @@ explainer <- explain_PAN(
   dev = dev,
   verbose = FALSE
 )
-
+}
 
 
 }

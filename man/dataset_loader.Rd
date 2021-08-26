@@ -27,7 +27,7 @@ respectively
 \description{
 Creates two torch datasets, from given train_x, test_x matrices and train_y,
 test_y vectors and converts them into torch dataloaders with provided batch
-size. It is used for both classifier and adversarial. During initialization
+size. It is used for both classifier and adversarial. During the initialization
 NAs are ommited.
 }
 \examples{

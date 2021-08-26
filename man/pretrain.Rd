@@ -93,25 +93,25 @@ training. Default : 10}
 not}
 
 \item{monitor}{logical indicating if we want to monitor the learning process
-or not (monitoring tends to slow down the training proccess, but provides
+or not (monitoring tends to slow down the training process, but provides
 some useful info to adjust parameters and training process)}
 
 \item{seed}{integer, seed for initial weights, set NULL for none. Default: 7.}
 }
 \value{
-list of two obejcts : clf_model and adv_model which are pretrained
+list of two objects : clf_model and adv_model which are pretrained
 neural networks (net, nn_module).
 }
 \description{
-This function can create and pretrain both classifier and adversarial. The
-user is able to provide its own architecture of both models through clf_model
+Creates and pretrains both classifier and adversarial. The user is
+also able to provide its own architecture of both models through clf_model
 and adv_model parameters. Moreover the classifier can be also trained, but then
 one has to change trained to TRUE and provide the optimizer from this training.
 It is also possible to create both models from our interface witch is described
 in create_model documentation.
 }
 \examples{
-
+\dontrun{
 adult <- fairmodels::adult
 
 processed <-
@@ -155,7 +155,7 @@ models <- pretrain(
   verbose = FALSE,
   monitor = FALSE
 )
-\dontrun{
+
 # presaved models and states of the optimizers
 clf                 <- torch_load(system.file("extdata","clf2",package="FairPAN"))
 clf_optimizer_state <- torch_load(system.file("extdata","clf_optimizer2",package="FairPAN"))
@@ -187,9 +187,7 @@ models2 <- pretrain(
   verbose = FALSE,
   monitor = FALSE
 )
-}
 
-\dontrun{
 clf2 <- create_model(processed$train_x, processed$train_y, c(4, 4), 2)
 
 # Clf provided, but not pretrained

@@ -1,7 +1,8 @@
 #' Creates explainer of PAN model
 #'
-#' This function creates DALEX explainer for PAN model (or other neural network)
-#' All DALEX functions such as model_performance or
+#' Creates DALEX explainer for PAN model (or other neural network)
+#' All DALEX functions such as model_performance are possible to use on the
+#' returned explainer.
 #'
 #' @param y numerical target of classification task
 #' @param model net, nn_module, the model we want to explain
@@ -19,7 +20,7 @@
 #'
 #' @examples
 #'
-#'
+#' \dontrun{
 #' dev <- "cpu"
 #'
 #' adult <- fairmodels::adult
@@ -54,7 +55,7 @@
 #'   dev = dev,
 #'   verbose = FALSE
 #' )
-#'
+#' }
 #'
 #'
 

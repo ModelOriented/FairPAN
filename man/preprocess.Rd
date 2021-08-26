@@ -70,7 +70,7 @@ protected_valid - character vector of protected values for explainers valid
 )
 }
 \description{
-This function prepares provided dataset to be ready for the training process.
+Prepares provided dataset to be ready for the training process.
 It  makes data suitable for training functions, splits it into train, test
 and validation, provides other data objects that are necessary for our
 training.

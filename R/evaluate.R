@@ -1,6 +1,6 @@
 #' Calculates accuracy
 #'
-#' This function evaluates the model by calculating its accuracy
+#' Evaluates the model by calculating its accuracy.
 #'
 #' @param model net, nn_module, neural network model we want to evaluate
 #' @param test_ds \code{dataset} object from torch used for making test

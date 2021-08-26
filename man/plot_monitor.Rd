@@ -2,7 +2,7 @@
 % Please edit documentation in R/plot_monitor.R
 \name{plot_monitor}
 \alias{plot_monitor}
-\title{Plots monitor data}
+\title{Plots monitored data}
 \usage{
 plot_monitor(
   STP = NULL,

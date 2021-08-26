@@ -1,4 +1,4 @@
-#' Plots monitor data
+#' Plots monitored data
 #'
 #' Plots visualizations of monitor metrics (STP ratio, adv accuracy, adv losses
 #' and classifier losses) epoch by epoch. It is useful for the monitoring of

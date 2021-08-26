@@ -18,7 +18,7 @@ predictions and evaluation}
 double, accuracy of provided model
 }
 \description{
-This function evaluates the model by calculating its accuracy
+Evaluates the model by calculating its accuracy.
 }
 \examples{
 

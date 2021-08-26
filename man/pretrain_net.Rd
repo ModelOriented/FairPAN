@@ -38,7 +38,7 @@ STP}
 not}
 
 \item{monitor}{logical indicating if we want to monitor the learning process
-or not (monitoring tends to slow down the training proccess, but provides
+or not (monitoring tends to slow down the training process, but provides
 some useful info to adjust parameters and training process)}
 }
 \value{
@@ -48,7 +48,7 @@ list(train_loss,test_loss,optimizer)
 Pretrain for both the classifier and adversarial model. You can select which
 model it is by setting model_type parameter (it customizes the prints properly).
 Pretrain can also collect more data to training analysis and print it out
-which is usefull for monitoring the learning process and making adjustments.
+which is useful for monitoring the learning process and making adjustments.
 }
 \examples{
 

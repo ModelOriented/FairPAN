@@ -1,7 +1,7 @@
 #' Pretrains both classifier and adversarial
 #'
-#' This function can create and pretrain both classifier and adversarial. The
-#' user is able to provide its own architecture of both models through clf_model
+#' Creates and pretrains both classifier and adversarial. The user is
+#' also able to provide its own architecture of both models through clf_model
 #' and adv_model parameters. Moreover the classifier can be also trained, but then
 #' one has to change trained to TRUE and provide the optimizer from this training.
 #' It is also possible to create both models from our interface witch is described
@@ -48,16 +48,16 @@
 #' @param verbose logical indicating if we want to print monitored outputs or
 #' not
 #' @param monitor logical indicating if we want to monitor the learning process
-#' or not (monitoring tends to slow down the training proccess, but provides
+#' or not (monitoring tends to slow down the training process, but provides
 #' some useful info to adjust parameters and training process)
 #' @param seed integer, seed for initial weights, set NULL for none. Default: 7.
 #'
-#' @return list of two obejcts : clf_model and adv_model which are pretrained
+#' @return list of two objects : clf_model and adv_model which are pretrained
 #' neural networks (net, nn_module).
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
 #' adult <- fairmodels::adult
 #'
 #' processed <-
@@ -101,7 +101,7 @@
 #'   verbose = FALSE,
 #'   monitor = FALSE
 #' )
-#' \dontrun{
+#'
 #' # presaved models and states of the optimizers
 #' clf                 <- torch_load(system.file("extdata","clf2",package="FairPAN"))
 #' clf_optimizer_state <- torch_load(system.file("extdata","clf_optimizer2",package="FairPAN"))
@@ -133,9 +133,7 @@
 #'   verbose = FALSE,
 #'   monitor = FALSE
 #' )
-#'}
 #'
-#'\dontrun{
 #' clf2 <- create_model(processed$train_x, processed$train_y, c(4, 4), 2)
 #'
 #' # Clf provided, but not pretrained
@@ -195,14 +193,11 @@ pretrain <- function(clf_model = NULL,
   if (n_ep_preadv != n_ep_preadv / 1 || n_ep_preadv < 0)
     stop("n_ep_preadv must be a positive integer")
   if (typeof(dsl) != "list")
-    stop("dsl must be list of 2 data sets and 2 data loaders from
-         dataset_loader function")
+    stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
   if (typeof(dsl$test_ds) != "environment")
-    stop("dsl must be list of 2 data sets and 2 data loaders from
-         dataset_loader function")
+    stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
   if (typeof(dsl$test_ds$y) != "externalptr")
-    stop("dsl must be list of 2 data sets and 2 data loaders from
-         dataset_loader function")
+    stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
   if (learning_rate_clf > 1 || learning_rate_clf < 0)
     stop("learning_rate_clf must be between 0 and 1")
   if (learning_rate_adv > 1 || learning_rate_adv < 0)
