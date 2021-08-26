@@ -97,5 +97,247 @@ test_that("test-prepare_data", {
   expect_true(nrow(processed$data_valid) == 0)
   expect_true(length(processed$protected_valid) == 0)
 
+  expect_error(
+    dataset_loader(
+      "not numeric",
+      train_y,
+      test_x,
+      test_y,
+      batch_size=1,
+      dev)
+  )
+
+  expect_error(
+    dataset_loader(
+      train_x,
+      "not numeric",
+      test_x,
+      test_y,
+      batch_size=1,
+      dev)
+  )
+
+  expect_error(
+    dataset_loader(
+      train_x,
+      train_y,
+      "not numeric",
+      test_y,
+      batch_size=1,
+      dev)
+  )
+
+  expect_error(
+    dataset_loader(
+      train_x,
+      train_y,
+      test_x,
+      "not numeric",
+      batch_size=1,
+      dev)
+  )
+
+  expect_error(
+    dataset_loader(
+      train_x,
+      train_y,
+      test_x,
+      test_y,
+      batch_size=0.5,
+      dev)
+  )
+
+  expect_error(
+    dataset_loader(
+      train_x,
+      train_y,
+      test_x,
+      test_y,
+      batch_size=1,
+      dev = "GGPPUU")
+  )
+
+  expect_error(
+    prepare_to_adv(
+      as.matrix(preds),
+      sensitive,
+      partition = 0.5)
+  )
+
+  expect_error(
+    prepare_to_adv(
+      preds,
+      as.matrix(sensitive),
+      partition = 0.5)
+  )
+
+  expect_error(
+    prepare_to_adv(
+      preds,
+      sensitive,
+      partition = 1.5)
+  )
+
+  expect_error(
+    preprocess(
+      7,
+      "salary",
+      "sex",
+      "Male",
+      "Female",
+      c("race"),
+      sample = 0.05,
+      train_size = 0.65,
+      test_size = 0.35,
+      validation_size = 0,
+      seed = 7
+    )
+  )
+
+  expect_error(
+    preprocess(
+      adult,
+      7,
+      "sex",
+      "Male",
+      "Female",
+      c("race"),
+      sample = 0.05,
+      train_size = 0.65,
+      test_size = 0.35,
+      validation_size = 0,
+      seed = 7
+    )
+  )
+
+  expect_error(
+    preprocess(
+      adult,
+      "salary",
+      7,
+      "Male",
+      "Female",
+      c("race"),
+      sample = 0.05,
+      train_size = 0.65,
+      test_size = 0.35,
+      validation_size = 0,
+      seed = 7
+    )
+  )
+
+  expect_error(
+    preprocess(
+      adult,
+      "salary",
+      "sex",
+      7,
+      "Female",
+      c("race"),
+      sample = 0.05,
+      train_size = 0.65,
+      test_size = 0.35,
+      validation_size = 0,
+      seed = 7
+    )
+  )
+
+  expect_error(
+    preprocess(
+      adult,
+      "salary",
+      "sex",
+      "Male",
+      7,
+      c("race"),
+      sample = 0.05,
+      train_size = 0.65,
+      test_size = 0.35,
+      validation_size = 0,
+      seed = 7
+    )
+  )
+
+  expect_error(
+    preprocess(
+      adult,
+      "salary",
+      "sex",
+      "Male",
+      "Female",
+      c(7),
+      sample = 7,
+      train_size = 0.65,
+      test_size = 0.35,
+      validation_size = 0,
+      seed = 7
+    )
+  )
+
+  expect_error(
+    preprocess(
+      adult,
+      "salary",
+      "sex",
+      "Male",
+      "Female",
+      c("race"),
+      sample = 0.05,
+      train_size = 7,
+      test_size = 0.35,
+      validation_size = 0,
+      seed = 7
+    )
+  )
+
+  expect_error(
+    preprocess(
+      adult,
+      "salary",
+      "sex",
+      "Male",
+      "Female",
+      c("race"),
+      sample = 0.05,
+      train_size = 1,
+      test_size = - 1,
+      validation_size = 1,
+      seed = 7
+    )
+  )
+
+  expect_error(
+    preprocess(
+      adult,
+      "salary",
+      "sex",
+      "Male",
+      "Female",
+      c("race"),
+      sample = 0.05,
+      train_size = 0.65,
+      test_size = 0.35,
+      validation_size = 0,
+      seed = 7.5
+    )
+  )
+
+  processed2 <- preprocess(
+    adult,
+    "salary",
+    "sex",
+    "Male",
+    "Female",
+    NULL,
+    sample = 0.05,
+    train_size = 0.65,
+    test_size = 0.35,
+    validation_size = 0,
+    seed = 7
+  )
+
+  expect_true(is.matrix(processed2$train_x))
+
+
 
   })

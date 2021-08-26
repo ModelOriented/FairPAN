@@ -38,14 +38,14 @@ dataset_loader <- function(train_x,
     stop("train_x must be numeric")
   if (!is.numeric(test_x))
     stop("test_x must be numeric")
-  if (!is.numeric(train_y) ||
-      !is.vector(train_y))
+  if (!is.numeric(train_y) || !is.vector(train_y))
     stop("train_y must be numeric vector of target")
-  if (!is.numeric(test_y) ||
-      !is.vector(test_y))
+  if (!is.numeric(test_y) || !is.vector(test_y))
     stop("test_y must be numeric vector of target")
-  if (!is.numeric(batch_size))
-    stop("batch size must be numeric")
+  if (batch_size != as.integer(batch_size / 1))
+    stop("batch size must be an integer")
+  if (!dev %in% c("gpu", "cpu"))
+    stop("dev must be gpu or cpu")
 
   #Without this NA self inside data_set produces global variable note
   self <- NA
@@ -209,15 +209,24 @@ preprocess <- function(data,
                        seed = NULL) {
 
 
-
+  if (!is.list(data) && !is.matrix(data) && !is.data.frame(data))
+    stop("data must be some sort of data holer (list,matrix,data.frame)")
+  if (!is.character(privileged))
+    stop("privileged must be a character string")
+  if (!is.character(discriminated))
+    stop("discriminated must be a character string")
+  if (train_size < 0 || test_size < 0 || validation_size < 0)
+    stop("sizes must be positive")
   if (train_size + test_size + validation_size != 1)
     stop("train_size+test_size+validation_size must equal 1")
   if (!is.character(target_name) || !is.character(sensitive_name))
     stop("target_name and sensitive_name must be characters")
   if (!is.null(drop_also) && !is.character(drop_also))
     stop("drop_also must be a character vector")
-  if (!is.list(data))
-    stop("data must be a list")
+  if(sample > 1 || sample < 0)
+    stop("sample must be between 0 and 1")
+  if (seed != as.integer(seed / 1))
+    stop("seed must be an integer")
 
   col    <- eval(parse(text = paste("data$", sensitive_name, sep = "")))
   #balance dataset to have the same number of sensitive values, so

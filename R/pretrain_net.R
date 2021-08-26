@@ -59,7 +59,7 @@ pretrain_net <- function(n_epochs = 15,
                          monitor = TRUE) {
 
 
-  if (n_epochs != n_epochs / 1 || n_epochs < 0)
+  if (n_epochs != as.integer(n_epochs / 1) || n_epochs < 0)
     stop("n_epochs must be a positive integer")
   if (typeof(model) != 'closure')
     stop("provide a neural network as a model")

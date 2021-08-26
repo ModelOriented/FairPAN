@@ -188,10 +188,14 @@ pretrain <- function(clf_model = NULL,
                      seed = 7) {
 
 
-  if (n_ep_preclf != n_ep_preclf / 1 || n_ep_preclf < 0)
+  if (n_ep_preclf != as.integer(n_ep_preclf / 1) || n_ep_preclf < 0)
     stop("n_ep_preclf must be a positive integer")
-  if (n_ep_preadv != n_ep_preadv / 1 || n_ep_preadv < 0)
+  if (n_ep_preadv != as.integer(n_ep_preadv / 1) || n_ep_preadv < 0)
     stop("n_ep_preadv must be a positive integer")
+  if (batch_size != as.integer(batch_size / 1) || batch_size < 0)
+    stop("batch_size must be a positive integer")
+  if (seed != as.integer(seed / 1))
+    stop("seed must be an integer")
   if (typeof(dsl) != "list")
     stop("dsl must be list of 2 data sets and 2 data loaders from dataset_loader function")
   if (typeof(dsl$test_ds) != "environment")
@@ -221,9 +225,9 @@ pretrain <- function(clf_model = NULL,
     stop("dimension_clf must be a 0,1 or 2")
   if (!dimension_adv %in% c(0, 1, 2))
     stop("dimension_adv must be a 0,1 or 2")
-  if (sum(neurons_clf - neurons_clf / 1) != 0)
+  if (sum(neurons_clf - as.integer(neurons_clf / 1)) != 0)
     stop("neurons_clf must be a vector of integers")
-  if (sum(neurons_adv - neurons_adv / 1) != 0)
+  if (sum(neurons_adv - as.integer(neurons_adv / 1)) != 0)
     stop("neurons_adv must be a vector of integers")
 
   if (!is.null(clf_optimizer) && !typeof(clf_optimizer) == "environment")
@@ -236,8 +240,7 @@ pretrain <- function(clf_model = NULL,
     if (!is.matrix(train_x))
       stop("train_x must be a matrix")
     if (nrow(train_x) != length(train_y))
-      stop("length of train_y must be equal
-                                            number of rows of train_x")
+      stop("length of train_y must be equal number of rows of train_x")
     clf_model <- create_model(train_x, train_y, neurons_clf, dimension_clf, seed = seed)
   }
   if (typeof(clf_model) != 'closure')
