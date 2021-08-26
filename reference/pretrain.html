@@ -46,8 +46,8 @@
 
 
 <meta property="og:title" content="Pretrains both classifier and adversarial — pretrain" />
-<meta property="og:description" content="This function can create and pretrain both classifier and adversarial. The
-user is able to provide its own architecture of both models through clf_model
+<meta property="og:description" content="Creates and pretrains both classifier and adversarial. The user is
+also able to provide its own architecture of both models through clf_model
 and adv_model parameters. Moreover the classifier can be also trained, but then
 one has to change trained to TRUE and provide the optimizer from this training.
 It is also possible to create both models from our interface witch is described
@@ -142,8 +142,8 @@ in create_model documentation." />
     </div>
 
     <div class="ref-description">
-    <p>This function can create and pretrain both classifier and adversarial. The
-user is able to provide its own architecture of both models through clf_model
+    <p>Creates and pretrains both classifier and adversarial. The user is
+also able to provide its own architecture of both models through clf_model
 and adv_model parameters. Moreover the classifier can be also trained, but then
 one has to change trained to TRUE and provide the optimizer from this training.
 It is also possible to create both models from our interface witch is described
@@ -285,7 +285,7 @@ not</p></td>
     <tr>
       <th>monitor</th>
       <td><p>logical indicating if we want to monitor the learning process
-or not (monitoring tends to slow down the training proccess, but provides
+or not (monitoring tends to slow down the training process, but provides
 some useful info to adjust parameters and training process)</p></td>
     </tr>
     <tr>
@@ -296,11 +296,11 @@ some useful info to adjust parameters and training process)</p></td>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>list of two obejcts : clf_model and adv_model which are pretrained
+    <p>list of two objects : clf_model and adv_model which are pretrained
 neural networks (net, nn_module).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'>
+    <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>adult</span> <span class='op'>&lt;-</span> <span class='fu'>fairmodels</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/fairmodels/man/adult.html'>adult</a></span>
 
 <span class='va'>processed</span> <span class='op'>&lt;-</span>
@@ -344,7 +344,7 @@ neural networks (net, nn_module).</p>
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
   monitor <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
+
 <span class='co'># presaved models and states of the optimizers</span>
 <span class='va'>clf</span>                 <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"clf2"</span>,package<span class='op'>=</span><span class='st'>"FairPAN"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>clf_optimizer_state</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"clf_optimizer2"</span>,package<span class='op'>=</span><span class='st'>"FairPAN"</span><span class='op'>)</span><span class='op'>)</span>
@@ -376,9 +376,7 @@ neural networks (net, nn_module).</p>
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>,
   monitor <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
-<span class='op'>}</span>
 
-<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>clf2</span> <span class='op'>&lt;-</span> <span class='fu'><a href='create_model.html'>create_model</a></span><span class='op'>(</span><span class='va'>processed</span><span class='op'>$</span><span class='va'>train_x</span>, <span class='va'>processed</span><span class='op'>$</span><span class='va'>train_y</span>, <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span><span class='op'>(</span><span class='fl'>4</span>, <span class='fl'>4</span><span class='op'>)</span>, <span class='fl'>2</span><span class='op'>)</span>
 
 <span class='co'># Clf provided, but not pretrained</span>

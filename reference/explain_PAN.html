@@ -46,8 +46,9 @@
 
 
 <meta property="og:title" content="Creates explainer of PAN model — explain_PAN" />
-<meta property="og:description" content="This function creates DALEX explainer for PAN model (or other neural network)
-All DALEX functions such as model_performance or" />
+<meta property="og:description" content="Creates DALEX explainer for PAN model (or other neural network)
+All DALEX functions such as model_performance are possible to use on the
+returned explainer." />
 
 <meta name="robots" content="noindex" />
 
@@ -138,8 +139,9 @@ All DALEX functions such as model_performance or" />
     </div>
 
     <div class="ref-description">
-    <p>This function creates DALEX explainer for PAN model (or other neural network)
-All DALEX functions such as model_performance or</p>
+    <p>Creates DALEX explainer for PAN model (or other neural network)
+All DALEX functions such as model_performance are possible to use on the
+returned explainer.</p>
     </div>
 
     <pre class="usage"><span class='fu'>explain_PAN</span><span class='op'>(</span>
@@ -198,7 +200,7 @@ not. Default: TRUE.</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>dev</span> <span class='op'>&lt;-</span> <span class='st'>"cpu"</span>
 
 <span class='va'>adult</span> <span class='op'>&lt;-</span> <span class='fu'>fairmodels</span><span class='fu'>::</span><span class='va'><a href='https://rdrr.io/pkg/fairmodels/man/adult.html'>adult</a></span>
@@ -233,7 +235,7 @@ not. Default: TRUE.</p></td>
   dev <span class='op'>=</span> <span class='va'>dev</span>,
   verbose <span class='op'>=</span> <span class='cn'>FALSE</span>
 <span class='op'>)</span>
-
+<span class='op'>}</span>
 
 
 </div></pre>
