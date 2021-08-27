@@ -10,8 +10,17 @@ test_that("test-plot_monitor", {
   plot2 <- plot_monitor(monitor3$STP, monitor3$adversary_acc,
                         monitor3$classifier_acc, monitor3$adversary_losses)
 
+  plot3 <- plot_monitor(monitor2$STP, monitor2$adversary_acc,
+                        monitor2$classifier_acc, monitor2$adversary_losses,
+                        patchwork = FALSE)
+  plot4 <- plot_monitor(monitor3$STP, monitor3$adversary_acc,
+                        monitor3$classifier_acc, monitor3$adversary_losses,
+                        patchwork = FALSE)
+
   expect_s3_class(plot1, "gtable")
   expect_s3_class(plot2, "gtable")
+  expect_s3_class(plot3, "gtable")
+  expect_s3_class(plot4, "gtable")
 
   expect_error(
     plot_monitor(
