@@ -10,8 +10,8 @@ test_that("test-plot_monitor", {
   plot2 <- plot_monitor(monitor3$STP, monitor3$adversary_acc,
                         monitor3$classifier_acc, monitor3$adversary_losses)
 
-  expect_s3_class(plot1, "ggplot")
-  expect_s3_class(plot2, "ggplot")
+  expect_s3_class(plot1, "gtable")
+  expect_s3_class(plot2, "gtable")
 
   expect_error(
     plot_monitor(
