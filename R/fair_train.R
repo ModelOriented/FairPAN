@@ -46,12 +46,12 @@
 #'\dontrun{
 #' dev <- "cpu"
 #' # presaved torch models from pretrain phase
-#' model1 <- torch_load(system.file("extdata","preclf",package="FairPAN"))
-#' model11 <- torch_load(system.file("extdata","preadv",package="FairPAN"))
+#' model1 <- torch_load(system.file("extdata","preclf",package="fairpan"))
+#' model11 <- torch_load(system.file("extdata","preadv",package="fairpan"))
 #'
 #' # presaved optimizers dictionaries from pretrain phase
-#' model1_optimizer_dict <- torch_load(system.file("extdata","preclf_optimizer",package="FairPAN"))
-#' model11_optimizer_dict <- torch_load(system.file("extdata","preadv_optimizer",package="FairPAN"))
+#' model1_optimizer_dict <- torch_load(system.file("extdata","preclf_optimizer",package="fairpan"))
+#' model11_optimizer_dict <- torch_load(system.file("extdata","preadv_optimizer",package="fairpan"))
 #'
 #' # Recreating optimizers
 #' model1_optimizer <- optim_adam(model1$parameters, lr = 0.001)
@@ -62,7 +62,7 @@
 #' model11_optimizer$load_state_dict(model11_optimizer_dict)
 #'
 #' # presaved output of `preprocess` function
-#' processed <- torch_load(system.file("extdata","processed",package="FairPAN"))
+#' processed <- torch_load(system.file("extdata","processed",package="fairpan"))
 #'
 #' dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
 #'                       processed$test_y, batch_size=5, dev=dev)

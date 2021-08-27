@@ -33,7 +33,7 @@ To use this, the user has to set monitor on during the fair_train process.
 \examples{
 
 # presaved monitoring data
-monitor2 <- torch_load(system.file("extdata","monitoring2",package="FairPAN"))
+monitor2 <- torch_load(system.file("extdata","monitoring2",package="fairpan"))
 
 plot_monitor(monitor2$STP ,monitor2$adversary_acc, monitor2$classifier_acc,
              monitor2$adversary_losses)

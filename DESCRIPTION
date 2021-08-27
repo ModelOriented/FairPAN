@@ -1,4 +1,4 @@
-Package: FairPAN
+Package: fairpan
 Type: Package
 Title: Comfortable Tool for Making Fair Classifier with the Neural Networks
 Version: 0.1.0

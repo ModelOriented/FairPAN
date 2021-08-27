@@ -29,12 +29,12 @@
 #' dev <- "cpu"
 #'
 #' # presaved output of preprocess function
-#' processed <- torch_load(system.file("extdata","processed",package="FairPAN"))
+#' processed <- torch_load(system.file("extdata","processed",package="fairpan"))
 #' dsl <- dataset_loader(processed$train_x, processed$train_y, processed$test_x,
 #'                       processed$test_y, batch_size=5, dev=dev)
 #'
 #' # presaved torch model
-#' model <- torch_load(system.file("extdata","clf1",package="FairPAN"))
+#' model <- torch_load(system.file("extdata","clf1",package="fairpan"))
 #' pretrain_net(
 #'   n_epochs = 1,
 #'   model = model,

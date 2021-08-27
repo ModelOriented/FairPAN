@@ -26,5 +26,5 @@ reference:
     - make_preds_prob
     - calc_STP
     - eval_accuracy
-    - explain_PAN
+    - explain_pan
     - plot_monitor

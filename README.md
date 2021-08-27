@@ -158,7 +158,7 @@ plot_monitor(STP = monitor$STP,
              adversary_losses = monitor$adversary_losses,
              classifier_acc = monitor$classifier_acc)
 
-exp_clf <- explain_PAN(y = data$test_y,
+exp_clf <- explain_pan(y = data$test_y,
                        model = models$clf_model,
                        label = "PAN",
                        data = data$data_test,

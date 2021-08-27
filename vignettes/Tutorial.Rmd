@@ -76,7 +76,7 @@ however we will focus only on `sex`.
 
 
 ```{r eval = TRUE, results='hide', imports}
-library(FairPAN)
+library(fairpan)
 library(fairmodels)
 data("adult")
 ```
@@ -290,7 +290,7 @@ In the end we want to create an explainer for our classification model, but we
 will say more about it later.
 
 ```{r eval = TRUE, explain_clf}
-exp_clf <- explain_PAN(y = data$test_y,                          # test target
+exp_clf <- explain_pan(y = data$test_y,                          # test target
                        model = models$clf_model,                 # classifier model
                        label = "Classifier",                     # classifiers name
                        original_data = data$data_test,           # original data for test
@@ -364,11 +364,11 @@ plot_monitor(STP = monitor$STP,                                  # monitor for S
 ```
 
 As fairness is closely connected with XAI, we also propose an option to create an
-explainer for our neural network models with `explain_PAN` which is 
+explainer for our neural network models with `explain_pan` which is 
 `DALEX::explain` function with proper adjustments for neural network models.
 
-```{r eval = TRUE, explain_PAN}
-exp_PAN <- explain_PAN(y = data$test_y,                          # test target
+```{r eval = TRUE, explain_pan}
+exp_PAN <- explain_pan(y = data$test_y,                          # test target
                        model = models$clf_model,                 # classifier model
                        label = "PAN",                            # classifiers name
                        original_data = data$data_test,           # original data for test
@@ -380,7 +380,7 @@ exp_PAN <- explain_PAN(y = data$test_y,                          # test target
 ```
 
 All functions that work on DALEX explainer object also applies to our 
-`explain_PAN`, but probably two most interesting ones are `model_performance`
+`explain_pan`, but probably two most interesting ones are `model_performance`
 and `fairmodels::fairness_check`.
 
 The first one proves useful when we want to see the performance of the model.

@@ -39,13 +39,13 @@
 #'   seed = 7
 #' )
 #' # presaved torch model
-#' model1 <- torch::torch_load(system.file("extdata","clf1",package="FairPAN"))
+#' model1 <- torch::torch_load(system.file("extdata","clf1",package="fairpan"))
 #'
 #' dsl <- dataset_loader(processed$train_x, processed$train_y,
 #'                       processed$test_x, processed$test_y,
 #'                       batch_size=5, dev=dev)
 #'
-#' explainer <- explain_PAN(
+#' explainer <- explain_pan(
 #'   processed$test_y,
 #'   model1,
 #'   "classifier",
@@ -60,7 +60,7 @@
 #'
 
 
-explain_PAN <- function(y,
+explain_pan <- function(y,
                         model,
                         label,
                         original_data,

@@ -1,5 +1,5 @@
 library(testthat)
-library(FairPAN)
+library(fairpan)
 
 if (Sys.getenv("TORCH_TEST", unset = 0) == 1)
-  test_check("FairPAN")
+  test_check("fairpan")

@@ -24,7 +24,7 @@ test_that("test-explainPAN", {
                         processed$test_x, processed$test_y,
                         batch_size=5, dev=dev)
 
-  explainer <- explain_PAN(
+  explainer <- explain_pan(
     processed$test_y,
     model1,
     "classifier",
@@ -52,7 +52,7 @@ test_that("test-explainPAN", {
 
   # not vector
   expect_error(
-    explainer <- explain_PAN(
+    explainer <- explain_pan(
       as.matrix(processed$test_y),
       model1,
       "classifier",
@@ -65,7 +65,7 @@ test_that("test-explainPAN", {
   )
   # not closure
   expect_error(
-    explainer <- explain_PAN(
+    explainer <- explain_pan(
       processed$test_y,
       7,
       "classifier",
@@ -78,7 +78,7 @@ test_that("test-explainPAN", {
   )
   # not character
   expect_error(
-    explainer <- explain_PAN(
+    explainer <- explain_pan(
       processed$test_y,
       model1,
       7,
@@ -91,7 +91,7 @@ test_that("test-explainPAN", {
   )
   # not list
   expect_error(
-    explainer <- explain_PAN(
+    explainer <- explain_pan(
       processed$test_y,
       model1,
       "classifier",
@@ -104,7 +104,7 @@ test_that("test-explainPAN", {
   )
   # not matrix
   expect_error(
-    explainer <- explain_PAN(
+    explainer <- explain_pan(
       processed$test_y,
       model1,
       "classifier",
@@ -117,7 +117,7 @@ test_that("test-explainPAN", {
   )
   # not equal rows
   expect_error(
-    explainer <- explain_PAN(
+    explainer <- explain_pan(
       processed$test_y,
       model1,
       "classifier",
@@ -130,7 +130,7 @@ test_that("test-explainPAN", {
   )
   # not integer
   expect_error(
-    explainer <- explain_PAN(
+    explainer <- explain_pan(
       processed$test_y,
       model1,
       "classifier",
@@ -143,7 +143,7 @@ test_that("test-explainPAN", {
   )
   # not dev type
   expect_error(
-    explainer <- explain_PAN(
+    explainer <- explain_pan(
       processed$test_y,
       model1,
       "classifier",
@@ -156,7 +156,7 @@ test_that("test-explainPAN", {
   )
   # not logical
   expect_error(
-      explainer <- explain_PAN(
+      explainer <- explain_pan(
       processed$test_y,
       model1,
       "classifier",

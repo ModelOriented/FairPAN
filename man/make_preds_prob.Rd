@@ -25,10 +25,10 @@ Makes probabilistic predictions for neural network with classification task.
 dev       <-  "cpu"
 
 # presaved torch model
-model1    <- torch_load(system.file("extdata","preclf",package="FairPAN"))
+model1    <- torch_load(system.file("extdata","preclf",package="fairpan"))
 
 # presaved output of preprocess function
-processed <- torch_load(system.file("extdata","processed",package="FairPAN"))
+processed <- torch_load(system.file("extdata","processed",package="fairpan"))
 
 dsl       <- dataset_loader(processed$train_x, processed$train_y,
              processed$test_x,processed$test_y, batch_size=5, dev=dev)
