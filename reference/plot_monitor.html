@@ -150,7 +150,8 @@ To use this, the user has to set monitor on during the fair_train process.</p>
   STP <span class='op'>=</span> <span class='cn'>NULL</span>,
   adversary_acc <span class='op'>=</span> <span class='cn'>NULL</span>,
   adversary_losses <span class='op'>=</span> <span class='cn'>NULL</span>,
-  classifier_acc <span class='op'>=</span> <span class='cn'>NULL</span>
+  classifier_acc <span class='op'>=</span> <span class='cn'>NULL</span>,
+  patchwork <span class='op'>=</span> <span class='cn'>TRUE</span>
 <span class='op'>)</span></pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
@@ -173,6 +174,11 @@ for each epoch</p></td>
       <th>classifier_acc</th>
       <td><p>double, vector of adversaries accuracy</p></td>
     </tr>
+    <tr>
+      <th>patchwork</th>
+      <td><p>logical, if TRUE it plots all 4 plots into 2x2 matrix, with FALSE
+plots every plot singularly</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -182,11 +188,7 @@ for each epoch</p></td>
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
 <span class='co'># presaved monitoring data</span>
-<span class='va'>monitor2</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"monitoring2"</span>,package<span class='op'>=</span><span class='st'>"fairpan"</span><span class='op'>)</span><span class='op'>)</span>
 
-<span class='fu'>plot_monitor</span><span class='op'>(</span><span class='va'>monitor2</span><span class='op'>$</span><span class='va'>STP</span> ,<span class='va'>monitor2</span><span class='op'>$</span><span class='va'>adversary_acc</span>, <span class='va'>monitor2</span><span class='op'>$</span><span class='va'>classifier_acc</span>,
-             <span class='va'>monitor2</span><span class='op'>$</span><span class='va'>adversary_losses</span><span class='op'>)</span>
-</div><div class='img'><img src='plot_monitor-1.png' alt='' width='700' height='433' /></div><div class='img'><img src='plot_monitor-2.png' alt='' width='700' height='433' /></div><div class='img'><img src='plot_monitor-3.png' alt='' width='700' height='433' /></div><div class='img'><img src='plot_monitor-4.png' alt='' width='700' height='433' /></div><div class='input'>
 </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
