@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Pretrains the neural network — pretrain_net • FairPAN</title>
+<title>Pretrains the neural network — pretrain_net • fairpan</title>
 
 
 <!-- jquery -->
@@ -89,7 +89,7 @@ which is useful for monitoring the learning process and making adjustments." />
       </button>
 
       <div class="navbar-brand-container">
-        <a class="navbar-brand" href="../index.html">FairPAN</a>
+        <a class="navbar-brand" href="../index.html">fairpan</a>
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy">DrWhy.AI</a>
            developed by the <a href="https://mi2.mini.pw.edu.pl/">MI^2 DataLab</a> </span>
@@ -214,12 +214,12 @@ some useful info to adjust parameters and training process)</p></td>
 <span class='va'>dev</span> <span class='op'>&lt;-</span> <span class='st'>"cpu"</span>
 
 <span class='co'># presaved output of preprocess function</span>
-<span class='va'>processed</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"processed"</span>,package<span class='op'>=</span><span class='st'>"FairPAN"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>processed</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"processed"</span>,package<span class='op'>=</span><span class='st'>"fairpan"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>dsl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='dataset_loader.html'>dataset_loader</a></span><span class='op'>(</span><span class='va'>processed</span><span class='op'>$</span><span class='va'>train_x</span>, <span class='va'>processed</span><span class='op'>$</span><span class='va'>train_y</span>, <span class='va'>processed</span><span class='op'>$</span><span class='va'>test_x</span>,
                       <span class='va'>processed</span><span class='op'>$</span><span class='va'>test_y</span>, batch_size<span class='op'>=</span><span class='fl'>5</span>, dev<span class='op'>=</span><span class='va'>dev</span><span class='op'>)</span>
 
 <span class='co'># presaved torch model</span>
-<span class='va'>model</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"clf1"</span>,package<span class='op'>=</span><span class='st'>"FairPAN"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>model</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"clf1"</span>,package<span class='op'>=</span><span class='st'>"fairpan"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='fu'>pretrain_net</span><span class='op'>(</span>
   n_epochs <span class='op'>=</span> <span class='fl'>1</span>,
   model <span class='op'>=</span> <span class='va'>model</span>,

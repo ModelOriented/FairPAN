@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Trains fairly the PAN model — fair_train • FairPAN</title>
+<title>Trains fairly the PAN model — fair_train • fairpan</title>
 
 
 <!-- jquery -->
@@ -88,7 +88,7 @@ classifier on a single mini batch. The result is a fairer classifier." />
       </button>
 
       <div class="navbar-brand-container">
-        <a class="navbar-brand" href="../index.html">FairPAN</a>
+        <a class="navbar-brand" href="../index.html">fairpan</a>
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy">DrWhy.AI</a>
            developed by the <a href="https://mi2.mini.pw.edu.pl/">MI^2 DataLab</a> </span>
@@ -254,12 +254,12 @@ deeply understand this process you can read:
     <pre class="examples"><div class='input'><span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>dev</span> <span class='op'>&lt;-</span> <span class='st'>"cpu"</span>
 <span class='co'># presaved torch models from pretrain phase</span>
-<span class='va'>model1</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"preclf"</span>,package<span class='op'>=</span><span class='st'>"FairPAN"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>model11</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"preadv"</span>,package<span class='op'>=</span><span class='st'>"FairPAN"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>model1</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"preclf"</span>,package<span class='op'>=</span><span class='st'>"fairpan"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>model11</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"preadv"</span>,package<span class='op'>=</span><span class='st'>"fairpan"</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># presaved optimizers dictionaries from pretrain phase</span>
-<span class='va'>model1_optimizer_dict</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"preclf_optimizer"</span>,package<span class='op'>=</span><span class='st'>"FairPAN"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>model11_optimizer_dict</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"preadv_optimizer"</span>,package<span class='op'>=</span><span class='st'>"FairPAN"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>model1_optimizer_dict</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"preclf_optimizer"</span>,package<span class='op'>=</span><span class='st'>"fairpan"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>model11_optimizer_dict</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"preadv_optimizer"</span>,package<span class='op'>=</span><span class='st'>"fairpan"</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='co'># Recreating optimizers</span>
 <span class='va'>model1_optimizer</span> <span class='op'>&lt;-</span> <span class='fu'>optim_adam</span><span class='op'>(</span><span class='va'>model1</span><span class='op'>$</span><span class='va'>parameters</span>, lr <span class='op'>=</span> <span class='fl'>0.001</span><span class='op'>)</span>
@@ -270,7 +270,7 @@ deeply understand this process you can read:
 <span class='va'>model11_optimizer</span><span class='op'>$</span><span class='fu'>load_state_dict</span><span class='op'>(</span><span class='va'>model11_optimizer_dict</span><span class='op'>)</span>
 
 <span class='co'># presaved output of `preprocess` function</span>
-<span class='va'>processed</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"processed"</span>,package<span class='op'>=</span><span class='st'>"FairPAN"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>processed</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"processed"</span>,package<span class='op'>=</span><span class='st'>"fairpan"</span><span class='op'>)</span><span class='op'>)</span>
 
 <span class='va'>dsl</span> <span class='op'>&lt;-</span> <span class='fu'><a href='dataset_loader.html'>dataset_loader</a></span><span class='op'>(</span><span class='va'>processed</span><span class='op'>$</span><span class='va'>train_x</span>, <span class='va'>processed</span><span class='op'>$</span><span class='va'>train_y</span>, <span class='va'>processed</span><span class='op'>$</span><span class='va'>test_x</span>,
                       <span class='va'>processed</span><span class='op'>$</span><span class='va'>test_y</span>, batch_size<span class='op'>=</span><span class='fl'>5</span>, dev<span class='op'>=</span><span class='va'>dev</span><span class='op'>)</span>

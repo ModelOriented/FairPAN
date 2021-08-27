@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Pretrains both classifier and adversarial — pretrain • FairPAN</title>
+<title>Pretrains both classifier and adversarial — pretrain • fairpan</title>
 
 
 <!-- jquery -->
@@ -91,7 +91,7 @@ in create_model documentation." />
       </button>
 
       <div class="navbar-brand-container">
-        <a class="navbar-brand" href="../index.html">FairPAN</a>
+        <a class="navbar-brand" href="../index.html">fairpan</a>
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy">DrWhy.AI</a>
            developed by the <a href="https://mi2.mini.pw.edu.pl/">MI^2 DataLab</a> </span>
@@ -346,8 +346,8 @@ neural networks (net, nn_module).</p>
 <span class='op'>)</span>
 
 <span class='co'># presaved models and states of the optimizers</span>
-<span class='va'>clf</span>                 <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"clf2"</span>,package<span class='op'>=</span><span class='st'>"FairPAN"</span><span class='op'>)</span><span class='op'>)</span>
-<span class='va'>clf_optimizer_state</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"clf_optimizer2"</span>,package<span class='op'>=</span><span class='st'>"FairPAN"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>clf</span>                 <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"clf2"</span>,package<span class='op'>=</span><span class='st'>"fairpan"</span><span class='op'>)</span><span class='op'>)</span>
+<span class='va'>clf_optimizer_state</span> <span class='op'>&lt;-</span> <span class='fu'>torch_load</span><span class='op'>(</span><span class='fu'><a href='https://rdrr.io/r/base/system.file.html'>system.file</a></span><span class='op'>(</span><span class='st'>"extdata"</span>,<span class='st'>"clf_optimizer2"</span>,package<span class='op'>=</span><span class='st'>"fairpan"</span><span class='op'>)</span><span class='op'>)</span>
 <span class='va'>clf_optimizer</span>       <span class='op'>&lt;-</span> <span class='fu'>optim_adam</span><span class='op'>(</span><span class='va'>clf</span><span class='op'>$</span><span class='va'>parameters</span>, lr <span class='op'>=</span> <span class='fl'>0.001</span><span class='op'>)</span>
 <span class='va'>acc2</span>                <span class='op'>&lt;-</span> <span class='fu'><a href='eval_accuracy.html'>eval_accuracy</a></span><span class='op'>(</span><span class='va'>clf</span>, <span class='va'>dsl</span><span class='op'>$</span><span class='va'>test_ds</span>, <span class='va'>dev</span><span class='op'>)</span>
 <span class='va'>clf_optimizer</span><span class='op'>$</span><span class='fu'>load_state_dict</span><span class='op'>(</span><span class='va'>clf_optimizer_state</span><span class='op'>)</span>

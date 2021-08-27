@@ -5,7 +5,7 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>FairPAN Tutorial • FairPAN</title>
+<title>FairPAN Tutorial • fairpan</title>
 <!-- jquery --><script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.1/jquery.min.js" integrity="sha256-CSXorXvZcTkaix6Yvo6HppcZGetbYMGWSFlBw8HfCJo=" crossorigin="anonymous"></script><!-- Bootstrap --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/css/bootstrap.min.css" integrity="sha256-bZLfwXAP04zRMK2BjiO8iu9pf4FbLqX6zitd+tIvLhE=" crossorigin="anonymous">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.4.1/js/bootstrap.min.js" integrity="sha256-nuL8/2cJ5NDSSwnKD8VqreErSWHtnEP9E7AySL+1ev4=" crossorigin="anonymous"></script><!-- bootstrap-toc --><link rel="stylesheet" href="../bootstrap-toc.css">
 <script src="../bootstrap-toc.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
@@ -14,7 +14,7 @@
 <link href="../dalexverse-2.css" rel="stylesheet">
 <!-- pkgdown --><link href="../pkgdown.css" rel="stylesheet">
 <script src="../pkgdown.js"></script><meta property="og:title" content="FairPAN Tutorial">
-<meta property="og:description" content="FairPAN">
+<meta property="og:description" content="fairpan">
 <meta name="robots" content="noindex">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
@@ -40,7 +40,7 @@
       </button>
 
       <div class="navbar-brand-container">
-        <a class="navbar-brand" href="../index.html">FairPAN</a>
+        <a class="navbar-brand" href="../index.html">fairpan</a>
         <div class="info">
           <span class="partof">part of the <a href="https://github.com/ModelOriented/DrWhy">DrWhy.AI</a>
            developed by the <a href="https://mi2.mini.pw.edu.pl/">MI^2 DataLab</a> </span>
@@ -140,7 +140,7 @@
 <a href="#data" class="anchor"></a>Data</h2>
 <p>The dataset used in our tutorial is called adult. It contains 15 columns with both numerical and categorical data about citizens of USA. Our target here is a <code>salary</code> column. As sensitive variables we can perceive <code>sex</code> and <code>race</code> however we will focus only on <code>sex</code>.</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">FairPAN</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">fairpan</span><span class="op">)</span></code></pre></div>
 <pre><code>## Loading required package: torch</code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://fairmodels.drwhy.ai/">fairmodels</a></span><span class="op">)</span>
@@ -424,7 +424,7 @@
 ## Preadversary at epoch 10: training loss: 0.677, validation: 0.685, accuracy: 0.644</code></pre>
 <p>In the end we want to create an explainer for our classification model, but we will say more about it later.</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">exp_clf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/explain_PAN.html">explain_PAN</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">test_y</span>,                          <span class="co"># test target</span>
+<code class="sourceCode R"><span class="va">exp_clf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/explain_pan.html">explain_pan</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">test_y</span>,                          <span class="co"># test target</span>
                        model <span class="op">=</span> <span class="va">models</span><span class="op">$</span><span class="va">clf_model</span>,                 <span class="co"># classifier model</span>
                        label <span class="op">=</span> <span class="st">"Classifier"</span>,                     <span class="co"># classifiers name</span>
                        original_data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data_test</span>,           <span class="co"># original data for test</span>
@@ -556,9 +556,9 @@
              adversary_losses <span class="op">=</span> <span class="va">monitor</span><span class="op">$</span><span class="va">adversary_losses</span>,        <span class="co"># monitor for adversaries loss</span>
              classifier_acc <span class="op">=</span> <span class="va">monitor</span><span class="op">$</span><span class="va">classifier_acc</span><span class="op">)</span>            <span class="co"># monitor for classifiers accuracy</span></code></pre></div>
 <p><img src="Tutorial_files/figure-html/plot_monitor-1.png" width="700"><img src="Tutorial_files/figure-html/plot_monitor-2.png" width="700"><img src="Tutorial_files/figure-html/plot_monitor-3.png" width="700"><img src="Tutorial_files/figure-html/plot_monitor-4.png" width="700"></p>
-<p>As fairness is closely connected with XAI, we also propose an option to create an explainer for our neural network models with <code>explain_PAN</code> which is <code><a href="https://dalex.drwhy.ai/reference/explain.html">DALEX::explain</a></code> function with proper adjustments for neural network models.</p>
+<p>As fairness is closely connected with XAI, we also propose an option to create an explainer for our neural network models with <code>explain_pan</code> which is <code><a href="https://dalex.drwhy.ai/reference/explain.html">DALEX::explain</a></code> function with proper adjustments for neural network models.</p>
 <div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">exp_PAN</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/explain_PAN.html">explain_PAN</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">test_y</span>,                          <span class="co"># test target</span>
+<code class="sourceCode R"><span class="va">exp_PAN</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/explain_pan.html">explain_pan</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">test_y</span>,                          <span class="co"># test target</span>
                        model <span class="op">=</span> <span class="va">models</span><span class="op">$</span><span class="va">clf_model</span>,                 <span class="co"># classifier model</span>
                        label <span class="op">=</span> <span class="st">"PAN"</span>,                            <span class="co"># classifiers name</span>
                        original_data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data_test</span>,           <span class="co"># original data for test</span>
@@ -579,7 +579,7 @@
 ##   -&gt; residual function :  difference between y and yhat ( [33m default [39m )
 ##   -&gt; residuals         :  numerical, min =  -0.9854026 , mean =  0.06694311 , max =  1  
 ##  [32m A new explainer has been created! [39m</code></pre>
-<p>All functions that work on DALEX explainer object also applies to our <code>explain_PAN</code>, but probably two most interesting ones are <code>model_performance</code> and <code><a href="https://rdrr.io/pkg/fairmodels/man/fairness_check.html">fairmodels::fairness_check</a></code>.</p>
+<p>All functions that work on DALEX explainer object also applies to our <code>explain_pan</code>, but probably two most interesting ones are <code>model_performance</code> and <code><a href="https://rdrr.io/pkg/fairmodels/man/fairness_check.html">fairmodels::fairness_check</a></code>.</p>
 <p>The first one proves useful when we want to see the performance of the model. We’d like to show you this functionality by comparing performance of PAN and ordinary classification model. As we can see below it is true that performance of PAN slightly diminished (but it’s only 1.2% on accuracy!), but the next plot will show us why it is okay for us.</p>
 <div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">DALEX</span><span class="fu">::</span><span class="fu"><a href="https://dalex.drwhy.ai/reference/model_performance.html">model_performance</a></span><span class="op">(</span><span class="va">exp_PAN</span><span class="op">)</span></code></pre></div>
