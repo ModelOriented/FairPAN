@@ -44,11 +44,11 @@ The diagram above represents the architecture of our model and is strongly inspi
 The crucial part of this model is the metric we use to engage the two models into a zero-sum game. This is captured by the following objective function: 
 
 
-![](./man/images/equation.png){width=50%}
+![](./man/images/equation.png)
 
 So, it learns to minimize its prediction losses while maximizing that of the adversarial (due to lambda being positive and minimizing a negated loss is the same as maximizing it). The objective during the game is simpler for the adversarial: predict sex based on the income level predictions of the classifier. This is captured in the following objective function:
 
-![](./man/images/equation2.png){width=30%}
+![](./man/images/equation2.png)
 
 The adversarial does not care about the prediction accuracy of the classifier. It is only concerned with minimizing its prediction losses.
 Firstly we pretrain classifier and adversarial. Later we begin the proper PAN training with both networks: we train the adversarial, provide its loss to the classifier, and after that, we train the classifier. This method shall lead us to fair predictions of the FairPAN model.
@@ -77,7 +77,7 @@ Achieve fairness and save performance!
 
 ```
 
-library(FairPAN)
+library(fairpan)
 
 adult <- fairmodels::adult
 

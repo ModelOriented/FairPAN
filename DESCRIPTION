@@ -24,7 +24,8 @@ Imports:
     magrittr (>= 2.0.1),
     ggplot2  (>= 3.3.0),
     DALEX  (>= 2.3.0),
-    Rcpp
+    Rcpp,
+    gridExtra
 Language: en-US
 RoxygenNote: 7.1.1
 Suggests: 
