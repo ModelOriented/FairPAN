@@ -40,7 +40,7 @@ FairPANs are the solution to bring fairness into neural networks. We mimic the G
 
 ![](../man/images/architecture_PAN.png)
 
-The diagram above represents the architecture of our model and is strongly inspired by aformentioned blogs
+The diagram above represents the architecture of our model and is strongly inspired by aforementioned blogs
 
 ### Custom Loss Function
 
@@ -74,9 +74,14 @@ both numerical and categorical data about citizens of USA. Our target here is
 a `salary` column. As sensitive variables we can perceive `sex` and `race`
 however we will focus only on `sex`.
 
-```{r eval = TRUE, import-adult}
+
+```{r eval = TRUE, results='hide', imports}
 library(FairPAN)
-adult <- fairmodels::adult
+library(fairmodels)
+data("adult")
+```
+
+```{r eval = TRUE, head-adult}
 head(adult)
 ```
 
@@ -206,7 +211,7 @@ models <- pretrain(clf_model = NULL,                       # classifier model
                    dimension_adv = 1,                      # dimension for adversarial (always set 1)
                    learning_rate_clf = 0.001,              # learning rate of classifier
                    learning_rate_adv = 0.001,              # learning rate of adversarial
-                   n_ep_preclf = 10,                        # number of epochs for classifier pretrain
+                   n_ep_preclf = 10,                       # number of epochs for classifier pretrain
                    n_ep_preadv = 10,                       # number of epochs for adversarial pretrain
                    
                    dsl = dsl,                              # dataset_loader
@@ -288,8 +293,8 @@ will say more about it later.
 exp_clf <- explain_PAN(y = data$test_y,                          # test target
                        model = models$clf_model,                 # classifier model
                        label = "Classifier",                     # classifiers name
-                       data = data$data_test,                    # original data for test
-                       data_scaled = data$data_scaled_test,      # scaled numeric data for test
+                       original_data = data$data_test,           # original data for test
+                       data = data$data_scaled_test,             # scaled numeric data for test
                        batch_size = 5,                           # batch_size used in dataset_loader
                        dev = dev,                                # computational device
                        verbose = TRUE                            # if TRUE prints monitor info
@@ -366,8 +371,8 @@ explainer for our neural network models with `explain_PAN` which is
 exp_PAN <- explain_PAN(y = data$test_y,                          # test target
                        model = models$clf_model,                 # classifier model
                        label = "PAN",                            # classifiers name
-                       data = data$data_test,                    # original data for test
-                       data_scaled = data$data_scaled_test,      # scaled numeric data for test
+                       original_data = data$data_test,           # original data for test
+                       data = data$data_scaled_test,             # scaled numeric data for test
                        batch_size = 5,                           # batch_size used in dataset_loader
                        dev = dev,                                # computational device
                        verbose = TRUE                            # if TRUE prints additional info

@@ -7,8 +7,8 @@
 #' @param y numerical target of classification task
 #' @param model net, nn_module, the model we want to explain
 #' @param label character providing the label (name) to first model
-#' @param data numerical list (table) of predictors
-#' @param data_scaled scaled matrix of numerical values representing
+#' @param original_data numerical list (table) of predictors
+#' @param data scaled matrix of numerical values representing
 #' predictors
 #' @param batch_size integer indicating a batch size used in dataloader.
 #' @param dev device used to calculations (cpu or gpu)
@@ -63,8 +63,8 @@
 explain_PAN <- function(y,
                         model,
                         label,
+                        original_data,
                         data,
-                        data_scaled,
                         batch_size,
                         dev,
                         verbose = TRUE) {
@@ -75,12 +75,12 @@ explain_PAN <- function(y,
     stop("models must be neural networks models")
   if (typeof(label) != 'character')
     stop("label must be a character")
-  if (!is.list(data))
-    stop("data must be a list")
-  if (!is.matrix(data_scaled))
-    stop("data_scaled must be a matrix")
-  if (nrow(data_scaled) != nrow(data))
-    stop("data_scaled and data must have equal number of rows")
+  if (!is.list(original_data))
+    stop("original_data must be a list")
+  if (!is.matrix(data))
+    stop("data must be a matrix")
+  if (nrow(data) != nrow(original_data))
+    stop("data and original_data must have equal number of rows")
   if (batch_size != as.integer(batch_size / 1))
     stop("batch size must be an integer")
   if (!dev %in% c("gpu", "cpu"))
@@ -91,9 +91,9 @@ explain_PAN <- function(y,
   y_numeric <- as.numeric(y) - 1
   custom_predict <- function(mmodel, newdata) {
     pp<-make_preds_prob(model = mmodel,
-                        test_ds = dataset_loader(data_scaled,
+                        test_ds = dataset_loader(data,
                                                  y,
-                                                 data_scaled,
+                                                 data,
                                                  y,
                                                  batch_size,
                                                  dev)$test_ds, dev)
@@ -102,7 +102,7 @@ explain_PAN <- function(y,
 
 
   aps_model_exp <- DALEX::explain(label = label, model,
-                                  data = data, y = y_numeric,
+                                  data = original_data, y = y_numeric,
                                   predict_function = custom_predict,
                                   type = 'classification', verbose = verbose)
 

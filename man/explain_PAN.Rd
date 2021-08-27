@@ -8,8 +8,8 @@ explain_PAN(
   y,
   model,
   label,
+  original_data,
   data,
-  data_scaled,
   batch_size,
   dev,
   verbose = TRUE
@@ -22,9 +22,9 @@ explain_PAN(
 
 \item{label}{character providing the label (name) to first model}
 
-\item{data}{numerical list (table) of predictors}
+\item{original_data}{numerical list (table) of predictors}
 
-\item{data_scaled}{scaled matrix of numerical values representing
+\item{data}{scaled matrix of numerical values representing
 predictors}
 
 \item{batch_size}{integer indicating a batch size used in dataloader.}

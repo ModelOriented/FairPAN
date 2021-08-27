@@ -4,3 +4,27 @@ template:
   params:
     ganalytics: UA-5650686-14
     noindex: true
+
+reference:
+  - title: Data preparation
+    desc: Functions that prepare data for the training process.
+    contents:
+    - dataset_loader
+    - prepare_to_adv
+    - preprocess
+  - title: Training workflow
+    desc: Functions that are directly involved in training process.
+    contents:
+    - fair_train
+    - pretrain
+    - create_model
+    - pretrain_net
+  - title: Outcome preparation
+    desc: Functions that prepare the outcomes, measures performance and plot it.
+    contents:
+    - make_preds
+    - make_preds_prob
+    - calc_STP
+    - eval_accuracy
+    - explain_PAN
+    - plot_monitor
