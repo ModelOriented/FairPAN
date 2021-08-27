@@ -144,8 +144,8 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-data-preparation" class="hasAnchor"><a href="#section-data-preparation" class="anchor"></a>Data preparation</h2>
+          <p class="section-desc"><p>Functions that prepare data for the training process.</p></p>
         </th>
       </tr>
       
@@ -156,9 +156,46 @@
       <tr>
         
         <td>
-          <p><code><a href="calc_STP.html">calc_STP()</a></code> </p>
+          <p><code><a href="dataset_loader.html">dataset_loader()</a></code> </p>
         </td>
-        <td><p>Calculates STP ratio</p></td>
+        <td><p>Creates datasets and dataloaders</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="prepare_to_adv.html">prepare_to_adv()</a></code> </p>
+        </td>
+        <td><p>Prepares data for adversarial model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="preprocess.html">preprocess()</a></code> </p>
+        </td>
+        <td><p>Preprocesses data for training</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-training-workflow" class="hasAnchor"><a href="#section-training-workflow" class="anchor"></a>Training workflow</h2>
+          <p class="section-desc"><p>Functions that are directly involved in training process.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="fair_train.html">fair_train()</a></code> </p>
+        </td>
+        <td><p>Trains fairly the PAN model</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pretrain.html">pretrain()</a></code> </p>
+        </td>
+        <td><p>Pretrains both classifier and adversarial</p></td>
       </tr><tr>
         
         <td>
@@ -168,9 +205,40 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="dataset_loader.html">dataset_loader()</a></code> </p>
+          <p><code><a href="pretrain_net.html">pretrain_net()</a></code> </p>
         </td>
-        <td><p>Creates datasets and dataloaders</p></td>
+        <td><p>Pretrains the neural network</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-outcome-preparation" class="hasAnchor"><a href="#section-outcome-preparation" class="anchor"></a>Outcome preparation</h2>
+          <p class="section-desc"><p>Functions that prepare the outcomes, measures performance and plot it.</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="make_preds.html">make_preds()</a></code> </p>
+        </td>
+        <td><p>Makes binary predictions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="make_preds_prob.html">make_preds_prob()</a></code> </p>
+        </td>
+        <td><p>Makes probabilistic predictions</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="calc_STP.html">calc_STP()</a></code> </p>
+        </td>
+        <td><p>Calculates STP ratio</p></td>
       </tr><tr>
         
         <td>
@@ -186,63 +254,9 @@
       </tr><tr>
         
         <td>
-          <p><code><a href="fair_train.html">fair_train()</a></code> </p>
-        </td>
-        <td><p>Trains fairly the PAN model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_preds.html">make_preds()</a></code> </p>
-        </td>
-        <td><p>Makes binary predictions</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="make_preds_prob.html">make_preds_prob()</a></code> </p>
-        </td>
-        <td><p>Makes probabilistic predictions</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="plot_monitor.html">plot_monitor()</a></code> </p>
         </td>
         <td><p>Plots monitored data</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="prepare_to_adv.html">prepare_to_adv()</a></code> </p>
-        </td>
-        <td><p>Prepares data for adversarial model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="preprocess.html">preprocess()</a></code> </p>
-        </td>
-        <td><p>Preprocesses data for training</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pretrain.html">pretrain()</a></code> </p>
-        </td>
-        <td><p>Pretrains both classifier and adversarial</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="pretrain_net.html">pretrain_net()</a></code> </p>
-        </td>
-        <td><p>Pretrains the neural network</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="train_PAN.html">train_PAN()</a></code> </p>
-        </td>
-        <td><p>Trains PAN model</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="verbose_cat.html">verbose_cat()</a></code> </p>
-        </td>
-        <td><p>Custom print function</p></td>
       </tr>
     </tbody>
     </table>

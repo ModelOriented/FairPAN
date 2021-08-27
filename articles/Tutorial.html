@@ -118,7 +118,7 @@
 <a href="#fairpan-1" class="anchor"></a>FairPAN</h3>
 <p>FairPANs are the solution to bring fairness into neural networks. We mimic the GANs by subsetting generator with classifier (predictor) and adversarial has to predict the sensitive value (such as sex, race, etc) from the output of the predictor. This process eventually leads the classifier to make predictions with indistinguishable sensitive values. The idea comes from blogs: <a href="https://godatadriven.com/blog/towards-fairness-in-ml-with-adversarial-networks/">Towards fairness in ML with adversarial networks, Stijn Tonk</a> and <a href="https://godatadriven.com/blog/fairness-in-machine-learning-with-pytorch/">Fairness in Machine Learning with PyTorch, Henk Griffoen</a> however, our implementation in R offers slightly different solutions. And the exact idea behind using GANs for Fairness is described in <a href="https://stanford.edu/~cpiech/bio/papers/fairnessAdversary.pdf">Achieving Fairness through Adversarial Learning: an Application to Recidivism Prediction, Christina Wadsworth, Francesca Vera, Chris Piech</a>.</p>
 <p><img src="../man/images/architecture_PAN.png"></p>
-<p>The diagram above represents the architecture of our model and is strongly inspired by aformentioned blogs</p>
+<p>The diagram above represents the architecture of our model and is strongly inspired by aforementioned blogs</p>
 </div>
 <div id="custom-loss-function" class="section level3">
 <h3 class="hasAnchor">
@@ -143,8 +143,10 @@
 <code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">FairPAN</span><span class="op">)</span></code></pre></div>
 <pre><code>## Loading required package: torch</code></pre>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span class="va">adult</span> <span class="op">&lt;-</span> <span class="fu">fairmodels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/fairmodels/man/adult.html">adult</a></span>
-<span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">adult</span><span class="op">)</span></code></pre></div>
+<code class="sourceCode R"><span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va"><a href="https://fairmodels.drwhy.ai/">fairmodels</a></span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/utils/data.html">data</a></span><span class="op">(</span><span class="st">"adult"</span><span class="op">)</span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">adult</span><span class="op">)</span></code></pre></div>
 <pre><code>##   salary age        workclass fnlwgt education education_num     marital_status
 ## 1  &lt;=50K  39        State-gov  77516 Bachelors            13      Never-married
 ## 2  &lt;=50K  50 Self-emp-not-inc  83311 Bachelors            13 Married-civ-spouse
@@ -177,7 +179,7 @@
 <p>At the beginning we have to preprocess our dataset so we can train a neural network on it and divide it into train and test subsets. One can do it on your own, however we will use built in function called preprocess which will create 16 objects which are needed for other features.</p>
 <p>To use this function we have to provide a dataset with categorical columns provided as factors. Then we define that <code>salary</code> is our target and <code>sex</code> is a sensitive variable with privileged level <code>Male</code> and discriminated <code>Female</code>. As we noticed before, <code>race</code> could also be considered as a sensitive variable so we want to remove it from our learning dataset too. In the end we sample a small part of the dataset for our process to save our time in this example and define proportions of train, test and validation subsets. We also set seed for reproduction.</p>
 <p>Inside, the function encodes the categorical columns as integers based on their factor levels. After that all variables are rescaled to ensure better learning process. Moreover to ensure that adversarial model works properly, we also balance a dataset to have the same number of privileged and discriminated records.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/preprocess.html">preprocess</a></span><span class="op">(</span> data <span class="op">=</span> <span class="va">adult</span>,               <span class="co"># dataset </span>
                     target_name <span class="op">=</span> <span class="st">"salary"</span>,     <span class="co"># name of target column</span>
                     sensitive_name <span class="op">=</span> <span class="st">"sex"</span>,     <span class="co"># name of sensitive column</span>
@@ -199,13 +201,13 @@
 ##            [,8]       [,9]      [,10]      [,11]     [,12]
 ## [1,] -1.0684260 -0.1091987 -0.2235767 0.48039857 0.2780602
 ## [2,] -0.4861406 -0.1091987 -0.2235767 0.06808044 0.2780602</code></pre>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">train_y</span>,<span class="fl">2</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 1 1</code></pre>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">sensitive_train</span>,<span class="fl">2</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 2 2</code></pre>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">test_x</span>,<span class="fl">2</span><span class="op">)</span></code></pre></div>
 <pre><code>##            [,1]      [,2]       [,3]      [,4]       [,5]       [,6]       [,7]
 ## [1,] -1.3383024 -1.110784 -0.1091827 1.1762624 -0.0216091  0.7917481  0.4460018
@@ -213,13 +215,13 @@
 ##           [,8]       [,9]      [,10]      [,11]     [,12]
 ## [1,] 0.6784302 -0.1091987 -0.2235767 -0.3442377 0.2780602
 ## [2,] 1.8430009 -0.1091987 -0.2235767  0.8927167 0.2780602</code></pre>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">test_y</span>,<span class="fl">2</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 1 2</code></pre>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">sensitive_test</span>,<span class="fl">2</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] 1 1</code></pre>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">data_scaled_test</span>,<span class="fl">2</span><span class="op">)</span></code></pre></div>
 <pre><code>##            [,1]      [,2]       [,3]      [,4]       [,5]       [,6]       [,7]
 ## [1,] -1.3383024 -1.110784 -0.1091827 1.1762624 -0.0216091  0.7917481  0.4460018
@@ -227,7 +229,7 @@
 ##           [,8]       [,9]      [,10]      [,11]     [,12]
 ## [1,] 0.6784302 -0.1091987 -0.2235767 -0.3442377 0.2780602
 ## [2,] 1.8430009 -0.1091987 -0.2235767  0.8927167 0.2780602</code></pre>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">data_test</span>,<span class="fl">2</span><span class="op">)</span></code></pre></div>
 <pre><code>##       salary age workclass fnlwgt    education education_num     marital_status
 ## 23812  &lt;=50K  19 Local-gov 176831 Some-college            10      Never-married
@@ -238,13 +240,13 @@
 ##       hours_per_week native_country
 ## 23812             35  United-States
 ## 10859             50  United-States</code></pre>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/utils/head.html">head</a></span><span class="op">(</span><span class="va">data</span><span class="op">$</span><span class="va">protected_test</span>,<span class="fl">2</span><span class="op">)</span></code></pre></div>
 <pre><code>## [1] Female Female
 ## Levels: Female Male</code></pre>
 <p>We’ve decided to show the most important objects created by preprocess above.</p>
 <p>Our next step is setting a computational device <code>dev</code>, which might be GPU with CUDA or cpu if we don’t have CUDA installed. Even more importantly we create a dataset_loader object which stores data as tensor for our neural network in 4 objects. First two of them are torch <code>datasets</code> for storing all the tensors and the other two are torch <code>dataloaders</code> which store tensors in batches described by <code>batch_size</code>.</p>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">dev</span> <span class="op">&lt;-</span>  <span class="st">"cpu"</span>
 
 <span class="va">dsl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/dataset_loader.html">dataset_loader</a></span><span class="op">(</span>train_x <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">train_x</span>,
@@ -285,7 +287,7 @@
 <a href="#model-creation-and-pretrain" class="anchor"></a>Model creation and pretrain</h2>
 <p>Finally we are ready to create and pretrain both adversarial and classifier models. <code>FairPAN</code> provides multiple options in this case, because one can not only create and pretrain both models with our interface, but also provide their own neural network models (<code>clf_model</code> and <code>adv_model</code>). The classifier model can be also pretrained, but then <code>clf_optimizer</code> from that training must be provided and <code>trained</code> changed to TRUE.</p>
 <p>In our first example we will focus on pretraining both models created by the <code>pretrain</code> function. To do that you don’t have to provide first four variables, because they are set like that on default. One has to provide <code>data</code> in next four variables and then, the other two describe inner <code>dataset_loader</code> for adversarial network. Next block describes the structure of our models. Neural architecture is provided as a simple vector where, for example, c(32,16,8) describes a network with 3 layers with 32, 16 and 8 neurons. This layers are connected with <code>nn_linear</code> and during forward pass, inner layers have <code>nnf_relu</code> with <code>nnf_softmax</code> in the end. User can also define dimension for softmax, however we advice not to do so, because other approaches are not sufficiently tested. In the end one can also provide learning rates and numbers of epochs for both models. In the end we have to provide a dataset_loader with device and choose whether we want to monitor more metrics and print them out. As a result we will obtain pretrained neural network models (classifier and adversarial) and optimizers for those two models.</p>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pretrain.html">pretrain</a></span><span class="op">(</span>clf_model <span class="op">=</span> <span class="cn">NULL</span>,                       <span class="co"># classifier model</span>
                    adv_model <span class="op">=</span> <span class="cn">NULL</span>,                       <span class="co"># adversarial model</span>
                    clf_optimizer <span class="op">=</span> <span class="cn">NULL</span>,                   <span class="co"># classifiers optimizer</span>
@@ -307,7 +309,7 @@
                    dimension_adv <span class="op">=</span> <span class="fl">1</span>,                      <span class="co"># dimension for adversarial (always set 1)</span>
                    learning_rate_clf <span class="op">=</span> <span class="fl">0.001</span>,              <span class="co"># learning rate of classifier</span>
                    learning_rate_adv <span class="op">=</span> <span class="fl">0.001</span>,              <span class="co"># learning rate of adversarial</span>
-                   n_ep_preclf <span class="op">=</span> <span class="fl">10</span>,                        <span class="co"># number of epochs for classifier pretrain</span>
+                   n_ep_preclf <span class="op">=</span> <span class="fl">10</span>,                       <span class="co"># number of epochs for classifier pretrain</span>
                    n_ep_preadv <span class="op">=</span> <span class="fl">10</span>,                       <span class="co"># number of epochs for adversarial pretrain</span>
                    
                    dsl <span class="op">=</span> <span class="va">dsl</span>,                              <span class="co"># dataset_loader</span>
@@ -337,7 +339,7 @@
 ## Preadversary at epoch 10: training loss: 0.677, validation: 0.685, accuracy: 0.644</code></pre>
 <p>As we’ve mentioned before, we can also provide our own pretrained model to the <code>pretrain</code> function, just like in the example below. Note that in this particular case we create the same classifier as in the previous example and the only difference is that we do it outside the <code>pretrain</code> function. <code>create_model</code> and <code>pretrain_net</code> are the methods which we also use under the <code>pretrain</code>, but the user is also able to call them and their parameters are similar to those in the pretrain. <code>create_model</code> returns the neural network architecture, whereas <code>pretrain_net</code> proceeds with its training and returns losses and optimizer from the learning process.</p>
 <p>As you can see, in <code>pretrain</code> we provide <code>clf_model</code>,<code>clf_optimizer</code> and change <code>trained</code> to TRUE as stated before.</p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">clf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/create_model.html">create_model</a></span><span class="op">(</span>train_x <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">train_x</span>,                <span class="co"># train predictors</span>
                     train_y <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">train_y</span>,                <span class="co"># train target </span>
                     neurons <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">32</span>,<span class="fl">32</span>,<span class="fl">32</span><span class="op">)</span>,                 <span class="co"># models neural architecture</span>
@@ -365,7 +367,7 @@
 ## Preclassifier at epoch 8: training loss: 0.454, validation: 0.489, accuracy: 0.808, STPR: 0.397
 ## Preclassifier at epoch 9: training loss: 0.442, validation: 0.491, accuracy: 0.808, STPR: 0.397
 ## Preclassifier at epoch 10: training loss: 0.432, validation: 0.491, accuracy: 0.814, STPR: 0.415</code></pre>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/base/print.html">print</a></span><span class="op">(</span><span class="va">opt</span><span class="op">$</span><span class="va">optimizer</span><span class="op">)</span></code></pre></div>
 <pre><code>## &lt;optim_adam&gt;
 ##   Inherits from: &lt;torch_Optimizer&gt;
@@ -382,7 +384,7 @@
 ##     zero_grad: function () 
 ##   Private:
 ##     step_helper: function (closure, loop_fun)</code></pre>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">clf_optimizer</span> <span class="op">&lt;-</span> <span class="va">opt</span><span class="op">$</span><span class="va">optimizer</span>
     
 <span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pretrain.html">pretrain</a></span><span class="op">(</span>clf_model <span class="op">=</span> <span class="va">clf</span>,                        <span class="co"># classifier model</span>
@@ -421,12 +423,12 @@
 ## Preadversary at epoch 9: training loss: 0.678, validation: 0.685, accuracy: 0.654
 ## Preadversary at epoch 10: training loss: 0.677, validation: 0.685, accuracy: 0.644</code></pre>
 <p>In the end we want to create an explainer for our classification model, but we will say more about it later.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">exp_clf</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/explain_PAN.html">explain_PAN</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">test_y</span>,                          <span class="co"># test target</span>
                        model <span class="op">=</span> <span class="va">models</span><span class="op">$</span><span class="va">clf_model</span>,                 <span class="co"># classifier model</span>
                        label <span class="op">=</span> <span class="st">"Classifier"</span>,                     <span class="co"># classifiers name</span>
-                       data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data_test</span>,                    <span class="co"># original data for test</span>
-                       data_scaled <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data_scaled_test</span>,      <span class="co"># scaled numeric data for test</span>
+                       original_data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data_test</span>,           <span class="co"># original data for test</span>
+                       data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data_scaled_test</span>,             <span class="co"># scaled numeric data for test</span>
                        batch_size <span class="op">=</span> <span class="fl">5</span>,                           <span class="co"># batch_size used in dataset_loader</span>
                        dev <span class="op">=</span> <span class="va">dev</span>,                                <span class="co"># computational device</span>
                        verbose <span class="op">=</span> <span class="cn">TRUE</span>                            <span class="co"># if TRUE prints monitor info</span>
@@ -448,7 +450,7 @@
 <h2 class="hasAnchor">
 <a href="#fairtrain" class="anchor"></a>Fairtrain</h2>
 <p>Finally we’ve reached the most important part of this package which is the <code>fair_train</code> function. This function enables us to conduct a fair training which optimizes Statistical Parity Ratio, thus leading to similar distributions of privileged and discriminated groups. As a short reminder, this method is based on a mutual training of the classifier and adversarial, where classifier learns to deceive the adversarial, so in the end it cannot predict the correct label. As we use previous models we need to provide them with correct <code>optimizers</code>. Moreover in the loss function equation we see a <code>lambda</code> parameter which we also have to provide. The intuition behind it states that the bigger the <code>lambda</code> is the fairer the training is, but traditional performance, like accuracy worsens faster. At this point you should be familiar with rest of the parameters, however <code>monitor</code> here collects much more training data (STP ratio, adversary accuracy, adversary loss and classifier accuracy) which can be used to monitor the training process. On the other hand calculating this metrics takes lots of time so turning <code>monitor</code> off is good when you’re sure that your model works properly. This function returns NULL if <code>monitor</code> is off and aforementioned metrics if it is on.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">monitor</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/fair_train.html">fair_train</a></span><span class="op">(</span> n_ep_pan <span class="op">=</span> <span class="fl">17</span>,                           <span class="co"># number of epochs for pan training</span>
                        dsl <span class="op">=</span> <span class="va">dsl</span>,                               <span class="co"># dataset_loader</span>
                        
@@ -522,7 +524,7 @@
 ## PAN epoch 17 
 ## Classifier at epoch 17:training loss: -89.998, accuracy: 0.791
 ## Adversary at epoch 17: training loss: 89.763,accuracy: 0.496, STPR: 0.905</code></pre>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">monitor</span></code></pre></div>
 <pre><code>## $STP
 ##  [1] 0.4329325 0.4329325 0.4346505 0.4563830 0.4804031 0.4804031 0.4367301
@@ -548,19 +550,19 @@
 <h2 class="hasAnchor">
 <a href="#metrics-and-visualizations" class="anchor"></a>Metrics and Visualizations</h2>
 <p>After the training process we’d like to visualize the final outcome and the monitor of metrics throughout learning. To achieve that we have to use <code>monitor</code> in <code>fair_train</code> and apply <code>plot_monitor</code> function to it. This function is especially convenient in the process of parameters tuning and model adjustments, because one can easily check if the model learns properly.</p>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="../reference/plot_monitor.html">plot_monitor</a></span><span class="op">(</span>STP <span class="op">=</span> <span class="va">monitor</span><span class="op">$</span><span class="va">STP</span>,                                  <span class="co"># monitor for STP</span>
              adversary_acc <span class="op">=</span> <span class="va">monitor</span><span class="op">$</span><span class="va">adversary_acc</span>,              <span class="co"># monitor for adversaries accuracy</span>
              adversary_losses <span class="op">=</span> <span class="va">monitor</span><span class="op">$</span><span class="va">adversary_losses</span>,        <span class="co"># monitor for adversaries loss</span>
              classifier_acc <span class="op">=</span> <span class="va">monitor</span><span class="op">$</span><span class="va">classifier_acc</span><span class="op">)</span>            <span class="co"># monitor for classifiers accuracy</span></code></pre></div>
 <p><img src="Tutorial_files/figure-html/plot_monitor-1.png" width="700"><img src="Tutorial_files/figure-html/plot_monitor-2.png" width="700"><img src="Tutorial_files/figure-html/plot_monitor-3.png" width="700"><img src="Tutorial_files/figure-html/plot_monitor-4.png" width="700"></p>
 <p>As fairness is closely connected with XAI, we also propose an option to create an explainer for our neural network models with <code>explain_PAN</code> which is <code><a href="https://dalex.drwhy.ai/reference/explain.html">DALEX::explain</a></code> function with proper adjustments for neural network models.</p>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">exp_PAN</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/explain_PAN.html">explain_PAN</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">test_y</span>,                          <span class="co"># test target</span>
                        model <span class="op">=</span> <span class="va">models</span><span class="op">$</span><span class="va">clf_model</span>,                 <span class="co"># classifier model</span>
                        label <span class="op">=</span> <span class="st">"PAN"</span>,                            <span class="co"># classifiers name</span>
-                       data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data_test</span>,                    <span class="co"># original data for test</span>
-                       data_scaled <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data_scaled_test</span>,      <span class="co"># scaled numeric data for test</span>
+                       original_data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data_test</span>,           <span class="co"># original data for test</span>
+                       data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data_scaled_test</span>,             <span class="co"># scaled numeric data for test</span>
                        batch_size <span class="op">=</span> <span class="fl">5</span>,                           <span class="co"># batch_size used in dataset_loader</span>
                        dev <span class="op">=</span> <span class="va">dev</span>,                                <span class="co"># computational device</span>
                        verbose <span class="op">=</span> <span class="cn">TRUE</span>                            <span class="co"># if TRUE prints additional info</span>
@@ -579,7 +581,7 @@
 ##  [32m A new explainer has been created! [39m</code></pre>
 <p>All functions that work on DALEX explainer object also applies to our <code>explain_PAN</code>, but probably two most interesting ones are <code>model_performance</code> and <code><a href="https://rdrr.io/pkg/fairmodels/man/fairness_check.html">fairmodels::fairness_check</a></code>.</p>
 <p>The first one proves useful when we want to see the performance of the model. We’d like to show you this functionality by comparing performance of PAN and ordinary classification model. As we can see below it is true that performance of PAN slightly diminished (but it’s only 1.2% on accuracy!), but the next plot will show us why it is okay for us.</p>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">DALEX</span><span class="fu">::</span><span class="fu"><a href="https://dalex.drwhy.ai/reference/model_performance.html">model_performance</a></span><span class="op">(</span><span class="va">exp_PAN</span><span class="op">)</span></code></pre></div>
 <pre><code>## Measures for:  classification
 ## recall     : 0.3243243 
@@ -595,7 +597,7 @@
 ## -4.095541e-07 -3.830160e-08 -1.062288e-09  2.399297e-02  9.364332e-01 
 ##          100% 
 ##  1.000000e+00</code></pre>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">DALEX</span><span class="fu">::</span><span class="fu"><a href="https://dalex.drwhy.ai/reference/model_performance.html">model_performance</a></span><span class="op">(</span><span class="va">exp_clf</span><span class="op">)</span></code></pre></div>
 <pre><code>## Measures for:  classification
 ## recall     : 0.5135135 
@@ -612,7 +614,7 @@
 ##          100% 
 ##  9.999998e-01</code></pre>
 <p>Finally, with <code><a href="https://rdrr.io/pkg/fairmodels/man/fairness_check.html">fairmodels::fairness_check</a></code> used on explainers (<code>exp_PAN</code>, <code>exp_clf</code>) we can compare fairness metrics for both models. We can use this function on a single or many explainers, but we have to provide them after comma one by one and ensure that they have different labels. After creating fairness object (<code>fobject</code>) we can plot it with regular <code>plot</code> function.</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">fobject</span> <span class="op">&lt;-</span> <span class="fu">fairmodels</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/fairmodels/man/fairness_check.html">fairness_check</a></span><span class="op">(</span><span class="va">exp_PAN</span>,<span class="va">exp_clf</span>,        <span class="co"># explainers given one by one</span>
                             protected <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">protected_test</span>,  <span class="co"># protected column</span>
                             privileged <span class="op">=</span> <span class="st">"Male"</span>,              <span class="co"># privileged class from protected</span>
@@ -625,7 +627,7 @@
 ## -&gt; Checking explainers       : 2 in total ( [32m compatible [39m )
 ## -&gt; Metric calculation        : 12/12 metrics calculated for all models
 ## [32m Fairness object created succesfully [39m</code></pre>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fobject</span><span class="op">)</span></code></pre></div>
 <p><img src="Tutorial_files/figure-html/fairness_check-1.png" width="700"></p>
 <p>As we can see, Statistical Parity ratio dramatically increased and the model is almost fair according to this metric. On the other hand we see worsening of other metrics, like Equal Opportunity ratio, however it can be easily explained. During the fair_train process we make more TP (True Positives) and FP (False Positives) which directly changes the value of Equal opportunity ratio, so this sacrifice is unavoidable.</p>
