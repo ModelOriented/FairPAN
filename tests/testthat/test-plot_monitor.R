@@ -19,8 +19,8 @@ test_that("test-plot_monitor", {
 
   expect_s3_class(plot1, "gtable")
   expect_s3_class(plot2, "gtable")
-  expect_s3_class(plot3, "gtable")
-  expect_s3_class(plot4, "gtable")
+  expect_s3_class(plot3, "ggplot")
+  expect_s3_class(plot4, "ggplot")
 
   expect_error(
     plot_monitor(
