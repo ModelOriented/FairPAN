@@ -75,7 +75,9 @@ devtools::install_github("ModelOriented/FairPAN",build_vignettes = TRUE)
 
 Achieve fairness and save performance!
 
+<<<<<<< HEAD
 ``` r
+
 library(fairpan)
 
 adult <- fairmodels::adult
