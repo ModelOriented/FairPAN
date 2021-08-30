@@ -135,110 +135,112 @@
 <h2 class="hasAnchor">
 <a href="#installation" class="anchor"></a>Installation</h2>
 <p>Install the developer version from GitHub:</p>
-<pre><code>devtools::install_github("ModelOriented/FairPAN",build_vignettes = TRUE)</code></pre>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ModelOriented/FairPAN"</span>,build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example" class="anchor"></a>Example</h2>
 <p>Achieve fairness and save performance!</p>
-<pre class="{r}"><code><a href="https://rdrr.io/r/base/library.html">
-library(fairpan)
+<p>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R">
+<span class="kw"><a href="https://rdrr.io/r/base/library.html">library</a></span><span class="op">(</span><span class="va">fairpan</span><span class="op">)</span>
 
-adult &lt;- fairmodels::adult
+<span class="va">adult</span> <span class="op">&lt;-</span> <span class="fu">fairmodels</span><span class="fu">::</span><span class="va"><a href="https://rdrr.io/pkg/fairmodels/man/adult.html">adult</a></span>
 
-# ------------------- step 1 - prepare data  ------------------------
+<span class="co"># ------------------- step 1 - prepare data  ------------------------</span>
 
-data &lt;- preprocess( data = adult,
-                    target_name = "salary",
-                    sensitive_name = "sex",
-                    privileged = "Male",
-                    discriminated = "Female",
-                    drop_also = c("race"),
-                    sample = 0.02,
-                    train_size = 0.6,
-                    test_size = 0.4,
-                    validation_size = 0,
-                    seed = 7
-)
+<span class="va">data</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/preprocess.html">preprocess</a></span><span class="op">(</span> data <span class="op">=</span> <span class="va">adult</span>,
+                    target_name <span class="op">=</span> <span class="st">"salary"</span>,
+                    sensitive_name <span class="op">=</span> <span class="st">"sex"</span>,
+                    privileged <span class="op">=</span> <span class="st">"Male"</span>,
+                    discriminated <span class="op">=</span> <span class="st">"Female"</span>,
+                    drop_also <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="st">"race"</span><span class="op">)</span>,
+                    sample <span class="op">=</span> <span class="fl">0.02</span>,
+                    train_size <span class="op">=</span> <span class="fl">0.6</span>,
+                    test_size <span class="op">=</span> <span class="fl">0.4</span>,
+                    validation_size <span class="op">=</span> <span class="fl">0</span>,
+                    seed <span class="op">=</span> <span class="fl">7</span>
+<span class="op">)</span>
 
-dev &lt;- "cpu"
+<span class="va">dev</span> <span class="op">&lt;-</span> <span class="st">"cpu"</span>
 
-dsl &lt;- dataset_loader(train_x = data$train_x,
-                      train_y = data$train_y,
-                      test_x = data$test_x,
-                      test_y = data$test_y,
-                      batch_size = 5,
-                      dev = dev
-)
+<span class="va">dsl</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/dataset_loader.html">dataset_loader</a></span><span class="op">(</span>train_x <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">train_x</span>,
+                      train_y <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">train_y</span>,
+                      test_x <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">test_x</span>,
+                      test_y <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">test_y</span>,
+                      batch_size <span class="op">=</span> <span class="fl">5</span>,
+                      dev <span class="op">=</span> <span class="va">dev</span>
+<span class="op">)</span>
 
-# ------------ step 2 - create and pretrain models  -----------------
+<span class="co"># ------------ step 2 - create and pretrain models  -----------------</span>
 
-models &lt;- pretrain(clf_model = NULL,
-                   adv_model = NULL,
-                   clf_optimizer = NULL,
-                   trained = FALSE,
-                   train_x = data$train_x,
-                   train_y = data$train_y,
-                   sensitive_train = data$sensitive_train,
-                   sensitive_test = data$sensitive_test,
-                   batch_size = 5,
-                   partition = 0.6,
-                   neurons_clf = c(32, 32, 32),
-                   neurons_adv = c(32, 32, 32),
-                   dimension_clf = 2,
-                   dimension_adv = 1,
-                   learning_rate_clf = 0.001,
-                   learning_rate_adv = 0.001,
-                   n_ep_preclf = 10,
-                   n_ep_preadv = 10,
-                   dsl = dsl,
-                   dev = dev,
-                   verbose = TRUE,
-                   monitor = TRUE
-)
+<span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/pretrain.html">pretrain</a></span><span class="op">(</span>clf_model <span class="op">=</span> <span class="cn">NULL</span>,
+                   adv_model <span class="op">=</span> <span class="cn">NULL</span>,
+                   clf_optimizer <span class="op">=</span> <span class="cn">NULL</span>,
+                   trained <span class="op">=</span> <span class="cn">FALSE</span>,
+                   train_x <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">train_x</span>,
+                   train_y <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">train_y</span>,
+                   sensitive_train <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">sensitive_train</span>,
+                   sensitive_test <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">sensitive_test</span>,
+                   batch_size <span class="op">=</span> <span class="fl">5</span>,
+                   partition <span class="op">=</span> <span class="fl">0.6</span>,
+                   neurons_clf <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">32</span>, <span class="fl">32</span>, <span class="fl">32</span><span class="op">)</span>,
+                   neurons_adv <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html">c</a></span><span class="op">(</span><span class="fl">32</span>, <span class="fl">32</span>, <span class="fl">32</span><span class="op">)</span>,
+                   dimension_clf <span class="op">=</span> <span class="fl">2</span>,
+                   dimension_adv <span class="op">=</span> <span class="fl">1</span>,
+                   learning_rate_clf <span class="op">=</span> <span class="fl">0.001</span>,
+                   learning_rate_adv <span class="op">=</span> <span class="fl">0.001</span>,
+                   n_ep_preclf <span class="op">=</span> <span class="fl">10</span>,
+                   n_ep_preadv <span class="op">=</span> <span class="fl">10</span>,
+                   dsl <span class="op">=</span> <span class="va">dsl</span>,
+                   dev <span class="op">=</span> <span class="va">dev</span>,
+                   verbose <span class="op">=</span> <span class="cn">TRUE</span>,
+                   monitor <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span>
 
-# --------------- step 3 - train for fairness  --------------------
+<span class="co"># --------------- step 3 - train for fairness  --------------------</span>
 
-monitor &lt;- fair_train( n_ep_pan = 17,
-                       dsl = dsl,
-                       clf_model = models$clf_model,
-                       adv_model = models$adv_model, 
-                       clf_optimizer = models$clf_optimizer,
-                       adv_optimizer = models$adv_optimizer,
-                       dev = dev,
-                       sensitive_train = data$sensitive_train,
-                       sensitive_test = data$sensitive_test,  
-                       batch_size = 5,   
-                       learning_rate_adv = 0.001,  
-                       learning_rate_clf = 0.001, 
-                       lambda = 130,
-                       verbose = TRUE,
-                       monitor = TRUE
-)
+<span class="va">monitor</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/fair_train.html">fair_train</a></span><span class="op">(</span> n_ep_pan <span class="op">=</span> <span class="fl">17</span>,
+                       dsl <span class="op">=</span> <span class="va">dsl</span>,
+                       clf_model <span class="op">=</span> <span class="va">models</span><span class="op">$</span><span class="va">clf_model</span>,
+                       adv_model <span class="op">=</span> <span class="va">models</span><span class="op">$</span><span class="va">adv_model</span>, 
+                       clf_optimizer <span class="op">=</span> <span class="va">models</span><span class="op">$</span><span class="va">clf_optimizer</span>,
+                       adv_optimizer <span class="op">=</span> <span class="va">models</span><span class="op">$</span><span class="va">adv_optimizer</span>,
+                       dev <span class="op">=</span> <span class="va">dev</span>,
+                       sensitive_train <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">sensitive_train</span>,
+                       sensitive_test <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">sensitive_test</span>,  
+                       batch_size <span class="op">=</span> <span class="fl">5</span>,   
+                       learning_rate_adv <span class="op">=</span> <span class="fl">0.001</span>,  
+                       learning_rate_clf <span class="op">=</span> <span class="fl">0.001</span>, 
+                       lambda <span class="op">=</span> <span class="fl">130</span>,
+                       verbose <span class="op">=</span> <span class="cn">TRUE</span>,
+                       monitor <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span>
 
-# --------- step 4 - prepare outcomes and plot them  --------------
+<span class="co"># --------- step 4 - prepare outcomes and plot them  --------------</span>
 
-plot_monitor(STP = monitor$STP,
-             adversary_acc = monitor$adversary_acc,
-             adversary_losses = monitor$adversary_losses,
-             classifier_acc = monitor$classifier_acc)
+<span class="fu"><a href="reference/plot_monitor.html">plot_monitor</a></span><span class="op">(</span>STP <span class="op">=</span> <span class="va">monitor</span><span class="op">$</span><span class="va">STP</span>,
+             adversary_acc <span class="op">=</span> <span class="va">monitor</span><span class="op">$</span><span class="va">adversary_acc</span>,
+             adversary_losses <span class="op">=</span> <span class="va">monitor</span><span class="op">$</span><span class="va">adversary_losses</span>,
+             classifier_acc <span class="op">=</span> <span class="va">monitor</span><span class="op">$</span><span class="va">classifier_acc</span><span class="op">)</span>
 
-exp_clf &lt;- explain_pan(y = data$test_y,
-                       model = models$clf_model,
-                       label = "PAN",
-                       data = data$data_test,
-                       data_scaled = data$data_scaled_test,
-                       batch_size = 5,
-                       dev = dev,
-                       verbose = TRUE
-)
+<span class="va">exp_clf</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/explain_pan.html">explain_pan</a></span><span class="op">(</span>y <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">test_y</span>,
+                       model <span class="op">=</span> <span class="va">models</span><span class="op">$</span><span class="va">clf_model</span>,
+                       label <span class="op">=</span> <span class="st">"PAN"</span>,
+                       data <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data_test</span>,
+                       data_scaled <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">data_scaled_test</span>,
+                       batch_size <span class="op">=</span> <span class="fl">5</span>,
+                       dev <span class="op">=</span> <span class="va">dev</span>,
+                       verbose <span class="op">=</span> <span class="cn">TRUE</span>
+<span class="op">)</span>
 
-fobject &lt;- fairmodels::fairness_check(exp_PAN,
-                            protected = data$protected_test,
-                            privileged = "Male",
-                            verbose = TRUE)
-plot(fobject)
-</a></code></pre>
+<span class="va">fobject</span> <span class="op">&lt;-</span> <span class="fu">fairmodels</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/fairmodels/man/fairness_check.html">fairness_check</a></span><span class="op">(</span><span class="va">exp_PAN</span>,
+                            protected <span class="op">=</span> <span class="va">data</span><span class="op">$</span><span class="va">protected_test</span>,
+                            privileged <span class="op">=</span> <span class="st">"Male"</span>,
+                            verbose <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span>
+<span class="fu"><a href="https://rdrr.io/r/graphics/plot.default.html">plot</a></span><span class="op">(</span><span class="va">fobject</span><span class="op">)</span></code></pre></div>
 </div>
 <div id="fair-training-is-flexible" class="section level2">
 <h2 class="hasAnchor">
