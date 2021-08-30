@@ -71,7 +71,12 @@
     </li>
   </ul>
 </li>
-        
+        <li>
+  <a href="https://github.com/ModelOriented/FairPAN">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
 </div>
 <!--/.nav-collapse -->
@@ -93,7 +98,7 @@
 <h2 class="hasAnchor">
 <a href="#overview" class="anchor"></a>Overview</h2>
 <p>Have you just created a model which is biased against some subgroup? Or have you just tried to fight the bias, but models performance dropped significantly? Use <code>FairPAN</code> to create neural network model that provides fair predictions and achieves outstanding performance! With <code><a href="reference/pretrain.html">pretrain()</a></code> you can create or provide your own neural networks and then use them in <code><a href="reference/fair_train.html">fair_train()</a></code> to achieve fair outcomes. R package FairPAN additionally allows you to use lots of <a href="https://github.com/ModelOriented/DALEX">DALEX</a> and <a href="https://github.com/ModelOriented/fairmodels">fairmodels</a> functions such as <code><a href="https://dalex.drwhy.ai/reference/model_performance.html">DALEX::model_performance()</a></code> or <code><a href="https://rdrr.io/pkg/fairmodels/man/fairness_check.html">fairmodels::fairness_check()</a></code>.</p>
-<p><em>If you have problems with the training process remember to use monitor parameter and plot_monitor function for parameter adjustments</em></p>
+<p><em>If you have problems with the training process remember to use monitor parameter and plot_monitor function for parameter adjustments.</em></p>
 <p>Check <a href="https://modeloriented.github.io/FairPAN/">FairPAN Website</a>!</p>
 </div>
 <div id="theoretical-introduction" class="section level2">
@@ -107,14 +112,14 @@
 <div id="introduction-to-gans" class="section level3">
 <h3 class="hasAnchor">
 <a href="#introduction-to-gans" class="anchor"></a>Introduction to GANs</h3>
-<p>Generative Adversarial Networks are two neural networks that learn together. The Generator has to generate new samples that are indistinguishable from original data and the adversarial has to distinguish if the observation is original or generated. The generator is punished whenever the adversarial makes the correct prediction. After such process generator eventually learns how to make indistinguishable predictions and adversaries’ accuracy drops up to 50% when a model cannot distinguish the two classes. The idea of GANs was proposed in <a href="https://arxiv.org/pdf/1406.2661.pdf">Generative Adversarial Nets, Ian Goodfellow</a>.</p>
+<p>Generative Adversarial Networks are two neural networks that learn together. The Generator has to generate new samples that are indistinguishable from original data and the adversarial has to distinguish if the observation is original or generated. The generator is punished whenever the adversarial makes the correct prediction. After such process generator eventually learns how to make indistinguishable predictions and adversaries’ accuracy drops down to 50% when a model cannot distinguish the two classes. The idea of GANs was proposed in <a href="https://arxiv.org/pdf/1406.2661.pdf">Generative Adversarial Nets, Ian Goodfellow</a>.</p>
 </div>
 <div id="fairpan" class="section level3">
 <h3 class="hasAnchor">
 <a href="#fairpan" class="anchor"></a>FairPAN</h3>
 <p>FairPANs are the solution to bring fairness into neural networks. We mimic the GANs by subsetting generator with classifier (predictor) and adversarial has to predict the sensitive value (such as sex, race, etc) from the output of the predictor. This process eventually leads the classifier to make predictions with indistinguishable sensitive values. The idea comes from blogs: <a href="https://godatadriven.com/blog/towards-fairness-in-ml-with-adversarial-networks/">Towards fairness in ML with adversarial networks, Stijn Tonk</a> and <a href="https://godatadriven.com/blog/fairness-in-machine-learning-with-pytorch/">Fairness in Machine Learning with PyTorch, Henk Griffoen</a> however, our implementation in R offers slightly different solutions. And the exact idea behind using GANs for Fairness is described in <a href="https://stanford.edu/~cpiech/bio/papers/fairnessAdversary.pdf">Achieving Fairness through Adversarial Learning: an Application to Recidivism Prediction, Christina Wadsworth, Francesca Vera, Chris Piech</a>.</p>
 <p><img src="./man/images/architecture_PAN.png"></p>
-<p>The diagram above represents the architecture of our model and is strongly inspired by aforementioned blogs</p>
+<p>The diagram above represents the architecture of our model and is strongly inspired by aforementioned blogs.</p>
 </div>
 <div id="custom-loss-function" class="section level3">
 <h3 class="hasAnchor">
@@ -245,12 +250,12 @@
 <a href="#fair-training-is-flexible" class="anchor"></a>Fair training is flexible</h2>
 <p><code>pretrain</code> function has optional parameters:</p>
 <ul>
-<li><p>clf_model nn_module describing classifiers neural network architecture</p></li>
-<li><p>adv_model nn_module describing adversaries neural network architecture</p></li>
-<li><p>clf_optimizer torch object providing classifier optimizer from pretrain</p></li>
-<li><p>trained settles whether clf_model is trained or not</p></li>
+<li><p><code>clf_model</code> nn_module describing classifiers neural network architecture</p></li>
+<li><p><code>adv_model</code> nn_module describing adversaries neural network architecture</p></li>
+<li><p><code>clf_optimizer</code> torch object providing classifier optimizer from pretrain</p></li>
+<li><p><code>trained</code> settles whether clf_model is trained or not</p></li>
 </ul>
-<p>which enables users to provide their own and even pretrained neural network models</p>
+<p>which enables users to provide their own and even pretrained neural network models.</p>
 <p>On the other hand, you can use FairPAN package from the very beginning starting from data preprocessing with <code><a href="reference/preprocess.html">preprocess()</a></code> function which provides every dataset that you will need for provided features.</p>
 </div>
 <div id="proper-evaluation" class="section level2">
@@ -262,7 +267,14 @@
   </div>
 
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
-    <div class="license">
+    <div class="links">
+<h2>Links</h2>
+<ul class="list-unstyled">
+<li>Browse source code at <br><a href="https://github.com/ModelOriented/FairPAN">https://​github.com/​ModelOriented/​FairPAN</a>
+</li>
+</ul>
+</div>
+<div class="license">
 <h2>License</h2>
 <ul class="list-unstyled">
 <li><a href="https://www.r-project.org/Licenses/GPL-3">GPL-3</a></li>

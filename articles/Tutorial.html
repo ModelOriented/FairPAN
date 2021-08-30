@@ -71,7 +71,12 @@
     </li>
   </ul>
 </li>
-        
+        <li>
+  <a href="https://github.com/ModelOriented/FairPAN">
+    <span class="fab fa-github fa-lg"></span>
+     
+  </a>
+</li>
       </ul>
 </div>
 <!--/.nav-collapse -->
@@ -89,7 +94,7 @@
                         <h4 class="author">Hubert Ruczyński</h4>
             
       
-      
+      <small class="dont-index">Source: <a href="https://github.com/ModelOriented/FairPAN/blob/master/vignettes/Tutorial.Rmd"><code>vignettes/Tutorial.Rmd</code></a></small>
       <div class="hidden name"><code>Tutorial.Rmd</code></div>
 
     </div>
@@ -176,7 +181,7 @@
 <div id="preprocessing" class="section level2">
 <h2 class="hasAnchor">
 <a href="#preprocessing" class="anchor"></a>Preprocessing</h2>
-<p>At the beginning we have to preprocess our dataset so we can train a neural network on it and divide it into train and test subsets. One can do it on your own, however we will use built in function called preprocess which will create 16 objects which are needed for other features.</p>
+<p>At the beginning we have to preprocess our dataset so we can train a neural network on it and divide it into train and test subsets. One can do it on their own, however we will use built in function called preprocess which will create 16 objects which are needed for other features.</p>
 <p>To use this function we have to provide a dataset with categorical columns provided as factors. Then we define that <code>salary</code> is our target and <code>sex</code> is a sensitive variable with privileged level <code>Male</code> and discriminated <code>Female</code>. As we noticed before, <code>race</code> could also be considered as a sensitive variable so we want to remove it from our learning dataset too. In the end we sample a small part of the dataset for our process to save our time in this example and define proportions of train, test and validation subsets. We also set seed for reproduction.</p>
 <p>Inside, the function encodes the categorical columns as integers based on their factor levels. After that all variables are rescaled to ensure better learning process. Moreover to ensure that adversarial model works properly, we also balance a dataset to have the same number of privileged and discriminated records.</p>
 <div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
@@ -286,7 +291,7 @@
 <h2 class="hasAnchor">
 <a href="#model-creation-and-pretrain" class="anchor"></a>Model creation and pretrain</h2>
 <p>Finally we are ready to create and pretrain both adversarial and classifier models. <code>FairPAN</code> provides multiple options in this case, because one can not only create and pretrain both models with our interface, but also provide their own neural network models (<code>clf_model</code> and <code>adv_model</code>). The classifier model can be also pretrained, but then <code>clf_optimizer</code> from that training must be provided and <code>trained</code> changed to TRUE.</p>
-<p>In our first example we will focus on pretraining both models created by the <code>pretrain</code> function. To do that you don’t have to provide first four variables, because they are set like that on default. One has to provide <code>data</code> in next four variables and then, the other two describe inner <code>dataset_loader</code> for adversarial network. Next block describes the structure of our models. Neural architecture is provided as a simple vector where, for example, c(32,16,8) describes a network with 3 layers with 32, 16 and 8 neurons. This layers are connected with <code>nn_linear</code> and during forward pass, inner layers have <code>nnf_relu</code> with <code>nnf_softmax</code> in the end. User can also define dimension for softmax, however we advice not to do so, because other approaches are not sufficiently tested. In the end one can also provide learning rates and numbers of epochs for both models. In the end we have to provide a dataset_loader with device and choose whether we want to monitor more metrics and print them out. As a result we will obtain pretrained neural network models (classifier and adversarial) and optimizers for those two models.</p>
+<p>In our first example we will focus on pretraining both models created by the <code>pretrain</code> function. To do that you don’t have to provide first four variables, because they are set like that on default. One has to provide <code>data</code> in next four variables and then, the other two describe inner <code>dataset_loader</code> for adversarial network. Next block describes the structure of our models. Neural architecture is provided as a simple vector where, for example, c(32,16,8) describes a network with 3 layers with 32, 16 and 8 neurons. This layers are connected with <code>nn_linear</code> and during forward pass, inner layers have <code>nnf_relu</code> with <code>nnf_softmax</code> in the end. User can also define dimension for softmax, however we advice not to do so, because other approaches are not sufficiently tested. In the end one can also provide learning rates and numbers of epochs for both models. In the end we have to provide a <code>dataset_loader</code> with device and choose whether we want to monitor more metrics and print them out. As a result we will obtain pretrained neural network models (classifier and adversarial) and optimizers for those two models.</p>
 <div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="va">models</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pretrain.html">pretrain</a></span><span class="op">(</span>clf_model <span class="op">=</span> <span class="cn">NULL</span>,                       <span class="co"># classifier model</span>
                    adv_model <span class="op">=</span> <span class="cn">NULL</span>,                       <span class="co"># adversarial model</span>
