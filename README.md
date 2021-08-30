@@ -68,15 +68,14 @@ multiple features available for user, such as `preprocess` function.
 
 Install the developer version from GitHub:
 
-```
+``` r
 devtools::install_github("ModelOriented/FairPAN",build_vignettes = TRUE)
 ```
 ## Example
 
 Achieve fairness and save performance!
 
-```
-
+``` r
 library(fairpan)
 
 adult <- fairmodels::adult
