@@ -90,7 +90,7 @@ head(adult)
 ## Preprocessing
 
 At the beginning we have to preprocess our dataset so we can train a neural
-network on it and divide it into train and test subsets. One can do it on your
+network on it and divide it into train and test subsets. One can do it on their
 own, however we will use built in function called preprocess which will create
 16 objects which are needed for other features.
 
@@ -183,7 +183,7 @@ with 3 layers with 32, 16 and 8 neurons. This layers are connected with
 advice not to do so, because other approaches are not sufficiently tested. 
 In the end one can also provide learning rates and numbers
 of epochs for both models.
-In the end we have to provide a dataset_loader with device and choose whether
+In the end we have to provide a `dataset_loader` with device and choose whether
 we want to monitor more metrics and print them out.
 As a result we will obtain pretrained neural network models (classifier and 
 adversarial) and optimizers for those two models.

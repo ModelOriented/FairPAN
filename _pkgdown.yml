@@ -28,3 +28,8 @@ reference:
     - eval_accuracy
     - explain_pan
     - plot_monitor
+repo:
+  url:
+    home: https://github.com/ModelOriented/FairPAN
+    source: https://github.com/ModelOriented/FairPAN/blob/master/
+    issue: https://github.com/ModelOriented/FairPAN/issues

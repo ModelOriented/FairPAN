@@ -16,7 +16,7 @@ outcomes. R package FairPAN additionally allows you to use lots of
 and [fairmodels](https://github.com/ModelOriented/fairmodels)
 functions such as `DALEX::model_performance()` or `fairmodels::fairness_check()`.
 
-*If you have problems with the training process remember to use monitor parameter and plot_monitor function for parameter adjustments*
+*If you have problems with the training process remember to use monitor parameter and plot_monitor function for parameter adjustments.*
 
 Check [FairPAN Website](https://modeloriented.github.io/FairPAN/)!
 
@@ -28,7 +28,7 @@ Consider the idea of the algorithm that has to predict whether giving credit to 
 
 ### Introduction to GANs
 
-Generative Adversarial Networks are two neural networks that learn together. The Generator has to generate new samples that are indistinguishable from original data and the adversarial has to distinguish if the observation is original or generated. The generator is punished whenever the adversarial makes the correct prediction. After such process generator eventually learns how to make indistinguishable predictions and adversaries' accuracy drops up to 50% when a model cannot distinguish the two classes. The idea of GANs
+Generative Adversarial Networks are two neural networks that learn together. The Generator has to generate new samples that are indistinguishable from original data and the adversarial has to distinguish if the observation is original or generated. The generator is punished whenever the adversarial makes the correct prediction. After such process generator eventually learns how to make indistinguishable predictions and adversaries' accuracy drops down to 50% when a model cannot distinguish the two classes. The idea of GANs
 was proposed in [Generative Adversarial Nets, Ian Goodfellow](https://arxiv.org/pdf/1406.2661.pdf).
 
 ### FairPAN
@@ -37,7 +37,7 @@ FairPANs are the solution to bring fairness into neural networks. We mimic the G
 
 ![](./man/images/architecture_PAN.png)
 
-The diagram above represents the architecture of our model and is strongly inspired by aforementioned blogs
+The diagram above represents the architecture of our model and is strongly inspired by aforementioned blogs.
 
 ### Custom Loss Function
 
@@ -179,16 +179,16 @@ plot(fobject)
 
 `pretrain` function has optional parameters:
 
-* clf_model      nn_module describing classifiers neural network architecture
+* `clf_model`      nn_module describing classifiers neural network architecture
 
-* adv_model      nn_module describing adversaries neural network architecture
+* `adv_model`      nn_module describing adversaries neural network architecture
 
-* clf_optimizer  torch object providing classifier optimizer from pretrain
+* `clf_optimizer`  torch object providing classifier optimizer from pretrain
 
-* trained        settles whether clf_model is trained or not
+* `trained`        settles whether clf_model is trained or not
 
 which enables users to provide their own and even pretrained neural network
-models
+models.
 
 On the other hand, you can use FairPAN package from the very beginning starting
 from data preprocessing with `preprocess()` function which provides every
