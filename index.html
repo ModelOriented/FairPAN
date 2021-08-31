@@ -149,6 +149,14 @@
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span class="fu">devtools</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"ModelOriented/FairPAN"</span>,build_vignettes <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></code></pre></div>
 </div>
+<div id="workflow" class="section level2">
+<h2 class="hasAnchor">
+<a href="#workflow" class="anchor"></a>Workflow</h2>
+<p>The graph below represents how the workflow inside the package looks like. Firstly we have to provide data and use <code><a href="reference/preprocess.html">preprocess()</a></code> which creates all sets needed for this package to work. One can also skip that step, however it is not advisable to do so. Later we have to create a <code><a href="reference/dataset_loader.html">dataset_loader()</a></code> which organises our data to be ready for torch usage. The nest step is really flexible, because we can choose whether we want to create our functions with the package openly via <code><a href="reference/create_model.html">create_model()</a></code> and <code>pretrain_model()</code>, hidden inside <code><a href="reference/pretrain.html">pretrain()</a></code> or we want to provide neural networks create on our own, which can be pretrained or not, depending on our needs. It is extremely powerful, because we can provide some well known and pretrained classifiers. Later, we engage the <code>fairtrain()</code> process which outcomes we can visualize by setting <code>monitor</code> to true and using <code><a href="reference/plot_monitor.html">plot_monitor()</a></code>. Although we can finish the process at his spot, we can also analyse the outcomes a bit more with <code><a href="reference/explain_pan.html">explain_pan()</a></code> and use all <code>DALEX</code> functions on the returned explainer. This explainer can also be used to apply fairmodels <code>fairness_check()</code> and other functions from this package.</p>
+<center>
+<img src="./man/images/workflow_diagram.png" alt="drawing">
+</center>
+</div>
 <div id="example" class="section level2">
 <h2 class="hasAnchor">
 <a href="#example" class="anchor"></a>Example</h2>
