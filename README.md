@@ -85,15 +85,15 @@ needed for this package to work. One can also skip that step, however it is not
 advisable to do so. Later we have to create a `dataset_loader()` which organises
 our data to be ready for torch usage. The nest step is really flexible, because
 we can choose whether we want to create our functions with the package openly via
-`create_model()` and `pretrain_model()`, hidden inside `pretrain()` or we want
+`create_model()` and `pretrain_net()`, hidden inside `pretrain()` or we want
 to provide neural networks create on our own, which can be pretrained or not,
 depending on our needs. It is extremely powerful, because we can provide some
-well known and pretrained classifiers. Later, we engage the `fairtrain()` process
+well known and pretrained classifiers. Later, we engage the `fair_train()` process
 which outcomes we can visualize by setting `monitor` to true and using 
 `plot_monitor()`. Although we can finish the process at his spot, we can also
 analyse the outcomes a bit more with `explain_pan()` and use all `DALEX` functions
-on the returned explainer. This explainer can also be used to apply fairmodels
-`fairness_check()` and other functions from this package.
+on the returned explainer. This explainer can also be used to apply 
+`fairmodels::fairness_check()` and other functions from this package.
 
 <center>
 <img src="./man/images/workflow_diagram.png" alt="drawing"/>
