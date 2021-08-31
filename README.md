@@ -35,7 +35,9 @@ was proposed in [Generative Adversarial Nets, Ian Goodfellow](https://arxiv.org/
 
 FairPANs are the solution to bring fairness into neural networks. We mimic the GANs by subsetting generator with classifier (predictor) and adversarial has to predict the sensitive value (such as sex, race, etc) from the output of the predictor. This process eventually leads the classifier to make predictions with indistinguishable sensitive values. The idea comes from blogs: [Towards fairness in ML with adversarial networks, Stijn Tonk](https://godatadriven.com/blog/towards-fairness-in-ml-with-adversarial-networks/) and [Fairness in Machine Learning with PyTorch, Henk Griffoen](https://godatadriven.com/blog/fairness-in-machine-learning-with-pytorch/) however, our implementation in R offers slightly different solutions. And the exact idea behind using GANs for Fairness is described in [Achieving Fairness through Adversarial Learning: an Application to Recidivism Prediction, Christina Wadsworth, Francesca Vera, Chris Piech](https://stanford.edu/~cpiech/bio/papers/fairnessAdversary.pdf).
 
-![](./man/images/architecture_PAN.png)
+<center>
+<img src="./man/images/architecture_PAN.png" alt="drawing"/>
+</center>
 
 The diagram above represents the architecture of our model and is strongly inspired by aforementioned blogs.
 
@@ -43,12 +45,15 @@ The diagram above represents the architecture of our model and is strongly inspi
 
 The crucial part of this model is the metric we use to engage the two models into a zero-sum game. This is captured by the following objective function: 
 
-
-![](./man/images/equation.png)
+<center>
+<img src="./man/images/equation.png" alt="drawing" height="40"/>
+</center>
 
 So, it learns to minimize its prediction losses while maximizing that of the adversarial (due to lambda being positive and minimizing a negated loss is the same as maximizing it). The objective during the game is simpler for the adversarial: predict sex based on the income level predictions of the classifier. This is captured in the following objective function:
 
-![](./man/images/equation2.png)
+<center>
+<img src="./man/images/equation2.png" alt="drawing" height="40"/>
+</center>
 
 The adversarial does not care about the prediction accuracy of the classifier. It is only concerned with minimizing its prediction losses.
 Firstly we pretrain classifier and adversarial. Later we begin the proper PAN training with both networks: we train the adversarial, provide its loss to the classifier, and after that, we train the classifier. This method shall lead us to fair predictions of the FairPAN model.

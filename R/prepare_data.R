@@ -240,6 +240,7 @@ preprocess <- function(data,
   set.seed(seed)
 
   sample_indices <- sample(1:nrow(data), nrow(data) * sample)
+
   data           <- data[sample_indices, ]
   data           <- stats::na.omit(data)
 
