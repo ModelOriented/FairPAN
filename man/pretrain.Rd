@@ -65,11 +65,11 @@ network has 3 layers with 32 neurons each.}
 adversarial network. Default: c(32,32,32). This notation means that the
 network has 3 layers with 32 neurons each.}
 
-\item{dimension_clf}{integer from [0,2] setting nnf_softmax dimension for
+\item{dimension_clf}{integer from [1,2] setting nnf_softmax dimension for
 classifier. Default: 2 (suggested to use 2 for classifier and 1 for
 adversarial)}
 
-\item{dimension_adv}{integer from [0,2] setting nnf_softmax dimension for
+\item{dimension_adv}{integer from [1,2] setting nnf_softmax dimension for
 adversarial. Default: 1 (suggested to use 2 for classifier and 1 for
 adversarial)}
 

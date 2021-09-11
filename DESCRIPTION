@@ -9,6 +9,7 @@ Authors@R:
               email = "jakwisn@gmail.com"),
       person("Przemysław", "Biecek", role = c("cph"),
               email = "przemyslaw.biecek@gmail.com"))
+Maintainer: Hubert Ruczyński <hruczynski21@interia.pl>
 Description: The tool not only for creating fair predictive adversarial networks, but also for monitoring the training process and visualizing its outcomes. This package is really flexible, because the user can not only provide its own neural network models, but also create them with our functions.
 License: GPL-3
 Encoding: UTF-8
