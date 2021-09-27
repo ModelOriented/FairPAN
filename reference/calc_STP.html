@@ -181,7 +181,7 @@ for STP ratio</p></td>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'>
-
+<span class='kw'>if</span> <span class='op'>(</span><span class='cn'>FALSE</span><span class='op'>)</span> <span class='op'>{</span>
 <span class='va'>dev</span>        <span class='op'>&lt;-</span>  <span class='st'>"cpu"</span>
 
 <span class='co'># presaved torch model</span>
@@ -195,7 +195,7 @@ for STP ratio</p></td>
                              batch_size <span class='op'>=</span> <span class='fl'>5</span>, dev <span class='op'>=</span> <span class='va'>dev</span><span class='op'>)</span>
 
 <span class='fu'>calc_STP</span><span class='op'>(</span><span class='va'>model</span>, <span class='va'>dsl</span><span class='op'>$</span><span class='va'>test_ds</span>, <span class='va'>processed</span><span class='op'>$</span><span class='va'>sensitive_test</span>, <span class='va'>dev</span><span class='op'>)</span>
-</div><div class='output co'>#&gt; [1] 0.3270079</div><div class='input'>
+<span class='op'>}</span>
 
 </div></pre>
   </div>
