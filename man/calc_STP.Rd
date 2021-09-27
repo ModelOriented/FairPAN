@@ -27,7 +27,7 @@ distributions of sensitive values are.
 }
 \examples{
 
-
+\dontrun{
 dev        <-  "cpu"
 
 # presaved torch model
@@ -41,6 +41,6 @@ dsl        <- dataset_loader(processed$train_x, processed$train_y,
                              batch_size = 5, dev = dev)
 
 calc_STP(model, dsl$test_ds, processed$sensitive_test, dev)
-
+}
 
 }

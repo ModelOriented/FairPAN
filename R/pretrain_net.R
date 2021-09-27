@@ -25,7 +25,7 @@
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
 #' dev <- "cpu"
 #'
 #' # presaved output of preprocess function
@@ -46,7 +46,7 @@
 #'   verbose = TRUE,
 #'   monitor = TRUE
 #' )
-#'
+#' }
 #'
 pretrain_net <- function(n_epochs = 15,
                          model,

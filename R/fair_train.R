@@ -43,7 +43,7 @@
 #' @export
 #'
 #' @examples
-#'\dontrun{
+#' \dontrun{
 #' dev <- "cpu"
 #' # presaved torch models from pretrain phase
 #' model1 <- torch_load(system.file("extdata","preclf",package="fairpan"))
@@ -84,7 +84,7 @@
 #'   verbose = TRUE,
 #'   monitor = TRUE
 #' )
-#'}
+#' }
 
 
 fair_train <- function(dsl,

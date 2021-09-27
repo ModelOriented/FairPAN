@@ -51,7 +51,7 @@ Pretrain can also collect more data to training analysis and print it out
 which is useful for monitoring the learning process and making adjustments.
 }
 \examples{
-
+\dontrun{
 dev <- "cpu"
 
 # presaved output of preprocess function
@@ -72,6 +72,6 @@ pretrain_net(
   verbose = TRUE,
   monitor = TRUE
 )
-
+}
 
 }

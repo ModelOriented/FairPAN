@@ -21,7 +21,7 @@ float (probabilistic) vector of predictions
 Makes probabilistic predictions for neural network with classification task.
 }
 \examples{
-
+\dontrun{
 dev       <-  "cpu"
 
 # presaved torch model
@@ -34,6 +34,6 @@ dsl       <- dataset_loader(processed$train_x, processed$train_y,
              processed$test_x,processed$test_y, batch_size=5, dev=dev)
 
 preds1    <- make_preds_prob(model1,dsl$test_ds,dev)
-
+}
 
 }

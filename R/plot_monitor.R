@@ -17,13 +17,13 @@
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
 #' # presaved monitoring data
 #' monitor2 <- torch_load(system.file("extdata","monitoring2",package="fairpan"))
 #'
 #' plot_monitor(monitor2$STP ,monitor2$adversary_acc, monitor2$classifier_acc,
 #'             monitor2$adversary_losses)
-#'
+#' }
 #' @import ggplot2
 #'
 plot_monitor <- function(STP = NULL,

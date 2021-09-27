@@ -11,8 +11,7 @@
 #' @export
 #'
 #' @examples
-#'
-#'
+#' \dontrun{
 #'
 #' dev        <- "cpu"
 #' # presaved torch model
@@ -26,7 +25,7 @@
 #'                              batch_size = 5, dev = dev)
 #'
 #' eval_accuracy(model, dsl$test_ds, dev)
-#'
+#' }
 #'
 #' @import torch
 #'
@@ -77,7 +76,7 @@ eval_accuracy <- function(model, test_ds, dev) {
 #'
 #' @examples
 #'
-#'
+#' \dontrun{
 #' dev        <-  "cpu"
 #'
 #' # presaved torch model
@@ -91,7 +90,7 @@ eval_accuracy <- function(model, test_ds, dev) {
 #'                              batch_size = 5, dev = dev)
 #'
 #' calc_STP(model, dsl$test_ds, processed$sensitive_test, dev)
-#'
+#' }
 #'
 calc_STP <- function(model, test_ds, sensitive, dev) {
 

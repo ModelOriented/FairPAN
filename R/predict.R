@@ -11,7 +11,7 @@
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
 #'
 #' dev <- "cpu"
 #'
@@ -25,7 +25,7 @@
 #'                       processed$test_y, batch_size=5, dev=dev)
 #'
 #' preds1   <- make_preds(model1,dsl$test_ds,dev)
-#'
+#' }
 
 
 make_preds <- function(model, test_ds, dev) {
@@ -66,7 +66,7 @@ make_preds <- function(model, test_ds, dev) {
 #' @export
 #'
 #' @examples
-#'
+#' \dontrun{
 #' dev       <-  "cpu"
 #'
 #' # presaved torch model
@@ -79,7 +79,7 @@ make_preds <- function(model, test_ds, dev) {
 #'              processed$test_x,processed$test_y, batch_size=5, dev=dev)
 #'
 #' preds1    <- make_preds_prob(model1,dsl$test_ds,dev)
-#'
+#' }
 #'
 make_preds_prob <- function(model, test_ds, dev) {
 

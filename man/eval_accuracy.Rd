@@ -21,8 +21,7 @@ double, accuracy of provided model
 Evaluates the model by calculating its accuracy.
 }
 \examples{
-
-
+\dontrun{
 
 dev        <- "cpu"
 # presaved torch model
@@ -36,6 +35,6 @@ dsl        <- dataset_loader(processed$train_x, processed$train_y,
                              batch_size = 5, dev = dev)
 
 eval_accuracy(model, dsl$test_ds, dev)
-
+}
 
 }
